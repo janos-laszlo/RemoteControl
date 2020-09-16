@@ -1,0 +1,17 @@
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\bin\Release\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\bin\Release\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\bin\Release\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\bin\Release\RemoteControlService.UniTests.dll
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\bin\Release\RemoteControlService.UniTests.pdb
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\bin\Release\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\bin\Release\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\bin\Release\RemoteControlService.exe
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\bin\Release\RemoteControlService.pdb
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\bin\Release\RemoteControlService.exe.config
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\bin\Release\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\bin\Release\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\obj\Release\RemoteControlService.UnitTests.csprojAssemblyReference.cache
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\obj\Release\RemoteControlService.UnitTests.csproj.CoreCompileInputs.cache
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\obj\Release\RemoteControlService.UnitTests.csproj.CopyComplete
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\obj\Release\RemoteControlService.UniTests.dll
+C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService.UniTests\obj\Release\RemoteControlService.UniTests.pdb

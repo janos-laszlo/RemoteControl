@@ -1,0 +1,21 @@
+Description:
+the receiver service:
+	-receives messages which contain different kinds of commands
+	-receives requests for the name of the machine
+
+we need classes for:
+	-message reception
+	-different types of commands
+	-command factory
+	-managing the interaction between the message receptionist and command executioner
+	
+Components:
+-MessageReceptionist - listens for messages and sends the command within the message to subscribers
+	-event MessageReceived
+-ICommand
+-ShutdownCommand
+-CancelShutdownCommand
+-SetVolumeCommand
+-CommandFactory - instantiate a command based on it's type
+	-ICommand Create(Message)
+
