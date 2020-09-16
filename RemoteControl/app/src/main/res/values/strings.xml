@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Remote Control</string>
+    <string name="device">DEVICE</string>
+    <string name="start">START</string>
+    <string name="shutdown">SHUTDOWN</string>
+    <string name="volume">VOLUME</string>
+    <string name="preference_file_key">com.john_inc.remotecontrol.DEVICE_DATA</string>
+    <string name="device_MAC_default">12:34:56:78:9a</string>
+    <string name="device_MAC">device_MAC</string>
+    <string name="minutes">minutes</string>
+    <string name="cancel">CANCEL</string>
+    <string name="hibernate">HIBERNATE</string>
+</resources>
