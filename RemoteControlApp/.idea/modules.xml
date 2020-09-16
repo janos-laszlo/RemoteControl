@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/RemoteControl.iml" filepath="$PROJECT_DIR$/RemoteControl.iml" group="RemoteControl" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/RemoteControlApp.iml" filepath="$PROJECT_DIR$/.idea/modules/RemoteControlApp.iml" group="RemoteControlApp" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/RemoteControlApp-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/RemoteControlApp-app.iml" group="RemoteControlApp/app" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="RemoteControl/app" />
     </modules>
   </component>
