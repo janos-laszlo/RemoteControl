@@ -1,4 +1,4 @@
-package com.john_inc.remotecontrol;
+package com.john_inc.remotecontrol.commands;
 
 public class HibernateCommandDTO implements Command {
     @Override

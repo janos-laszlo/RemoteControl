@@ -3,11 +3,7 @@ package com.john_inc.remotecontrol;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -17,30 +13,23 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
+import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
+import com.john_inc.remotecontrol.commands.CancelShutdownDTO;
+import com.john_inc.remotecontrol.commands.Command;
+import com.john_inc.remotecontrol.commands.HibernateCommandDTO;
+import com.john_inc.remotecontrol.commands.SetVolumeCommandDTO;
+import com.john_inc.remotecontrol.commands.ShutdownCommandDTO;
+
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private static final int SIXTY_SECONDS = 60;
-    private static final int SERVER_PORT = 11000;
-    private static final int TIMEOUT = 5000;
-    private static final String CONNECTION_ERROR = "Connection error!";
     private ArrayList<Receiver> controllableDevices = new ArrayList<>();
     private ArrayList<String> controllableDeviceNames = new ArrayList<>();
     private Receiver selectedControllableDevice;
+    private Transmitter transmitter = new Transmitter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +44,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onStart() {
         super.onStart();
-        findServer();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    controllableDevices = transmitter.findControllableDevices();
+                    loadSpinnerData();
+                } catch (Exception e) {
+                    setErrorMessage(e.getMessage());
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -108,12 +107,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }).start();
     }
 
-    private String serializeCommand(Command cmd) {
-        Gson serializer = new Gson();
-        CommandDTO commandDTO = new CommandDTO(cmd.getName(), serializer.toJson(cmd));
-        return serializer.toJson(commandDTO);
-    }
-
     public void cancelShutdown(View v) {
         new Thread(new Runnable() {
             @Override
@@ -129,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }).start();
     }
 
-    public void hibernate(View view){
+    public void hibernate(View view) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -213,8 +206,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void sendCommand(Command cmd) {
-        String s = serializeCommand(cmd);
-        sendMessage(s);
+        toggleProgressBar();
+        try {
+            transmitter.sendCommand(cmd, selectedControllableDevice);
+        } catch (Exception e) {
+            setErrorMessage(e.getMessage());
+        }
+        toggleProgressBar();
     }
 
     private void setupSpinner() {
@@ -238,80 +236,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
         });
-    }
-
-    private void sendMessage(final String message) {
-        toggleProgressBar();
-        try {
-            Socket socket = new Socket();
-            socket.connect(new InetSocketAddress(selectedControllableDevice.getIpAddress(), SERVER_PORT), TIMEOUT);
-
-            if (socket.isConnected()) {
-                PrintWriter out = new PrintWriter(new BufferedWriter(
-                        new OutputStreamWriter(socket.getOutputStream())
-                ), true);
-                out.print(message + "\\"); // append the message terminator
-                out.flush();
-                out.close();
-                setErrorMessage("");
-            } else
-                setErrorMessage(CONNECTION_ERROR);
-            socket.close();
-        } catch (Exception e) {
-            setErrorMessage(e.getMessage());
-        }
-        toggleProgressBar();
-    }
-
-    private void findServer() {
-        new Thread(new Runnable() {
-            @Override
-            public synchronized void run() {
-                try {
-                    DatagramSocket broadcastSocket = new DatagramSocket();
-                    broadcastSocket.setBroadcast(true);
-                    broadcastSocket.setSoTimeout(5000);
-                    byte[] message = "WhoAreYou".getBytes();
-                    try {
-                        DatagramPacket packet = new DatagramPacket(message, message.length, InetAddress.getByName("255.255.255.255"), SERVER_PORT);
-                        broadcastSocket.send(packet);
-                    } catch (IOException ex) {
-                        // Ignore this exception.
-                    } catch (Exception ex) {
-                        setErrorMessage(ex.toString());
-                    }
-
-                    DatagramPacket receivedPacket;
-                    byte[] receivingBuffer = new byte[256];
-                    AtomicBoolean receivingResponses = new AtomicBoolean(true);
-                    while (receivingResponses.get()) {
-                        try {
-                            receivedPacket = new DatagramPacket(receivingBuffer, receivingBuffer.length);
-                            broadcastSocket.receive(receivedPacket);
-                            String serverResponse = new String(receivedPacket.getData()).trim();
-                            if (serverResponse.length() == 0) {
-                                receivingResponses.set(false);
-                            } else {
-                                if (!controllableDeviceExists(receivedPacket.getAddress().getHostAddress())) {
-                                    controllableDevices.add(new Receiver(serverResponse, receivedPacket.getAddress()));
-                                }
-                                loadSpinnerData();
-                            }
-                        } catch (SocketTimeoutException e) {
-                            if (controllableDevices.isEmpty()) {
-                                setErrorMessage(e.getMessage());
-                            } else receivingResponses.set(false);
-                        } catch (Exception e) {
-                            setErrorMessage(e.getMessage());
-                        }
-                    }
-
-                    broadcastSocket.close();
-                } catch (Exception e) {
-                    setErrorMessage(e.getMessage());
-                }
-            }
-        }).start();
     }
 
     private synchronized void loadSpinnerData() {
@@ -349,15 +273,5 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 selectedControllableDevice = controllableDevice;
             }
         }
-    }
-
-    private boolean controllableDeviceExists(String ipAddress) {
-        for (Receiver controllableDevice : controllableDevices) {
-            if (ipAddress.equals(controllableDevice.getIpAddress().getHostAddress())) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

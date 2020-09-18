@@ -1,13 +1,12 @@
-package com.john_inc.remotecontrol;
+package com.john_inc.remotecontrol.commands;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ShutdownCommandDTO implements Command{
+public class ShutdownCommandDTO implements Command {
 
-    @SuppressWarnings("unused")
     @SerializedName("seconds") private final String seconds;
 
-    ShutdownCommandDTO(String seconds) {
+    public ShutdownCommandDTO(String seconds) {
         this.seconds = seconds;
     }
 

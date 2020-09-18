@@ -1,13 +1,12 @@
-package com.john_inc.remotecontrol;
+package com.john_inc.remotecontrol.commands;
 
 import com.google.gson.annotations.SerializedName;
 
-class SetVolumeCommandDTO implements Command {
+public class SetVolumeCommandDTO implements Command {
 
-    @SuppressWarnings("unused")
     @SerializedName("percent") private final String percent;
 
-    SetVolumeCommandDTO(String percent) {
+    public SetVolumeCommandDTO(String percent) {
         this.percent = percent;
     }
 
