@@ -14,7 +14,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Transmitter {
@@ -88,15 +87,5 @@ public class Transmitter {
         }
 
         broadcastSocket.close();
-    }
-
-    private boolean controllableDeviceExists(ArrayList<Receiver> controllableDevices, String ipAddress) {
-        for (Receiver controllableDevice : controllableDevices) {
-            if (ipAddress.equals(controllableDevice.getIpAddress().getHostAddress())) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

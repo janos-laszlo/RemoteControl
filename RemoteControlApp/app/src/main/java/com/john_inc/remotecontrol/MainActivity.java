@@ -112,7 +112,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             new Thread(() -> {
                 try {
                     transmitter.findReceivers(receiver -> {
-                        receivers.add(receiver);
+                        if (!receiverAlreadyAdded(receiver))
+                            receivers.add(receiver);
                         loadSpinnerData();
                     });
                     receiverFinderThreadLock.set(false);
@@ -123,7 +124,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    private boolean receiverAlreadyAdded(Receiver receiver) {
+        for (Receiver r : receivers) {
+            if(r.getName().equals(receiver.getName())){
+                return true;
+            }
+        }
 
+        return false;
+    }
 
     public void start(View view) {
         final EditText macAddress = findViewById(R.id.editText_mac);
