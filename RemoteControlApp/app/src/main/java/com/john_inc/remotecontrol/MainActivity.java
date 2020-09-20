@@ -1,7 +1,13 @@
 package com.john_inc.remotecontrol;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,14 +28,17 @@ import com.john_inc.remotecontrol.commands.SetVolumeCommandDTO;
 import com.john_inc.remotecontrol.commands.ShutdownCommandDTO;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private static final int SIXTY_SECONDS = 60;
-    private ArrayList<Receiver> controllableDevices = new ArrayList<>();
-    private ArrayList<String> controllableDeviceNames = new ArrayList<>();
-    private Receiver selectedControllableDevice;
+    private ArrayList<Receiver> receivers = new ArrayList<>();
+    private ArrayList<String> receiverNames = new ArrayList<>();
+    private Receiver selectedReceiver;
     private Transmitter transmitter = new Transmitter();
+    private BroadcastReceiver broadcastReceiver = createBroadcastReceiver();
+    private AtomicBoolean receiverFinderThreadLock = new AtomicBoolean(false);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,108 +53,149 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onStart() {
         super.onStart();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    controllableDevices = transmitter.findControllableDevices();
-                    loadSpinnerData();
-                } catch (Exception e) {
-                    setErrorMessage(e.getMessage());
-                }
-            }
-        }).start();
+        listenToWifiStateChanges();
+    }
+
+    private void listenToWifiStateChanges() {
+        IntentFilter intentFilter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        registerReceiver(broadcastReceiver, intentFilter);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        unregisterReceiver(broadcastReceiver);
         write();
     }
+
+    private BroadcastReceiver createBroadcastReceiver() {
+        return new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int wifiStateExtra = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
+
+                switch (wifiStateExtra) {
+                    case WifiManager.WIFI_STATE_ENABLED:
+                        setErrorMessage("");
+                        while (!isConnectedViaWifi()) {
+                            sleepOneSecond();
+                        }
+                        findReceivers();
+                        break;
+                    case WifiManager.WIFI_STATE_DISABLED:
+                        setErrorMessage("No WIFI connection available");
+                        break;
+                }
+            }
+        };
+    }
+
+    private void sleepOneSecond() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isConnectedViaWifi() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connectivityManager != null;
+        NetworkInfo mWifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        assert mWifi != null;
+        return mWifi.isConnected();
+    }
+
+    private void findReceivers() {
+        if (!receiverFinderThreadLock.get()) {
+            receiverFinderThreadLock.set(true);
+            new Thread(() -> {
+                try {
+                    transmitter.findReceivers(receiver -> {
+                        receivers.add(receiver);
+                        loadSpinnerData();
+                    });
+                    receiverFinderThreadLock.set(false);
+                } catch (Exception e) {
+                    setErrorMessage(e.getMessage());
+                }
+            }).start();
+        }
+    }
+
+
 
     public void start(View view) {
         final EditText macAddress = findViewById(R.id.editText_mac);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String macStr;
-                toggleProgressBar();
-                try {
-                    macStr = MagicPacket.cleanMac(macAddress.getText().toString());
-                    System.out.println("Sending to: " + macStr);
-                    String s = MagicPacket.send(macStr, selectedControllableDevice.getIpAddress().getHostAddress());
-                    System.out.println(s);
-                } catch (IllegalArgumentException e) {
-                    System.out.println(e.getMessage());
-                } catch (Exception e) {
-                    System.out.println("Failed to send Wake-on-LAN packet:" + e.getMessage());
-                }
-                toggleProgressBar();
+        new Thread(() -> {
+            String macStr;
+            toggleProgressBar();
+            try {
+                macStr = MagicPacket.cleanMac(macAddress.getText().toString());
+                System.out.println("Sending to: " + macStr);
+                String s = MagicPacket.send(macStr, selectedReceiver.getIpAddress().getHostAddress());
+                System.out.println(s);
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Failed to send Wake-on-LAN packet:" + e.getMessage());
             }
+            toggleProgressBar();
         }).start();
     }
 
     public void shutdown(View view) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                toggleProgressBar();
-                try {
-                    EditText editTextMinutes = findViewById(R.id.editText_minutes);
+        new Thread(() -> {
+            toggleProgressBar();
+            try {
+                EditText editTextMinutes = findViewById(R.id.editText_minutes);
 
-                    String minutes = editTextMinutes.getText().toString();
-                    int seconds;
-                    seconds = minutes.isEmpty() ? 0 : (Integer.parseInt(minutes) * SIXTY_SECONDS);
+                String minutes = editTextMinutes.getText().toString();
+                int seconds;
+                seconds = minutes.isEmpty() ? 0 : (Integer.parseInt(minutes) * SIXTY_SECONDS);
 
-                    sendCommand(new ShutdownCommandDTO(String.valueOf(seconds)));
-                } catch (Exception e) {
-                    setErrorMessage(e.getMessage());
-                }
-                toggleProgressBar();
+                sendCommand(new ShutdownCommandDTO(String.valueOf(seconds)));
+            } catch (Exception e) {
+                setErrorMessage(e.getMessage());
             }
+            toggleProgressBar();
         }).start();
     }
 
     public void cancelShutdown(View v) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                toggleProgressBar();
-                try {
-                    sendCommand(new CancelShutdownDTO());
-                } catch (Exception e) {
-                    setErrorMessage(e.getMessage());
-                }
-                toggleProgressBar();
+        new Thread(() -> {
+            toggleProgressBar();
+            try {
+                sendCommand(new CancelShutdownDTO());
+            } catch (Exception e) {
+                setErrorMessage(e.getMessage());
             }
+            toggleProgressBar();
         }).start();
     }
 
     public void hibernate(View view) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                toggleProgressBar();
-                try {
-                    sendCommand(new HibernateCommandDTO());
-                } catch (Exception e) {
-                    setErrorMessage(e.getMessage());
-                }
-                toggleProgressBar();
+        new Thread(() -> {
+            toggleProgressBar();
+            try {
+                sendCommand(new HibernateCommandDTO());
+            } catch (Exception e) {
+                setErrorMessage(e.getMessage());
             }
+            toggleProgressBar();
         }).start();
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String name = parent.getItemAtPosition(position).toString();
-        updateSelectedControllableDevice(name);
+        setSelectedReceiver(name);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-        selectedControllableDevice = null;
+        selectedReceiver = null;
     }
 
     // Read the IP and MAC from the preference file.
@@ -187,17 +237,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                     @Override
                     public void onStopTrackingTouch(final SeekBar seekBar) {
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                toggleProgressBar();
-                                try {
-                                    sendCommand(new SetVolumeCommandDTO(String.valueOf(seekBar.getProgress())));
-                                } catch (Exception e) {
-                                    setErrorMessage(e.getMessage());
-                                }
-                                toggleProgressBar();
+                        new Thread(() -> {
+                            toggleProgressBar();
+                            try {
+                                sendCommand(new SetVolumeCommandDTO(String.valueOf(seekBar.getProgress())));
+                            } catch (Exception e) {
+                                setErrorMessage(e.getMessage());
                             }
+                            toggleProgressBar();
                         }).start();
                         System.out.println("stop tracking, progress = " + seekBar.getProgress());
                     }
@@ -208,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void sendCommand(Command cmd) {
         toggleProgressBar();
         try {
-            transmitter.sendCommand(cmd, selectedControllableDevice);
+            transmitter.sendCommand(cmd, selectedReceiver);
         } catch (Exception e) {
             setErrorMessage(e.getMessage());
         }
@@ -218,7 +265,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void setupSpinner() {
         Spinner spinner = findViewById(R.id.controllable_devices_spinner);
         spinner.setOnItemSelectedListener(this);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, controllableDeviceNames);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, receiverNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }
@@ -226,20 +273,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void toggleProgressBar() {
         final ProgressBar progressBar = findViewById(R.id.progressBar);
 
-        progressBar.post(new Runnable() {
-            @Override
-            public void run() {
-                if (progressBar.isShown()) {
-                    progressBar.setVisibility(View.INVISIBLE);
-                } else {
-                    progressBar.setVisibility(View.VISIBLE);
-                }
+        progressBar.post(() -> {
+            if (progressBar.isShown()) {
+                progressBar.setVisibility(View.INVISIBLE);
+            } else {
+                progressBar.setVisibility(View.VISIBLE);
             }
         });
     }
 
     private synchronized void loadSpinnerData() {
-        updateControllableDeviceNames();
+        updateReceiverNames();
         runOnUiThread(new Runnable() {
             @Override
             public synchronized void run() {
@@ -249,28 +293,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
     }
 
-    private void updateControllableDeviceNames() {
-        controllableDeviceNames.clear();
-        for (Receiver controllableDevice : controllableDevices) {
-            controllableDeviceNames.add(controllableDevice.getName());
+    private void updateReceiverNames() {
+        receiverNames.clear();
+        for (Receiver receiver : receivers) {
+            receiverNames.add(receiver.getName());
         }
     }
 
     private void setErrorMessage(final String message) {
         final TextView textView = findViewById(R.id.textView_errors);
-        textView.post(new Runnable() {
-            @Override
-            public void run() {
-                textView.setText(message);
-            }
-        });
+        textView.post(() -> textView.setText(message));
     }
 
-    private void updateSelectedControllableDevice(String name) {
-        selectedControllableDevice = null;
-        for (Receiver controllableDevice : controllableDevices) {
-            if (name.equals(controllableDevice.getName())) {
-                selectedControllableDevice = controllableDevice;
+    private void setSelectedReceiver(String name) {
+        selectedReceiver = null;
+        for (Receiver receiver : receivers) {
+            if (name.equals(receiver.getName())) {
+                selectedReceiver = receiver;
             }
         }
     }

@@ -52,8 +52,7 @@ public class Transmitter {
         }
     }
 
-    public ArrayList<Receiver> findControllableDevices() throws Exception {
-        ArrayList<Receiver> controllableDevices = new ArrayList<>();
+    public void findReceivers(OnReceiverFoundListener listener) throws Exception {
         DatagramSocket broadcastSocket = new DatagramSocket();
         broadcastSocket.setBroadcast(true);
         broadcastSocket.setSoTimeout(5000);
@@ -68,6 +67,7 @@ public class Transmitter {
         DatagramPacket receivedPacket;
         byte[] receivingBuffer = new byte[256];
         AtomicBoolean receivingResponses = new AtomicBoolean(true);
+        boolean anyReceiverFound = false;
         while (receivingResponses.get()) {
             try {
                 receivedPacket = new DatagramPacket(receivingBuffer, receivingBuffer.length);
@@ -76,21 +76,18 @@ public class Transmitter {
                 if (serverResponse.length() == 0) {
                     receivingResponses.set(false);
                 } else {
-                    if (!controllableDeviceExists(controllableDevices, receivedPacket.getAddress().getHostAddress())) {
-                        controllableDevices.add(new Receiver(serverResponse, receivedPacket.getAddress()));
-                    }
+                    listener.onReceiverFound(new Receiver(serverResponse, receivedPacket.getAddress()));
+                    anyReceiverFound = true;
                 }
             } catch (SocketTimeoutException e) {
                 broadcastSocket.close();
-                if (controllableDevices.isEmpty()) {
+                if (!anyReceiverFound) {
                     throw new Exception(e.getMessage());
                 } else receivingResponses.set(false);
             }
         }
 
         broadcastSocket.close();
-
-        return controllableDevices;
     }
 
     private boolean controllableDeviceExists(ArrayList<Receiver> controllableDevices, String ipAddress) {
