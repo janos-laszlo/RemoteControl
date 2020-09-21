@@ -265,6 +265,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         toggleProgressBar();
         try {
             transmitter.sendCommand(cmd, selectedReceiver);
+            setErrorMessage("");
         } catch (Exception e) {
             setErrorMessage(e.getMessage());
         }
