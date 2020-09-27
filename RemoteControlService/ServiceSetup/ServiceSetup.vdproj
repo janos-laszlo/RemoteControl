@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_1183BB8EE7DE459EB49E2AAB60C22F4D"
+        "MsmKey" = "8:_227AC8F16A994609A2C8E25464E302F6"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -34,6 +34,12 @@
         "Entry"
         {
         "MsmKey" = "8:_6DC34145B68A49B382AC35F57A6DC74C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_780F93FF9DD8409E87AA4373F818A540"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -200,10 +206,10 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1183BB8EE7DE459EB49E2AAB60C22F4D"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_227AC8F16A994609A2C8E25464E302F6"
             {
-            "SourcePath" = "8:..\\..\\..\\..\\My hobby projects\\Remotely control PC with phone\\readme.txt"
-            "TargetName" = "8:readme.txt"
+            "SourcePath" = "8:..\\shutdownHistory.json"
+            "TargetName" = "8:shutdownHistory.json"
             "Tag" = "8:"
             "Folder" = "8:_A29662C73490499AA757580FB7B0DCC7"
             "Condition" = "8:"
@@ -255,6 +261,26 @@
             {
             "SourcePath" = "8:..\\nircmd.exe"
             "TargetName" = "8:nircmd.exe"
+            "Tag" = "8:"
+            "Folder" = "8:_A29662C73490499AA757580FB7B0DCC7"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_780F93FF9DD8409E87AA4373F818A540"
+            {
+            "SourcePath" = "8:..\\readme.txt"
+            "TargetName" = "8:readme.txt"
             "Tag" = "8:"
             "Folder" = "8:_A29662C73490499AA757580FB7B0DCC7"
             "Condition" = "8:"
@@ -328,7 +354,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Remote Control Service"
         "ProductCode" = "8:{8F6A861D-F43D-4AB9-845F-7D6CE2637B3B}"
-        "PackageCode" = "8:{04B04176-6A34-4F0D-9D5D-B6E0E79FB167}"
+        "PackageCode" = "8:{00005C6C-429B-4264-B705-EB13592EB8F0}"
         "UpgradeCode" = "8:{B549B3B0-8414-459C-AA51-334DCAF8A87A}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -849,7 +875,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3BF0F682531D4BC89BC590E4C66D0A91"
             {
-            "SourcePath" = "8:"
+            "SourcePath" = "8:..\\RemoteControlService\\obj\\Release\\RemoteControlService.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A29662C73490499AA757580FB7B0DCC7"

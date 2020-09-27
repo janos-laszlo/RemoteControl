@@ -135,6 +135,7 @@ namespace RemoteControlService.ReceiverDevice.MessageReception
                     listener.Dispose();
                 }
             });
+
             commandListenerThread.Start();
         }
 

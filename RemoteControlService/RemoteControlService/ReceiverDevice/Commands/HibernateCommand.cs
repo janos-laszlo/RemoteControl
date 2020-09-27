@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Timers;
-
-namespace RemoteControlService.ReceiverDevice.Commands
+﻿namespace RemoteControlService.ReceiverDevice.Commands
 {
     public class HibernateCommand : ICommand
     {

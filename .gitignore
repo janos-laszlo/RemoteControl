@@ -81,3 +81,12 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+
+# RemoteControlService ignores
+/RemoteControlService/RemoteControlService/bin
+/RemoteControlService/RemoteControlService/obj
+/RemoteControlService/RemoteControlService.UnitTests/bin
+/RemoteControlService/RemoteControlService.UnitTests/obj
+/RemoteControlService/.vs
+/RemoteControlService/packages

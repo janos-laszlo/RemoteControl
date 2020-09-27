@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using RemoteControlService.ReceiverDevice.DailyShutdown;
+using System;
+using System.Collections;
 using System.ComponentModel;
 using System.Configuration.Install;
 using System.Diagnostics;
@@ -22,6 +24,7 @@ namespace RemoteControlService
 
             string path = Path.GetDirectoryName(Context.Parameters["assemblypath"]);
             OpenFirewallForProgram(Path.Combine(path, "RemoteControlService.exe"), ServiceName);
+            AddReadWriteAccessForLocalService(Path.Combine(path, "shutdownHistory.json"));
         }
 
         protected override void OnAfterUninstall(IDictionary savedState)
@@ -41,6 +44,7 @@ namespace RemoteControlService
                     Arguments = string.Format("advfirewall firewall delete rule name = \"{0}\" program = \"{1}\"", displayName, exeFullPath),
                     WindowStyle = ProcessWindowStyle.Hidden
                 });
+
             proc.WaitForExit();
         }
 
@@ -51,6 +55,19 @@ namespace RemoteControlService
                 {
                     FileName = "netsh",
                     Arguments = string.Format("advfirewall firewall add rule name = \"{0}\" dir=in action=allow program=\"{1}\" enable = yes profile = PUBLIC", displayName, exeFullPath),
+                    WindowStyle = ProcessWindowStyle.Hidden
+                });
+
+            proc.WaitForExit();
+        }
+
+        private void AddReadWriteAccessForLocalService(string path)
+        {
+            var proc = Process.Start(
+                new ProcessStartInfo
+                {
+                    FileName = "icacls",
+                    Arguments = $"\"{path}\" /grant \"LOCAL SERVICE\":(GR,GW)",
                     WindowStyle = ProcessWindowStyle.Hidden
                 });
 

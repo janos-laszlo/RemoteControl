@@ -36,3 +36,13 @@ C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\Re
 C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService\obj\Debug\RemoteControlService.exe
 C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService\obj\Debug\RemoteControlService.pdb
 C:\Users\janos\OneDrive\Code\Visual Studio 2017\Projects\RemoteControlService\RemoteControlService\obj\Debug\RemoteControlService.csprojAssemblyReference.cache
+D:\Code\repos\RemoteControl\RemoteControlService\RemoteControlService\bin\Debug\RemoteControlService.exe.config
+D:\Code\repos\RemoteControl\RemoteControlService\RemoteControlService\bin\Debug\RemoteControlService.exe
+D:\Code\repos\RemoteControl\RemoteControlService\RemoteControlService\bin\Debug\RemoteControlService.pdb
+D:\Code\repos\RemoteControl\RemoteControlService\RemoteControlService\obj\Debug\RemoteControlService.csprojAssemblyReference.cache
+D:\Code\repos\RemoteControl\RemoteControlService\RemoteControlService\obj\Debug\RemoteControlService.ProjectInstaller.resources
+D:\Code\repos\RemoteControl\RemoteControlService\RemoteControlService\obj\Debug\RemoteControlService.RemoteControlService.resources
+D:\Code\repos\RemoteControl\RemoteControlService\RemoteControlService\obj\Debug\RemoteControlService.csproj.GenerateResource.cache
+D:\Code\repos\RemoteControl\RemoteControlService\RemoteControlService\obj\Debug\RemoteControlService.csproj.CoreCompileInputs.cache
+D:\Code\repos\RemoteControl\RemoteControlService\RemoteControlService\obj\Debug\RemoteControlService.exe
+D:\Code\repos\RemoteControl\RemoteControlService\RemoteControlService\obj\Debug\RemoteControlService.pdb

@@ -1,0 +1,38 @@
+public static DateTime GetLastSystemShutdown()
+{
+	string sKey = @"System\CurrentControlSet\Control\Windows";
+	Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(sKey);
+
+	string sValueName = "ShutdownTime";
+	byte[] val = (byte[])key.GetValue(sValueName);
+	long valueAsLong = BitConverter.ToInt64(val, 0);
+	return DateTime.FromFileTime(valueAsLong);
+}
+
+
+x = set of the last five shutdowns between 10PM and 06AM
+
+on startup
+	find the last shutdown time
+	if it occured between 10PM and 06AM save it in the app if not already saved
+	if any shutdown time exists then
+		schedule shutdown to the average of the shutdowns
+	
+class ShutdownHistoryStorage
+	GetShutdownHistory: set<DateTime>
+	AddShutdownToHistory(DateTime): void
+	
+class DailyShutdownScheduler
+	DailyShutdownScheduler(ShutdownHistoryStorage)
+	ScheduleDailyShutodwn(): void
+		GetShutdownHistory
+		if any shutdown in history
+			schedule shutdown to the average of the shutdown times in history
+	UpdateShutdownHistory(): void
+		GetLastSystemShutdown()
+		if it occured between 10PM and 6AM then
+			AddShutdownToHistory
+			
+onstartup -> UpdateShutdownHistory() and ScheduleDailyShutodwn()
+
+shutdownHistory

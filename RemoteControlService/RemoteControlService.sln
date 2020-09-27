@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteControlService", "Rem
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ServiceSetup", "ServiceSetup\ServiceSetup.vdproj", "{F11F77B8-72A3-46FB-B275-3670DEB53731}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteControlService.UnitTests", "RemoteControlService.UniTests\RemoteControlService.UnitTests.csproj", "{2C063BF2-CC75-45A4-B2B0-6E9ED49EB354}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteControlService.UnitTests", "RemoteControlService.UnitTests\RemoteControlService.UnitTests.csproj", "{2C063BF2-CC75-45A4-B2B0-6E9ED49EB354}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

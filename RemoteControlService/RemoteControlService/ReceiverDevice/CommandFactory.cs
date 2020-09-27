@@ -18,7 +18,7 @@ namespace RemoteControlService.ReceiverDevice
 
         public ICommand Create(string unparsedCmd)
         {
-            var cmd = JSONUtils.Parse<CommandDTO>(unparsedCmd);
+            var cmd = JSONUtils.FromJson<CommandDTO>(unparsedCmd);
 
             if (!CommandTypes.ContainsKey(cmd.Name)) throw new Exception($"Command type {cmd.Name} is not handled");
 
@@ -27,7 +27,7 @@ namespace RemoteControlService.ReceiverDevice
 
         private static T Create<T>(string json)
         {
-            return JSONUtils.Parse<T>(json);
+            return JSONUtils.FromJson<T>(json);
         }
     }
 }
