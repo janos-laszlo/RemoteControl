@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         setupVolumeBar();
         setupSpinner();
+        updateVolumeTextView();
         read();
     }
 
@@ -126,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private boolean receiverAlreadyAdded(Receiver receiver) {
         for (Receiver r : receivers) {
-            if(r.getName().equals(receiver.getName())){
+            if (r.getName().equals(receiver.getName())) {
                 return true;
             }
         }
@@ -155,45 +156,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void shutdown(View view) {
-        new Thread(() -> {
-            toggleProgressBar();
-            try {
-                EditText editTextMinutes = findViewById(R.id.editText_minutes);
+        EditText editTextMinutes = findViewById(R.id.editText_minutes);
 
-                String minutes = editTextMinutes.getText().toString();
-                int seconds;
-                seconds = minutes.isEmpty() ? 0 : (Integer.parseInt(minutes) * SIXTY_SECONDS);
+        String minutes = editTextMinutes.getText().toString();
+        int seconds;
+        seconds = minutes.isEmpty() ? 0 : (Integer.parseInt(minutes) * SIXTY_SECONDS);
 
-                sendCommand(new ShutdownCommandDTO(String.valueOf(seconds)));
-            } catch (Exception e) {
-                setErrorMessage(e.getMessage());
-            }
-            toggleProgressBar();
-        }).start();
+        sendCommand(new ShutdownCommandDTO(String.valueOf(seconds)));
     }
 
     public void cancelShutdown(View v) {
-        new Thread(() -> {
-            toggleProgressBar();
-            try {
-                sendCommand(new CancelShutdownDTO());
-            } catch (Exception e) {
-                setErrorMessage(e.getMessage());
-            }
-            toggleProgressBar();
-        }).start();
+        sendCommand(new CancelShutdownDTO());
     }
 
     public void hibernate(View view) {
-        new Thread(() -> {
-            toggleProgressBar();
-            try {
-                sendCommand(new HibernateCommandDTO());
-            } catch (Exception e) {
-                setErrorMessage(e.getMessage());
-            }
-            toggleProgressBar();
-        }).start();
+        sendCommand(new HibernateCommandDTO());
+    }
+
+    public void decreaseVolume(View view) {
+        AddToVolume(-1);
+    }
+
+    public void increaseVolume(View view) {
+        AddToVolume(1);
     }
 
     @Override
@@ -238,6 +223,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        sendCommand(new SetVolumeCommandDTO(String.valueOf(seekBar.getProgress())));
+                        updateVolumeTextView();
                     }
 
                     @Override
@@ -246,30 +233,37 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                     @Override
                     public void onStopTrackingTouch(final SeekBar seekBar) {
-                        new Thread(() -> {
-                            toggleProgressBar();
-                            try {
-                                sendCommand(new SetVolumeCommandDTO(String.valueOf(seekBar.getProgress())));
-                            } catch (Exception e) {
-                                setErrorMessage(e.getMessage());
-                            }
-                            toggleProgressBar();
-                        }).start();
-                        System.out.println("stop tracking, progress = " + seekBar.getProgress());
+//                        sendCommand(new SetVolumeCommandDTO(String.valueOf(seekBar.getProgress())));
+//                        System.out.println("stop tracking, progress = " + seekBar.getProgress());
                     }
                 }
         );
     }
 
+    private void updateVolumeTextView() {
+        TextView volumeText = findViewById(R.id.textView_volume);
+        SeekBar seekBar = findViewById(R.id.seekBar_volume);
+        volumeText.setText(getString(R.string.volume, seekBar.getProgress()));
+    }
+
+    private void AddToVolume(int volumeToAdd){
+        SeekBar seekBar = findViewById(R.id.seekBar_volume);
+        int newProgress = Math.max(0, seekBar.getProgress() + volumeToAdd);
+        newProgress = Math.min(100, newProgress);
+        seekBar.setProgress(newProgress);
+    }
+
     private void sendCommand(Command cmd) {
-        toggleProgressBar();
-        try {
-            transmitter.sendCommand(cmd, selectedReceiver);
-            setErrorMessage("");
-        } catch (Exception e) {
-            setErrorMessage(e.getMessage());
-        }
-        toggleProgressBar();
+        new Thread(() -> {
+            toggleProgressBar();
+            try {
+                transmitter.sendCommand(cmd, selectedReceiver);
+                setErrorMessage("");
+            } catch (Exception e) {
+                setErrorMessage(e.getMessage());
+            }
+            toggleProgressBar();
+        }).start();
     }
 
     private void setupSpinner() {
