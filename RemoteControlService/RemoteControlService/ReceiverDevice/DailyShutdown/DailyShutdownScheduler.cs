@@ -64,19 +64,16 @@ namespace RemoteControlService.ReceiverDevice.DailyShutdown
 
         private TimeSpan CalculateAverageShutdownHourFromShudownHistory(IEnumerable<DateTime> shutdownHistory)
         {
-            var sortedShutdownHistory = new SortedSet<DateTime>(shutdownHistory);
-            TimeSpan average = TimeSpan.FromSeconds(0);
+            var sortedShutdownHistory = new SortedSet<TimeSpan>(shutdownHistory.Select(d => new TimeSpan(d.Hour, d.Minute, d.Second)));
+            long averageShutdownHourInTicks = 0;
             for (int i = 1; i < sortedShutdownHistory.Count; i++)
             {
-                average += TimeSpan.FromTicks((sortedShutdownHistory.ElementAt(i) - sortedShutdownHistory.ElementAt(0)).Ticks % TimeSpan.TicksPerDay);
+                averageShutdownHourInTicks += (sortedShutdownHistory.ElementAt(i) - sortedShutdownHistory.ElementAt(0)).Ticks % TimeSpan.TicksPerDay;
             }
 
-            average = TimeSpan.FromTicks(average.Ticks / sortedShutdownHistory.Count);
+            averageShutdownHourInTicks /= sortedShutdownHistory.Count;
 
-            return TimeSpan.FromTicks((average.Ticks
-                                       + TimeSpan.FromHours(sortedShutdownHistory.ElementAt(0).Hour).Ticks
-                                       + TimeSpan.FromMinutes(sortedShutdownHistory.ElementAt(0).Minute).Ticks) 
-                                       % TimeSpan.TicksPerDay);
+            return TimeSpan.FromTicks((sortedShutdownHistory.ElementAt(0).Ticks + averageShutdownHourInTicks) % TimeSpan.TicksPerDay);
         }
 
         private DateTime GetNextClosestShutdownDatetime(TimeSpan shutdownHour)

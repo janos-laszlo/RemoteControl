@@ -16,7 +16,14 @@ namespace RemoteControlService.ReceiverDevice.DailyShutdown
             string sValueName = "ShutdownTime";
             byte[] val = (byte[])key.GetValue(sValueName);
             long valueAsLong = BitConverter.ToInt64(val, 0);
-            return DateTime.FromFileTime(valueAsLong);
+            DateTime exactShutdownDateTime = DateTime.FromFileTime(valueAsLong);
+            return new DateTime(exactShutdownDateTime.Year,
+                                exactShutdownDateTime.Month,
+                                exactShutdownDateTime.Day,
+                                exactShutdownDateTime.Hour,
+                                exactShutdownDateTime.Minute,
+                                exactShutdownDateTime.Second,
+                                0);
         }
     }
 }
