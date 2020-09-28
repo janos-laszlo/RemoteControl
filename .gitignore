@@ -84,10 +84,9 @@ lint/tmp/
 
 
 # RemoteControlService ignores
-RemoteControlService/RemoteControlService/obj
 RemoteControlService/RemoteControlService/bin
 RemoteControlService/RemoteControlService/obj
-/RemoteControlService/RemoteControlService.UnitTests/bin
-/RemoteControlService/RemoteControlService.UnitTests/obj
-/RemoteControlService/.vs/
-/RemoteControlService/packages
+RemoteControlService/RemoteControlService.UnitTests/bin
+RemoteControlService/RemoteControlService.UnitTests/obj
+RemoteControlService/.vs
+RemoteControlService/packages
