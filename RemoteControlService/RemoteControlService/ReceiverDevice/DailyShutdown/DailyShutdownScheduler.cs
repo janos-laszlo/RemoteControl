@@ -25,6 +25,7 @@ namespace RemoteControlService.ReceiverDevice.DailyShutdown
 
         public async Task ScheduleDailyShutdown()
         {
+            UpdateShutdownHistory();
             IEnumerable<DateTime> shutdownHistory = shutdownHistoryStorage.GetAll();
             if (!shutdownHistory.Any())
             {
@@ -32,19 +33,18 @@ namespace RemoteControlService.ReceiverDevice.DailyShutdown
                 return;
             }
 
-            TimeSpan shutdownHourAndMinute = CalculateAverageShutdownHourFromShudownHistory(shutdownHistory);
+            TimeSpan shutdownHourAndMinute = CalculateAverageShutdownTimeFromShudownHistory(shutdownHistory);
             DateTime forecastedShutdownDateTime = GetNextClosestShutdownDatetime(shutdownHourAndMinute);
 
             var now = DateTime.Now;
             TimeSpan timeTillShutdownWillBeScheduled = TimeSpan.FromTicks(Math.Max((forecastedShutdownDateTime - now - TimeSpan.FromMinutes(10)).Ticks, TimeSpan.Zero.Ticks));
             DateTime actualShutdownDatetime = now.Add(timeTillShutdownWillBeScheduled).AddMinutes(10);
-            actualShutdownDatetime = actualShutdownDatetime.AddSeconds(-actualShutdownDatetime.Second);
             Trace.WriteLine($"Shutdown was scheduled to happen at: {actualShutdownDatetime}");
             await Task.Delay(timeTillShutdownWillBeScheduled);
             powerController.ScheduleShutdown(seconds: (int)(actualShutdownDatetime - DateTime.Now).TotalSeconds);
         }
 
-        public void UpdateShutdownHistory()
+        private void UpdateShutdownHistory()
         {
             DateTime lastSystemShutdown = systemInformation.GetLastSystemShutdown();
             if (!(22 <= lastSystemShutdown.Hour && lastSystemShutdown.Hour <= 23 ||
@@ -62,7 +62,7 @@ namespace RemoteControlService.ReceiverDevice.DailyShutdown
             shutdownHistoryStorage.Add(lastSystemShutdown);
         }
 
-        private TimeSpan CalculateAverageShutdownHourFromShudownHistory(IEnumerable<DateTime> shutdownHistory)
+        private TimeSpan CalculateAverageShutdownTimeFromShudownHistory(IEnumerable<DateTime> shutdownHistory)
         {
             var sortedShutdownHistory = new SortedSet<TimeSpan>(shutdownHistory.Select(d => new TimeSpan(d.Hour, d.Minute, d.Second)));
             long averageShutdownHourInTicks = 0;
@@ -76,14 +76,14 @@ namespace RemoteControlService.ReceiverDevice.DailyShutdown
             return TimeSpan.FromTicks((sortedShutdownHistory.ElementAt(0).Ticks + averageShutdownHourInTicks) % TimeSpan.TicksPerDay);
         }
 
-        private DateTime GetNextClosestShutdownDatetime(TimeSpan shutdownHour)
+        private DateTime GetNextClosestShutdownDatetime(TimeSpan shutdownTime)
         {
             var nextClosestShutdownDatetime = new DateTime(DateTime.Now.Year,
                                                            DateTime.Now.Month,
                                                            DateTime.Now.Day,
-                                                           shutdownHour.Hours,
-                                                           shutdownHour.Minutes,
-                                                           0);
+                                                           shutdownTime.Hours,
+                                                           shutdownTime.Minutes,
+                                                           shutdownTime.Seconds);
 
             if (nextClosestShutdownDatetime < DateTime.Now)
             {

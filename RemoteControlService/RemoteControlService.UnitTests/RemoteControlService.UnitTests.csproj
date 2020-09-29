@@ -39,7 +39,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CmdLinePowerControllerMock.cs" />
+    <Compile Include="Mocks\CmdLinePowerControllerMock.cs" />
     <Compile Include="DailyShutdownSchedulerTest.cs" />
     <Compile Include="HibernateCommandTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,6 +67,7 @@
     <Reference Include="Moq, Version=4.14.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.14.5\lib\net45\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>

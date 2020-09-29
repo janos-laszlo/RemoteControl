@@ -14,19 +14,20 @@ namespace RemoteControlService.UniTests
     {
         private IShutdownHistoryStorage shutdownHistoryStorage;
 
-        [TestCleanup]
-        public void CleanupTest()
-        {
-            File.Delete(ShutdownHistoryStorage.SHUTDOWN_HISTORY_FILE);
-        }
-
         [TestInitialize]
         public void Init()
         {
+            File.Delete(ShutdownHistoryStorage.SHUTDOWN_HISTORY_FILE);
             shutdownHistoryStorage = new ShutdownHistoryStorage();
             shutdownHistoryStorage.Add(DateTime.Now);
             shutdownHistoryStorage.Add(DateTime.UtcNow);
             shutdownHistoryStorage.Add(DateTime.UtcNow.AddDays(1));
+        }
+
+        [ClassCleanup]
+        public static void CleanClass()
+        {
+            File.Delete(ShutdownHistoryStorage.SHUTDOWN_HISTORY_FILE);
         }
 
         [TestMethod]
@@ -41,7 +42,8 @@ namespace RemoteControlService.UniTests
         public void Add_WhenNewDatetimesAdded_ThenStorageIncreaseExpected()
         {
             IEnumerable<DateTime> times = shutdownHistoryStorage.GetAll();
-            Assert.IsTrue(times.Count() == 3);
+            shutdownHistoryStorage.Add(DateTime.Now.AddMinutes(3));
+            Assert.IsTrue(times.Count() == 4);
         }
 
         [TestMethod]

@@ -27,14 +27,8 @@ namespace RemoteControlService.ReceiverDevice
         {
             messageReceptioner.MessageReceived += OnMessageReceived;
             messageReceptioner.Start();
-            RunDailyShutdownScheduler();
+            _ = dailyShutodwnScheduler.ScheduleDailyShutdown();
             Trace.TraceInformation("The receiver has started.");
-        }
-
-        private void RunDailyShutdownScheduler()
-        {
-            dailyShutodwnScheduler.UpdateShutdownHistory();
-            dailyShutodwnScheduler.ScheduleDailyShutdown().ConfigureAwait(false);
         }
 
         public void Stop()

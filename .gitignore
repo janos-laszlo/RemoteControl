@@ -90,3 +90,5 @@ RemoteControlService/RemoteControlService.UnitTests/bin
 RemoteControlService/RemoteControlService.UnitTests/obj
 RemoteControlService/.vs
 RemoteControlService/packages
+RemoteControlService/ServiceSetup/Debug
+RemoteControlService/ServiceSetup/Release

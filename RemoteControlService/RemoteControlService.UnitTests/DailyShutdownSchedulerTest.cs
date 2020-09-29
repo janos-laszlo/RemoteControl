@@ -1,119 +1,76 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RemoteControlService.ReceiverDevice.DailyShutdown;
+using RemoteControlService.UniTests.Mocks;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RemoteControlService.UniTests
 {
     [TestClass]
     public class DailyShutdownSchedulerTest
     {
-        private Mock<ISystemInformation> sysInfoMock;
         private DailyShutdownScheduler dailyShutdownScheduler;
+        private Mock<ISystemInformation> sysInfoMock;
         private ShutdownHistoryStorage shutdownHistoryStorage;
+        private CmdLinePowerControllerMock powerController;
 
         [TestInitialize]
         public void Init()
         {
-            shutdownHistoryStorage = new ShutdownHistoryStorage();
+            File.Delete(ShutdownHistoryStorage.SHUTDOWN_HISTORY_FILE);
             sysInfoMock = new Mock<ISystemInformation>();
-            dailyShutdownScheduler = new DailyShutdownScheduler(shutdownHistoryStorage, new CmdLinePowerControllerMock(), sysInfoMock.Object);
+            shutdownHistoryStorage = new ShutdownHistoryStorage();
+            powerController = new CmdLinePowerControllerMock();
+            dailyShutdownScheduler = new DailyShutdownScheduler(shutdownHistoryStorage, powerController, sysInfoMock.Object);
         }
 
-        [TestCleanup]
-        public void CleanupTest()
+        [ClassCleanup]
+        public static void CleanClass()
         {
             File.Delete(ShutdownHistoryStorage.SHUTDOWN_HISTORY_FILE);
         }
 
         [TestMethod]
-        public void UpdateShutdownHistory_WhenLastSystemShutdownOccuredBetween10AMAnd5PM_ThenAddedShutdownHistoryStorage()
+        public async Task ScheduleDailyShutdown_WhenLessThan10MinutesTillShutdown_ThenShutdownScheduledImmediatelyWith10MinuteDelay()
         {
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(new DateTime(2020, 9, 26, 22, 10, 0));
-            dailyShutdownScheduler.UpdateShutdownHistory();
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(new DateTime(2020, 9, 26, 23, 10, 0));
-            dailyShutdownScheduler.UpdateShutdownHistory();
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(new DateTime(2020, 9, 26, 0, 10, 0));
-            dailyShutdownScheduler.UpdateShutdownHistory();
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(new DateTime(2020, 9, 26, 1, 10, 0));
-            dailyShutdownScheduler.UpdateShutdownHistory();
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(new DateTime(2020, 9, 26, 2, 10, 0));
-            dailyShutdownScheduler.UpdateShutdownHistory();
-
-            var times = shutdownHistoryStorage.GetAll();
-            Assert.AreEqual(5, times.Count());
-        }
-
-        [TestMethod]
-        public void UpdateShutdownHistory_WhenMoreThan5ShutdownsOccuredBetween10AMAnd5PM_ThenMax5AddedShutdownHistoryStorage()
-        {
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(new DateTime(2020, 9, 26, 0, 10, 0));
-            dailyShutdownScheduler.UpdateShutdownHistory();
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(new DateTime(2020, 9, 26, 1, 10, 0));
-            dailyShutdownScheduler.UpdateShutdownHistory();
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(new DateTime(2020, 9, 26, 2, 10, 0));
-            dailyShutdownScheduler.UpdateShutdownHistory();
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(new DateTime(2020, 9, 26, 3, 10, 0));
-            dailyShutdownScheduler.UpdateShutdownHistory();
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(new DateTime(2020, 9, 26, 13, 10, 0));
-            dailyShutdownScheduler.UpdateShutdownHistory();
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(new DateTime(2020, 9, 26, 4, 10, 0));
-            dailyShutdownScheduler.UpdateShutdownHistory();
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(new DateTime(2020, 9, 26, 22, 10, 0));
-            dailyShutdownScheduler.UpdateShutdownHistory();
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(new DateTime(2020, 9, 26, 23, 10, 0));
-            dailyShutdownScheduler.UpdateShutdownHistory();
-
-            var times = shutdownHistoryStorage.GetAll();
-            Assert.AreEqual(5, times.Count());
-            Assert.IsTrue(times.Contains(new DateTime(2020, 9, 26, 23, 10, 0)));
-            Assert.IsTrue(times.Contains(new DateTime(2020, 9, 26, 2, 10, 0)));
-            Assert.IsTrue(!times.Contains(new DateTime(2020, 9, 26, 1, 10, 0)));
-            Assert.IsTrue(!times.Contains(new DateTime(2020, 9, 26, 0, 10, 0)));
-            Assert.IsTrue(!times.Contains(new DateTime(2020, 9, 26, 13, 10, 0)));
-        }
-
-        [TestMethod]
-        public void ScheduleDailyShutdown_WhenLessThan10MinutesTillShutdown_ThenShutdownScheduledImmediatelyWith10MinuteDelay()
-        {
-            var shutdownHistoryMock = new Mock<IShutdownHistoryStorage>();
             var d = DateTime.Now;
-            shutdownHistoryMock.Setup(s => s.GetAll()).Returns(new List<DateTime>
-            {
-                d.AddMinutes(1),
-                d.AddMinutes(2),
-                d.AddMinutes(3),
-                d.AddMinutes(4),
-                d.AddMinutes(5),
-            });
+            var d1 = d.AddDays(-1);
+            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(d.AddSeconds(2));
+            shutdownHistoryStorage.Add(d.AddSeconds(2));
+            shutdownHistoryStorage.Add(d1.AddSeconds(3));
+            shutdownHistoryStorage.Add(d1.AddSeconds(4));
+            shutdownHistoryStorage.Add(d.AddSeconds(5));
+            shutdownHistoryStorage.Add(d1.AddSeconds(6));
 
-            var dailyShutdownScheduler1 = new DailyShutdownScheduler(shutdownHistoryMock.Object, new CmdLinePowerControllerMock(), sysInfoMock.Object);
-            dailyShutdownScheduler1.ScheduleDailyShutdown();
+            await dailyShutdownScheduler.ScheduleDailyShutdown();
 
-            // Check output.
+            Assert.IsTrue(powerController.SecondsTillShutdown <= 600);
+            Assert.IsTrue(powerController.SecondsTillShutdown >= 540);
         }
 
         [TestMethod]
-        public void ScheduleDailyShutdown_WhenMoreThan10MinutesTillShutdown_ThenShutdownScheduled10MinutesBeforeShuttingDOwn()
+        public async Task ScheduleDailyShutdown_WhenMoreThan10MinutesTillShutdown_ThenShutdownScheduled10MinutesBeforeShuttingDOwn()
         {
-            var shutdownHistoryMock = new Mock<IShutdownHistoryStorage>();
             var d = DateTime.Now;
-            shutdownHistoryMock.Setup(s => s.GetAll()).Returns(new List<DateTime>
-            {
-                d.AddMinutes(10),
-                d.AddMinutes(10),
-                d.AddMinutes(10),
-                d.AddMinutes(12),
-                d.AddMinutes(13),
-            });
+            var d1 = d.AddDays(-2);
+            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(d.AddMinutes(11));
+            shutdownHistoryStorage.Add(d.AddMinutes(10).AddSeconds(4));
+            shutdownHistoryStorage.Add(d.AddMinutes(10).AddSeconds(8));
 
-            var dailyShutdownScheduler1 = new DailyShutdownScheduler(shutdownHistoryMock.Object, new CmdLinePowerControllerMock(), sysInfoMock.Object);
-            dailyShutdownScheduler1.ScheduleDailyShutdown();
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            await dailyShutdownScheduler.ScheduleDailyShutdown();
+            stopwatch.Stop();
 
-            // Check output.
+            Assert.IsTrue(stopwatch.ElapsedMilliseconds <= 6100);
+            Assert.IsTrue(stopwatch.ElapsedMilliseconds > 5000);
+            Assert.IsTrue(powerController.SecondsTillShutdown <= 600);
+            Assert.IsTrue(powerController.SecondsTillShutdown > 540);
         }
     }
 }
