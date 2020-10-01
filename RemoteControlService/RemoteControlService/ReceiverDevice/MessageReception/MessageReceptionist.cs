@@ -209,7 +209,7 @@ namespace RemoteControlService.ReceiverDevice.MessageReception
             {
                 handler.Shutdown(SocketShutdown.Both);
             }
-            catch(SocketException ex)
+            catch (SocketException ex)
             {
                 Trace.WriteLine($"Error closing handler: {ex}");
             }

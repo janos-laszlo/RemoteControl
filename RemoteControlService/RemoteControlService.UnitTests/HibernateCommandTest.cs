@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RemoteControlService.ReceiverDevice.Commands;
 using RemoteControlService.UniTests.Mocks;
 

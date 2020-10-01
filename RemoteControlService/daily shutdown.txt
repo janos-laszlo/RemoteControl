@@ -33,6 +33,4 @@ class DailyShutdownScheduler
 		if it occured between 10PM and 6AM then
 			AddShutdownToHistory
 			
-onstartup -> UpdateShutdownHistory() and ScheduleDailyShutodwn()
-
-shutdownHistory
+onstartup -> ScheduleDailyShutodwn()

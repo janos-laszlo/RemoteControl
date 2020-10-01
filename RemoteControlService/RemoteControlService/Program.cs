@@ -18,7 +18,7 @@ namespace RemoteControlService
             {
                 new RemoteControlService()
             };
-            ServiceBase.Run(ServicesToRun);            
+            ServiceBase.Run(ServicesToRun);
 #endif
         }
     }

@@ -1,6 +1,4 @@
 ﻿using RemoteControlService.ReceiverDevice.Commands;
-using System;
-using System.Diagnostics;
 
 namespace RemoteControlService.ReceiverDevice.Controllers
 {

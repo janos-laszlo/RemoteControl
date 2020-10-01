@@ -3,10 +3,8 @@ using Moq;
 using RemoteControlService.ReceiverDevice.DailyShutdown;
 using RemoteControlService.UniTests.Mocks;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RemoteControlService.UniTests
@@ -58,7 +56,7 @@ namespace RemoteControlService.UniTests
         {
             var d = DateTime.Now;
             var d1 = d.AddDays(-2);
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(d.AddMinutes(11));
+            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(d.AddMinutes(10).AddSeconds(4));
             shutdownHistoryStorage.Add(d.AddMinutes(10).AddSeconds(4));
             shutdownHistoryStorage.Add(d.AddMinutes(10).AddSeconds(8));
 

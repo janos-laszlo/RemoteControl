@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-
-namespace RemoteControlService.ReceiverDevice.Commands
-{    
+﻿namespace RemoteControlService.ReceiverDevice.Commands
+{
     class SetVolumeCommand : ICommand
     {
         readonly int percent;

@@ -17,7 +17,7 @@ namespace RemoteControlService.ReceiverDevice
                 WorkingDirectory = Directory.GetCurrentDirectory(),
                 Arguments = arguments
             };
-            
+
             process.StartInfo = startInfo;
             process.Start();
             process.WaitForExit();

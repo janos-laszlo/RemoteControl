@@ -4,7 +4,6 @@ using RemoteControlService.ReceiverDevice.DailyShutdown;
 using RemoteControlService.ReceiverDevice.MessageReception;
 using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace RemoteControlService.ReceiverDevice
 {
