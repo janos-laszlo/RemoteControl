@@ -3,6 +3,7 @@ package com.john_inc.remotecontrol;
 import com.google.gson.Gson;
 import com.john_inc.remotecontrol.commands.Command;
 import com.john_inc.remotecontrol.commands.CommandDTO;
+import com.john_inc.remotecontrol.listeners.OnReceiverFoundListener;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

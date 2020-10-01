@@ -1,13 +1,9 @@
 package com.john_inc.remotecontrol;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -37,8 +33,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private ArrayList<String> receiverNames = new ArrayList<>();
     private Receiver selectedReceiver;
     private Transmitter transmitter = new Transmitter();
-    private BroadcastReceiver broadcastReceiver = createBroadcastReceiver();
-    private AtomicBoolean receiverFinderThreadLock = new AtomicBoolean(false);
+    private NetworkEvents networkEvents = new NetworkEvents(this);
+    private AtomicBoolean threadLock = new AtomicBoolean(false);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,49 +50,57 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onStart() {
         super.onStart();
-        listenToWifiStateChanges();
-    }
-
-    private void listenToWifiStateChanges() {
-        IntentFilter intentFilter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
-        registerReceiver(broadcastReceiver, intentFilter);
+        networkEvents.whenNetworkChanges(this::updateReceivers);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterReceiver(broadcastReceiver);
+        networkEvents.unregister();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         write();
     }
 
-    private BroadcastReceiver createBroadcastReceiver() {
-        return new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                int wifiStateExtra = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN);
+    private void updateReceivers() {
+        if (threadLock.get()) {
+            return;
+        }
 
-                switch (wifiStateExtra) {
-                    case WifiManager.WIFI_STATE_ENABLED:
-                        setErrorMessage("");
-                        while (!isConnectedViaWifi()) {
-                            sleepOneSecond();
-                        }
-                        findReceivers();
-                        break;
-                    case WifiManager.WIFI_STATE_DISABLED:
-                        setErrorMessage("No WIFI connection available");
-                        break;
-                }
+        threadLock.set(true);
+        new Thread(() -> {
+            if (connectedToWifiAfterMaxFiveSeconds()) {
+                setErrorMessage("");
+            } else {
+                threadLock.set(false);
+                setErrorMessage("No WIFI connection available");
+                return;
             }
-        };
+
+            try {
+                transmitter.findReceivers(receiver -> {
+                    if (!receiverAlreadyAdded(receiver))
+                        receivers.add(receiver);
+                    loadSpinnerData();
+                });
+            } catch (Exception e) {
+                setErrorMessage(e.getMessage());
+            } finally {
+                threadLock.set(false);
+            }
+        }).start();
     }
 
-    private void sleepOneSecond() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    private boolean connectedToWifiAfterMaxFiveSeconds() {
+        int waitingCycles = 0;
+        while (!isConnectedViaWifi() && waitingCycles++ < 5) {
+            sleepOneSecond();
         }
+
+        return waitingCycles < 5;
     }
 
     private boolean isConnectedViaWifi() {
@@ -107,21 +111,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return mWifi.isConnected();
     }
 
-    private void findReceivers() {
-        if (!receiverFinderThreadLock.get()) {
-            receiverFinderThreadLock.set(true);
-            new Thread(() -> {
-                try {
-                    transmitter.findReceivers(receiver -> {
-                        if (!receiverAlreadyAdded(receiver))
-                            receivers.add(receiver);
-                        loadSpinnerData();
-                    });
-                    receiverFinderThreadLock.set(false);
-                } catch (Exception e) {
-                    setErrorMessage(e.getMessage());
-                }
-            }).start();
+    private void sleepOneSecond() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -233,8 +227,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                     @Override
                     public void onStopTrackingTouch(final SeekBar seekBar) {
-//                        sendCommand(new SetVolumeCommandDTO(String.valueOf(seekBar.getProgress())));
-//                        System.out.println("stop tracking, progress = " + seekBar.getProgress());
                     }
                 }
         );
@@ -246,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         volumeText.setText(getString(R.string.volume, seekBar.getProgress()));
     }
 
-    private void AddToVolume(int volumeToAdd){
+    private void AddToVolume(int volumeToAdd) {
         SeekBar seekBar = findViewById(R.id.seekBar_volume);
         int newProgress = Math.max(0, seekBar.getProgress() + volumeToAdd);
         newProgress = Math.min(100, newProgress);

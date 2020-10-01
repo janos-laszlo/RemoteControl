@@ -2,7 +2,7 @@ package com.john_inc.remotecontrol;
 
 import java.net.InetAddress;
 
-class Receiver {
+public class Receiver {
     private String name;
     private InetAddress ipAddress;
 
