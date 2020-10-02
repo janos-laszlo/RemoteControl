@@ -1,17 +1,16 @@
 ﻿using RemoteControlService.ReceiverDevice;
 using System.ServiceProcess;
-using System.Threading;
 
 namespace RemoteControlService
 {
     public partial class RemoteControlService : ServiceBase
     {
-        readonly Thread t;
+        Receiver receiver;
 
         public RemoteControlService()
         {
             InitializeComponent();
-            t = new Thread(Setup);
+            CanHandlePowerEvent = true;
         }
 
         public void OnDebug()
@@ -21,18 +20,31 @@ namespace RemoteControlService
 
         protected override void OnStart(string[] args)
         {
-            t.Start();
+            base.OnStart(args);
+            receiver = new Receiver();
+            receiver.Start();
         }
 
         protected override void OnStop()
         {
-            t.Join();
+            base.OnStop();
+            receiver?.Stop();
         }
-
-        private void Setup()
+        protected override bool OnPowerEvent(PowerBroadcastStatus powerStatus)
         {
-            var receiver = new Receiver();
-            receiver.Start();
+            switch (powerStatus)
+            {
+                case PowerBroadcastStatus.ResumeSuspend:
+                    receiver.Start();
+                    break;
+                case PowerBroadcastStatus.Suspend:
+                    receiver.Stop();
+                    break;
+                default:
+                    break;
+            }
+
+            return base.OnPowerEvent(powerStatus);
         }
     }
 }
