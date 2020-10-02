@@ -16,7 +16,7 @@ namespace RemoteControlService.ReceiverDevice.Commands
 
         public void Execute()
         {
-            powerController.ScheduleShutdown(seconds);
+            powerController.ScheduleShutdown(seconds, overrideScheduledShutdown: true);
         }
     }
 }

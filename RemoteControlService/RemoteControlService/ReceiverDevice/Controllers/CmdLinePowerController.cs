@@ -9,9 +9,10 @@ namespace RemoteControlService.ReceiverDevice.Controllers
             CmdLineUtils.InvokeCommandLineCommand("/C SHUTDOWN /A");
         }
 
-        public void ScheduleShutdown(int seconds)
+        public void ScheduleShutdown(int seconds, bool overrideScheduledShutdown)
         {
-            CmdLineUtils.InvokeCommandLineCommand($"/C SHUTDOWN /A & SHUTDOWN /S /T {seconds}");
+            string arguments = overrideScheduledShutdown ? $"/C SHUTDOWN /A & SHUTDOWN /S /T {seconds}" : $"SHUTDOWN /S /T {seconds}";
+            CmdLineUtils.InvokeCommandLineCommand(arguments);
         }
 
         public void Hibernate()

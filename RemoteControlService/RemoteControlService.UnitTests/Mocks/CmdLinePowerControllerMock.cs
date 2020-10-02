@@ -18,7 +18,7 @@ namespace RemoteControlService.UniTests.Mocks
             ++NumOfHibernations;
         }
 
-        public void ScheduleShutdown(int seconds)
+        public void ScheduleShutdown(int seconds, bool overrideScheduledShutdown = false)
         {
             SecondsTillShutdown = seconds;
         }

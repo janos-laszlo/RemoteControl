@@ -40,9 +40,9 @@ namespace RemoteControlService.ReceiverDevice.DailyShutdown
             var now = DateTime.Now;
             TimeSpan timeTillShutdownWillBeScheduled = TimeSpan.FromTicks(Math.Max((forecastedShutdownDateTime - now - TimeSpan.FromMinutes(10)).Ticks, TimeSpan.Zero.Ticks));
             DateTime actualShutdownDatetime = now.Add(timeTillShutdownWillBeScheduled).AddMinutes(10);
-            Trace.WriteLine($"Shutdown was scheduled to happen at: {actualShutdownDatetime}");
+            Trace.TraceInformation($"Shutdown was scheduled to happen at: {actualShutdownDatetime}");
             await Task.Delay(timeTillShutdownWillBeScheduled);
-            powerController.ScheduleShutdown(seconds: (int)(actualShutdownDatetime - DateTime.Now).TotalSeconds);
+            powerController.ScheduleShutdown(seconds: (int)(actualShutdownDatetime - DateTime.Now).TotalSeconds, overrideScheduledShutdown: false);
         }
 
         private void UpdateShutdownHistory()

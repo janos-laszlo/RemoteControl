@@ -37,7 +37,7 @@ namespace RemoteControlService.ReceiverDevice.MessageReception
                 ip = GetMyIP();
             }
 
-            Trace.TraceInformation($"My IP:{ip}");
+            Trace.WriteLine($"My IP:{ip}");
 
             localEndPoint = new IPEndPoint(ip, Port);
         }
