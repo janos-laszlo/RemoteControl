@@ -13,6 +13,7 @@ namespace RemoteControlService.ReceiverDevice.DailyShutdown
         private readonly IShutdownHistoryStorage shutdownHistoryStorage;
         private readonly IPowerController powerController;
         private readonly ISystemInformation systemInformation;
+        private readonly TimeSpan MIN_TIME = new TimeSpan(22, 0, 0);
 
         public DailyShutdownScheduler(IShutdownHistoryStorage shutdownHistoryStorage,
                                       IPowerController powerController,
@@ -33,7 +34,7 @@ namespace RemoteControlService.ReceiverDevice.DailyShutdown
                 return;
             }
 
-            TimeSpan shutdownHourAndMinute = CalculateAverageShutdownTimeFromShudownHistory(shutdownHistory);
+            TimeSpan shutdownHourAndMinute = CalculateAverageTimeForTimeInterval(shutdownHistory.Select(d => new TimeSpan(d.Hour, d.Minute, d.Second)), MIN_TIME);
             DateTime forecastedShutdownDateTime = GetNextClosestShutdownDatetime(shutdownHourAndMinute);
 
             var now = DateTime.Now;
@@ -62,18 +63,25 @@ namespace RemoteControlService.ReceiverDevice.DailyShutdown
             shutdownHistoryStorage.Add(lastSystemShutdown);
         }
 
-        private TimeSpan CalculateAverageShutdownTimeFromShudownHistory(IEnumerable<DateTime> shutdownHistory)
+        public static TimeSpan CalculateAverageTimeForTimeInterval(IEnumerable<TimeSpan> times, TimeSpan minTime)
         {
-            var sortedShutdownHistory = new SortedSet<TimeSpan>(shutdownHistory.Select(d => new TimeSpan(d.Hour, d.Minute, d.Second)));
-            long averageShutdownHourInTicks = 0;
-            for (int i = 1; i < sortedShutdownHistory.Count; i++)
+            long average = 0;
+            foreach (var time in times)
             {
-                averageShutdownHourInTicks += (sortedShutdownHistory.ElementAt(i) - sortedShutdownHistory.ElementAt(0)).Ticks % TimeSpan.TicksPerDay;
+                average += GetTicksFromMinTimeTillTime(minTime, time) / times.Count();
             }
 
-            averageShutdownHourInTicks /= sortedShutdownHistory.Count;
+            return TimeSpan.FromTicks((minTime.Ticks + average) % TimeSpan.TicksPerDay);
+        }
 
-            return TimeSpan.FromTicks((sortedShutdownHistory.ElementAt(0).Ticks + averageShutdownHourInTicks) % TimeSpan.TicksPerDay);
+        private static long GetTicksFromMinTimeTillTime(TimeSpan minTime, TimeSpan time)
+        {
+            if (time < minTime)
+            {
+                return (TimeSpan.FromDays(1) - minTime + time).Ticks;
+            }
+
+            return (time - minTime).Ticks;
         }
 
         private DateTime GetNextClosestShutdownDatetime(TimeSpan shutdownTime)
