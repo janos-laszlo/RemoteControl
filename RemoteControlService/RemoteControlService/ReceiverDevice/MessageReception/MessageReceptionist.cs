@@ -75,13 +75,13 @@ namespace RemoteControlService.ReceiverDevice.MessageReception
 
         public void Stop()
         {
+            shouldRun = false;
             StopMessageListener();
             StopNameLookupReceptionist();
         }
 
         private void StopMessageListener()
         {
-            shouldRun = false;
             allDone.Set();
             WaitForMessageListenerThread();
         }
