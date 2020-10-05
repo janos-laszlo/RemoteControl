@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace RemoteControlService.ReceiverDevice
 {
-    class CommandFactory
+    public class CommandFactory
     {
         static readonly Dictionary<string, Func<string, ICommand>> CommandTypes = new Dictionary<string, Func<string, ICommand>>
         {

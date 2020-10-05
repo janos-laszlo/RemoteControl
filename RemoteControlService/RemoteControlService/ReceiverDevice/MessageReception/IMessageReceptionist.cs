@@ -2,7 +2,7 @@
 
 namespace RemoteControlService.ReceiverDevice.MessageReception
 {
-    interface IMessageReceptionist
+    public interface IMessageReceptionist
     {
         void Start();
         void Stop();

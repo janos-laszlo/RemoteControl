@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace RemoteControlService.ReceiverDevice.DailyShutdown
 {
-    public class DailyShutdownScheduler : IDailyShutodwnScheduler
+    public class DailyShutdownScheduler : IDailyShutdownScheduler
     {
         private const int HISTORY_MAX_SIZE = 5;
+        private readonly TimeSpan MIN_TIME = new TimeSpan(22, 0, 0);
         private readonly IShutdownHistoryStorage shutdownHistoryStorage;
         private readonly IPowerController powerController;
         private readonly ISystemInformation systemInformation;
-        private readonly TimeSpan MIN_TIME = new TimeSpan(22, 0, 0);
 
         public DailyShutdownScheduler(IShutdownHistoryStorage shutdownHistoryStorage,
                                       IPowerController powerController,

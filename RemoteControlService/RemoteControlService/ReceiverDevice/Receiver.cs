@@ -1,5 +1,4 @@
 ﻿using RemoteControlService.ReceiverDevice.Commands;
-using RemoteControlService.ReceiverDevice.Controllers;
 using RemoteControlService.ReceiverDevice.DailyShutdown;
 using RemoteControlService.ReceiverDevice.MessageReception;
 using System;
@@ -7,33 +6,33 @@ using System.Diagnostics;
 
 namespace RemoteControlService.ReceiverDevice
 {
-    class Receiver
+    public class Receiver
     {
-        private readonly IMessageReceptionist messageReceptioner;
+        private readonly IMessageReceptionist messageReceptionist;
         private readonly CommandFactory commandFactory;
-        private readonly DailyShutdownScheduler dailyShutodwnScheduler;
+        private readonly IDailyShutdownScheduler dailyShutodwnScheduler;
 
-        public Receiver()
+        public Receiver(IMessageReceptionist messageReceptionist,
+                        CommandFactory commandFactory,
+                        IDailyShutdownScheduler dailyShutodwnScheduler)
         {
-            messageReceptioner = new MessageReceptionist();
-            commandFactory = new CommandFactory();
-            dailyShutodwnScheduler = new DailyShutdownScheduler(new ShutdownHistoryStorage(),
-                                                                new CmdLinePowerController(),
-                                                                new SystemInformation());
+            this.messageReceptionist = messageReceptionist;
+            this.commandFactory = commandFactory;
+            this.dailyShutodwnScheduler = dailyShutodwnScheduler;
         }
 
         public void Start()
         {
-            messageReceptioner.MessageReceived += OnMessageReceived;
-            messageReceptioner.Start();
+            messageReceptionist.MessageReceived += OnMessageReceived;
+            messageReceptionist.Start();
             _ = dailyShutodwnScheduler.ScheduleDailyShutdown();
             Trace.WriteLine("The receiver has started.");
         }
 
         public void Stop()
         {
-            messageReceptioner.MessageReceived -= OnMessageReceived;
-            messageReceptioner.Stop();
+            messageReceptionist.MessageReceived -= OnMessageReceived;
+            messageReceptionist.Stop();
             Trace.WriteLine("The receiver has stopped.");
         }
 

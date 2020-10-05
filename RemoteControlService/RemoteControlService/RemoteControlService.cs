@@ -1,16 +1,18 @@
 ﻿using RemoteControlService.ReceiverDevice;
+
 using System.ServiceProcess;
 
 namespace RemoteControlService
 {
     public partial class RemoteControlService : ServiceBase
     {
-        Receiver receiver;
+        readonly Receiver receiver;
 
-        public RemoteControlService()
+        public RemoteControlService(Receiver receiver)
         {
             InitializeComponent();
             CanHandlePowerEvent = true;
+            this.receiver = receiver;
         }
 
         public void OnDebug()
@@ -21,7 +23,6 @@ namespace RemoteControlService
         protected override void OnStart(string[] args)
         {
             base.OnStart(args);
-            receiver = new Receiver();
             receiver.Start();
         }
 

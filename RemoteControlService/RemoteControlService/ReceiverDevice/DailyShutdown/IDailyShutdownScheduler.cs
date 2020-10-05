@@ -2,7 +2,7 @@
 
 namespace RemoteControlService.ReceiverDevice.DailyShutdown
 {
-    public interface IDailyShutodwnScheduler
+    public interface IDailyShutdownScheduler
     {
         Task ScheduleDailyShutdown();
     }

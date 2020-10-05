@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace RemoteControlService.ReceiverDevice.MessageReception
 {
-    class MessageReceptionist : IMessageReceptionist
+    public class MessageReceptionist : IMessageReceptionist
     {
         readonly ManualResetEvent allDone = new ManualResetEvent(false);
         const char MessageTerminator = '\\';
@@ -16,19 +16,85 @@ namespace RemoteControlService.ReceiverDevice.MessageReception
         IPEndPoint localEndPoint;
         Socket listener;
         bool shouldRun = true;
-        Thread commandListenerThread;
+        Thread messageListenerThread;
+        private UdpClient udpClient;
 
         public MessageReceptionist()
         {
             SetLocalEndPoint();
             SubscribeToNetworkAddressChangedEvent();
+        }
+
+        public void Start()
+        {
+            StartMessageListener();
             StartNameLookupReceptionist();
         }
 
+        private void StartMessageListener()
+        {
+            messageListenerThread = new Thread(() =>
+            {
+                // Create a TCP/IP socket.  
+                listener = new Socket(addressFamily: localEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+
+                // Bind the socket to the local endpoint and listen for incoming connections.  
+                try
+                {
+                    listener.Bind(localEndPoint);
+                    listener.Listen(10);
+
+                    shouldRun = true;
+                    while (shouldRun)
+                    {
+                        // Set the event to nonsignaled state.  
+                        allDone.Reset();
+
+                        // Start an asynchronous socket to listen for connections.  
+                        Trace.WriteLine("Listening for a connection...");
+                        listener.BeginAccept(
+                            new AsyncCallback(AcceptCallback),
+                            listener);
+
+                        // Wait until a connection is made before continuing.
+                        allDone.WaitOne();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e.ToString());
+                }
+                finally
+                {
+                    listener.Dispose();
+                }
+            });
+
+            messageListenerThread.Start();
+        }
+
+        public void Stop()
+        {
+            StopMessageListener();
+            StopNameLookupReceptionist();
+        }
+
+        private void StopMessageListener()
+        {
+            shouldRun = false;
+            allDone.Set();
+            WaitForMessageListenerThread();
+        }
+
+        private void StopNameLookupReceptionist()
+        {
+            udpClient.Close();
+        }
+
+        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
+
         private void SetLocalEndPoint()
         {
-            Trace.WriteLine("Initializing.");
-
             IPAddress ip = GetMyIP();
             while (!IPAddressValid(ip))
             {
@@ -68,10 +134,16 @@ namespace RemoteControlService.ReceiverDevice.MessageReception
 
         private void AddressChangedCallback(object sender, EventArgs e)
         {
-            if (!localEndPoint.Address.Equals(GetMyIP()))
+            IPAddress myIP = GetMyIP();
+            if (!IPAddressValid(myIP) || localEndPoint.Address.Equals(myIP))
             {
-                Trace.WriteLine("Address changed");
-                SetLocalEndPoint();
+                return;
+            }
+
+            Trace.WriteLine("Address changed");
+            SetLocalEndPoint();
+            if (shouldRun)
+            {
                 Restart();
             }
         }
@@ -82,64 +154,13 @@ namespace RemoteControlService.ReceiverDevice.MessageReception
             Start();
         }
 
-        public void Stop()
+        private void WaitForMessageListenerThread()
         {
-            shouldRun = false;
-            allDone.Set();
-            WaitForCommandListenerThread();
-        }
-
-        private void WaitForCommandListenerThread()
-        {
-            if (commandListenerThread != null)
+            if (messageListenerThread != null)
             {
-                commandListenerThread.Join();
+                messageListenerThread.Join();
             }
         }
-
-        public void Start()
-        {
-            commandListenerThread = new Thread(() =>
-            {
-                // Create a TCP/IP socket.  
-                listener = new Socket(addressFamily: localEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
-                // Bind the socket to the local endpoint and listen for incoming connections.  
-                try
-                {
-                    listener.Bind(localEndPoint);
-                    listener.Listen(10);
-
-                    shouldRun = true;
-                    while (shouldRun)
-                    {
-                        // Set the event to nonsignaled state.  
-                        allDone.Reset();
-
-                        // Start an asynchronous socket to listen for connections.  
-                        Trace.WriteLine("Listening for a connection...");
-                        listener.BeginAccept(
-                            new AsyncCallback(AcceptCallback),
-                            listener);
-
-                        // Wait until a connection is made before continuing.
-                        allDone.WaitOne();
-                    }
-                }
-                catch (Exception e)
-                {
-                    Trace.WriteLine(e.ToString());
-                }
-                finally
-                {
-                    listener.Dispose();
-                }
-            });
-
-            commandListenerThread.Start();
-        }
-
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
         private void AcceptCallback(IAsyncResult ar)
         {
@@ -229,37 +250,40 @@ namespace RemoteControlService.ReceiverDevice.MessageReception
             new Thread(() =>
             {
                 Trace.WriteLine("Listening for name lookup");
-                using (var server = new UdpClient(Port))
+                using (udpClient = new UdpClient(Port))
                 {
                     var clientEndpoint = new IPEndPoint(IPAddress.Any, 0);
 
-                    while (true)
+                    while (shouldRun)
                     {
-                        TryListeningAndRespondingToNameLookup(server, clientEndpoint);
+                        TryListeningAndRespondingToNameLookup(udpClient, clientEndpoint);
                     }
                 }
             }).Start();
         }
 
-        private static void TryListeningAndRespondingToNameLookup(UdpClient server, IPEndPoint clientEndpoint)
+        private void TryListeningAndRespondingToNameLookup(UdpClient udpClient, IPEndPoint clientEndpoint)
         {
             try
             {
-                ListenAndRespondToNameLookup(server, clientEndpoint);
+                ListenAndRespondToNameLookup(udpClient, clientEndpoint);
             }
             catch (Exception e)
             {
-                Trace.TraceError($"Error occured while listening and responding to name lookup: {e}");
+                if (shouldRun)
+                {
+                    Trace.TraceError($"Error occured while listening and responding to name lookup: {e.Message}");
+                }
             }
         }
 
-        private static void ListenAndRespondToNameLookup(UdpClient server, IPEndPoint clientEndpoint)
+        private static void ListenAndRespondToNameLookup(UdpClient udpClient, IPEndPoint clientEndpoint)
         {
-            var clientRequestBytes = server.Receive(ref clientEndpoint);
+            var clientRequestBytes = udpClient.Receive(ref clientEndpoint);
             var clientRequestMessage = Encoding.ASCII.GetString(clientRequestBytes);
             Trace.WriteLine($"Received \"{clientRequestMessage}\" from {clientEndpoint.Address}");
             var response = Encoding.ASCII.GetBytes(Environment.MachineName);
-            server.Send(response, response.Length, clientEndpoint);
+            udpClient.Send(response, response.Length, clientEndpoint);
         }
     }
 }
