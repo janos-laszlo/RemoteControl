@@ -15,7 +15,7 @@ namespace RemoteControlService.ReceiverDevice.MessageReception
         const int Port = 11000;
         IPEndPoint localEndPoint;
         Socket listener;
-        bool shouldRun = true;
+        bool shouldRun = false;
         Thread messageListenerThread;
         private UdpClient udpClient;
 
@@ -43,15 +43,14 @@ namespace RemoteControlService.ReceiverDevice.MessageReception
                 {
                     listener.Bind(localEndPoint);
                     listener.Listen(10);
-
+                    Trace.WriteLine("Listening for a connection...");
                     shouldRun = true;
                     while (shouldRun)
                     {
                         // Set the event to nonsignaled state.  
                         allDone.Reset();
 
-                        // Start an asynchronous socket to listen for connections.  
-                        Trace.WriteLine("Listening for a connection...");
+                        // Start an asynchronous socket to listen for connections.                          
                         listener.BeginAccept(
                             new AsyncCallback(AcceptCallback),
                             listener);
