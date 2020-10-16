@@ -27,6 +27,7 @@ namespace RemoteControlService.ReceiverDevice.MessageReception
 
         public void Start()
         {
+            shouldRun = true;
             StartMessageListener();
             StartNameLookupReceptionist();
         }
@@ -44,7 +45,6 @@ namespace RemoteControlService.ReceiverDevice.MessageReception
                     listener.Bind(localEndPoint);
                     listener.Listen(10);
                     Trace.WriteLine("Listening for a connection...");
-                    shouldRun = true;
                     while (shouldRun)
                     {
                         // Set the event to nonsignaled state.  
@@ -79,6 +79,8 @@ namespace RemoteControlService.ReceiverDevice.MessageReception
             StopNameLookupReceptionist();
         }
 
+        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
+
         private void StopMessageListener()
         {
             allDone.Set();
@@ -89,9 +91,7 @@ namespace RemoteControlService.ReceiverDevice.MessageReception
         {
             udpClient.Close();
         }
-
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
-
+        
         private void SetLocalEndPoint()
         {
             IPAddress ip = GetMyIP();
