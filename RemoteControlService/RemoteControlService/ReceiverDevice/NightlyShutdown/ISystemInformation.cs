@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RemoteControlService.ReceiverDevice.DailyShutdown
+namespace RemoteControlService.ReceiverDevice.NightlyShutdown
 {
     public interface ISystemInformation
     {

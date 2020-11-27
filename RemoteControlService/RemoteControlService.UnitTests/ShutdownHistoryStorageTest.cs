@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RemoteControlService.ReceiverDevice.DailyShutdown;
+using RemoteControlService.ReceiverDevice.NightlyShutdown;
 using System;
 using System.Collections.Generic;
 using System.IO;

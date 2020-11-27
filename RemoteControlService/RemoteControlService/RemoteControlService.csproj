@@ -107,11 +107,13 @@
     <Compile Include="ReceiverDevice\Commands\HibernateCommand.cs" />
     <Compile Include="ReceiverDevice\Controllers\CmdLinePowerController.cs" />
     <Compile Include="ReceiverDevice\Controllers\CmdLineVolumeController.cs" />
-    <Compile Include="ReceiverDevice\DailyShutdown\DailyShutdownScheduler.cs" />
-    <Compile Include="ReceiverDevice\DailyShutdown\IDailyShutdownScheduler.cs" />
-    <Compile Include="ReceiverDevice\DailyShutdown\IShutdownHistoryStorage.cs" />
-    <Compile Include="ReceiverDevice\DailyShutdown\ISystemInformation.cs" />
-    <Compile Include="ReceiverDevice\DailyShutdown\SystemInformation.cs" />
+    <Compile Include="ReceiverDevice\NightlyShutdown\NightlyShutdownScheduler.cs" />
+    <Compile Include="ReceiverDevice\NightlyShutdown\IShutdownScheduler.cs" />
+    <Compile Include="ReceiverDevice\NightlyShutdown\IShutdownCalculator.cs" />
+    <Compile Include="ReceiverDevice\NightlyShutdown\IShutdownHistoryStorage.cs" />
+    <Compile Include="ReceiverDevice\NightlyShutdown\ISystemInformation.cs" />
+    <Compile Include="ReceiverDevice\NightlyShutdown\AverageTimeShutdownCalculator.cs" />
+    <Compile Include="ReceiverDevice\NightlyShutdown\SystemInformation.cs" />
     <Compile Include="ReceiverDevice\MessageReception\IMessageReceptionist.cs" />
     <Compile Include="ReceiverDevice\JSONUtils.cs" />
     <Compile Include="ReceiverDevice\DTOs\CommandDTO.cs" />
@@ -123,7 +125,7 @@
     <Compile Include="ReceiverDevice\Commands\ShutdownCommand.cs" />
     <Compile Include="ReceiverDevice\DTOs\ShutdownCommandDTO.cs" />
     <Compile Include="ReceiverDevice\MessageReception\StateObject.cs" />
-    <Compile Include="ReceiverDevice\DailyShutdown\ShutdownHistoryStorage.cs" />
+    <Compile Include="ReceiverDevice\NightlyShutdown\ShutdownHistoryStorage.cs" />
     <Compile Include="RemoteControlService.cs">
       <SubType>Component</SubType>
     </Compile>

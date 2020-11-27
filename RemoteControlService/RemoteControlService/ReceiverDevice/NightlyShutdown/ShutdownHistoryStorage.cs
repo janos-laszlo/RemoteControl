@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace RemoteControlService.ReceiverDevice.DailyShutdown
+namespace RemoteControlService.ReceiverDevice.NightlyShutdown
 {
     public class ShutdownHistoryStorage : IShutdownHistoryStorage
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using RemoteControlService.ReceiverDevice.DailyShutdown;
+using RemoteControlService.ReceiverDevice.NightlyShutdown;
 using RemoteControlService.UniTests.Mocks;
 using System;
 using System.Diagnostics;
@@ -10,12 +10,13 @@ using System.Threading.Tasks;
 namespace RemoteControlService.UniTests
 {
     [TestClass]
-    public class DailyShutdownSchedulerTest
+    public class NightlyShutdownSchedulerTest
     {
-        private DailyShutdownScheduler dailyShutdownScheduler;
+        private NightlyShutdownScheduler nightlyShutdownScheduler;
         private Mock<ISystemInformation> sysInfoMock;
         private ShutdownHistoryStorage shutdownHistoryStorage;
         private CmdLinePowerControllerMock powerController;
+        private IShutdownCalculator shutdownCalculator;
 
         [TestInitialize]
         public void Init()
@@ -24,7 +25,8 @@ namespace RemoteControlService.UniTests
             sysInfoMock = new Mock<ISystemInformation>();
             shutdownHistoryStorage = new ShutdownHistoryStorage();
             powerController = new CmdLinePowerControllerMock();
-            dailyShutdownScheduler = new DailyShutdownScheduler(shutdownHistoryStorage, powerController, sysInfoMock.Object);
+            shutdownCalculator = new AverageTimeShutdownCalculator();
+            nightlyShutdownScheduler = new NightlyShutdownScheduler(shutdownHistoryStorage, powerController, sysInfoMock.Object, shutdownCalculator);
         }
 
         [ClassCleanup]
@@ -34,7 +36,7 @@ namespace RemoteControlService.UniTests
         }
 
         [TestMethod]
-        public async Task ScheduleDailyShutdown_WhenLessThan10MinutesTillShutdown_ThenShutdownScheduledImmediatelyWith10MinuteDelay()
+        public async Task ScheduleShutdown_WhenLessThan10MinutesTillShutdown_ThenShutdownScheduledImmediatelyWith10MinuteDelay()
         {
             var d = DateTime.Now;
             var d1 = d.AddDays(-1);
@@ -45,14 +47,14 @@ namespace RemoteControlService.UniTests
             shutdownHistoryStorage.Add(d.AddSeconds(5));
             shutdownHistoryStorage.Add(d1.AddSeconds(6));
 
-            await dailyShutdownScheduler.ScheduleDailyShutdown();
+            await nightlyShutdownScheduler.ScheduleShutdown();
 
             Assert.IsTrue(powerController.SecondsTillShutdown <= 600);
             Assert.IsTrue(powerController.SecondsTillShutdown >= 540);
         }
 
         [TestMethod]
-        public async Task ScheduleDailyShutdown_WhenMoreThan10MinutesTillShutdown_ThenShutdownScheduled10MinutesBeforeShuttingDOwn()
+        public async Task ScheduleShutdown_WhenMoreThan10MinutesTillShutdown_ThenShutdownScheduled10MinutesBeforeShuttingDOwn()
         {
             var d = DateTime.Now;
             var d1 = d.AddDays(-2);
@@ -62,7 +64,7 @@ namespace RemoteControlService.UniTests
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            await dailyShutdownScheduler.ScheduleDailyShutdown();
+            await nightlyShutdownScheduler.ScheduleShutdown();
             stopwatch.Stop();
 
             Assert.IsTrue(stopwatch.ElapsedMilliseconds <= 6100);

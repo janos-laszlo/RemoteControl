@@ -1,5 +1,5 @@
 ﻿using RemoteControlService.ReceiverDevice.Commands;
-using RemoteControlService.ReceiverDevice.DailyShutdown;
+using RemoteControlService.ReceiverDevice.NightlyShutdown;
 using RemoteControlService.ReceiverDevice.MessageReception;
 using System;
 using System.Diagnostics;
@@ -10,22 +10,22 @@ namespace RemoteControlService.ReceiverDevice
     {
         private readonly IMessageReceptionist messageReceptionist;
         private readonly CommandFactory commandFactory;
-        private readonly IDailyShutdownScheduler dailyShutodwnScheduler;
+        private readonly IShutdownScheduler nightlyShutodwnScheduler;
 
         public Receiver(IMessageReceptionist messageReceptionist,
                         CommandFactory commandFactory,
-                        IDailyShutdownScheduler dailyShutodwnScheduler)
+                        IShutdownScheduler nightlyShutdownScheduler)
         {
             this.messageReceptionist = messageReceptionist;
             this.commandFactory = commandFactory;
-            this.dailyShutodwnScheduler = dailyShutodwnScheduler;
+            this.nightlyShutodwnScheduler = nightlyShutdownScheduler;
         }
 
         public void Start()
         {
             messageReceptionist.MessageReceived += OnMessageReceived;
             messageReceptionist.Start();
-            _ = dailyShutodwnScheduler.ScheduleDailyShutdown();
+            _ = nightlyShutodwnScheduler.ScheduleShutdown();
             Trace.WriteLine("The receiver has started.");
         }
 

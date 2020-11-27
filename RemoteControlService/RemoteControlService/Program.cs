@@ -2,9 +2,8 @@
 using RemoteControlService.ReceiverDevice;
 using RemoteControlService.ReceiverDevice.Commands;
 using RemoteControlService.ReceiverDevice.Controllers;
-using RemoteControlService.ReceiverDevice.DailyShutdown;
+using RemoteControlService.ReceiverDevice.NightlyShutdown;
 using RemoteControlService.ReceiverDevice.MessageReception;
-using System.ServiceProcess;
 
 namespace RemoteControlService
 {
@@ -38,11 +37,12 @@ namespace RemoteControlService
             builder.RegisterType<Receiver>();
             builder.RegisterType<CommandFactory>();
             builder.RegisterType<MessageReceptionist>().As<IMessageReceptionist>();
-            builder.RegisterType<DailyShutdownScheduler>().As<IDailyShutdownScheduler>();
+            builder.RegisterType<NightlyShutdownScheduler>().As<IShutdownScheduler>();
             builder.RegisterType<ShutdownHistoryStorage>().As<IShutdownHistoryStorage>();
             builder.RegisterType<CmdLinePowerController>().As<IPowerController>();
             builder.RegisterType<CmdLineVolumeController>().As<IVolumeController>();
             builder.RegisterType<SystemInformation>().As<ISystemInformation>();
+            builder.RegisterType<AverageTimeShutdownCalculator>().As<IShutdownCalculator>();
             return builder.Build();
         }
     }
