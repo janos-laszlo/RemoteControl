@@ -42,7 +42,7 @@
     <Compile Include="Mocks\CmdLinePowerControllerMock.cs" />
     <Compile Include="NightlyShutdownSchedulerTest.cs" />
     <Compile Include="HibernateCommandTest.cs" />
-    <Compile Include="AverageTimeShutdownCalculatorTest.cs" />
+    <Compile Include="NightlyShutdownCalculatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShutdownHistoryStorageTest.cs" />
   </ItemGroup>

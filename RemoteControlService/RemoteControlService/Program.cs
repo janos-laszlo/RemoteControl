@@ -4,6 +4,7 @@ using RemoteControlService.ReceiverDevice.Commands;
 using RemoteControlService.ReceiverDevice.Controllers;
 using RemoteControlService.ReceiverDevice.NightlyShutdown;
 using RemoteControlService.ReceiverDevice.MessageReception;
+using System.ServiceProcess;
 
 namespace RemoteControlService
 {
@@ -42,7 +43,7 @@ namespace RemoteControlService
             builder.RegisterType<CmdLinePowerController>().As<IPowerController>();
             builder.RegisterType<CmdLineVolumeController>().As<IVolumeController>();
             builder.RegisterType<SystemInformation>().As<ISystemInformation>();
-            builder.RegisterType<AverageTimeShutdownCalculator>().As<IShutdownCalculator>();
+            builder.RegisterType<NightlyShutdownCalculator>().As<IShutdownCalculator>();
             return builder.Build();
         }
     }

@@ -25,7 +25,7 @@ namespace RemoteControlService.UniTests
             sysInfoMock = new Mock<ISystemInformation>();
             shutdownHistoryStorage = new ShutdownHistoryStorage();
             powerController = new CmdLinePowerControllerMock();
-            shutdownCalculator = new AverageTimeShutdownCalculator();
+            shutdownCalculator = new NightlyShutdownCalculator();
             nightlyShutdownScheduler = new NightlyShutdownScheduler(shutdownHistoryStorage, powerController, sysInfoMock.Object, shutdownCalculator);
         }
 
