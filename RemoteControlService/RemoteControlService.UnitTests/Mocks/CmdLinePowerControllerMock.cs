@@ -1,4 +1,5 @@
-﻿using RemoteControlService.ReceiverDevice.Commands;
+﻿using RemoteControlService.Commands;
+using System.Diagnostics;
 
 namespace RemoteControlService.UniTests.Mocks
 {
@@ -20,6 +21,7 @@ namespace RemoteControlService.UniTests.Mocks
 
         public void ScheduleShutdown(int seconds, bool overrideScheduledShutdown = false)
         {
+            Trace.TraceInformation($"Shutdown was scheduled to happen in {seconds} seconds");
             SecondsTillShutdown = seconds;
         }
     }

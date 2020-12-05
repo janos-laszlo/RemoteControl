@@ -1,5 +1,4 @@
-﻿using RemoteControlService.ReceiverDevice;
-
+﻿
 using System.ServiceProcess;
 
 namespace RemoteControlService

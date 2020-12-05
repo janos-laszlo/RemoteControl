@@ -1,11 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using RemoteControlService.ReceiverDevice.NightlyShutdown;
+using RemoteControlService.Commands;
+using RemoteControlService.Commands.CommandFactories;
+using RemoteControlService.Common.TaskScheduling;
+using RemoteControlService.NightlyShutdown;
 using RemoteControlService.UniTests.Mocks;
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace RemoteControlService.UniTests
 {
@@ -14,19 +16,23 @@ namespace RemoteControlService.UniTests
     {
         private NightlyShutdownScheduler nightlyShutdownScheduler;
         private Mock<ISystemInformation> sysInfoMock;
-        private ShutdownHistoryStorage shutdownHistoryStorage;
         private CmdLinePowerControllerMock powerController;
+        private ShutdownHistoryStorage shutdownHistoryStorage;
         private IShutdownCalculator shutdownCalculator;
+        private ITaskScheduler taskScheduler;
+        private IShutdownCommandFactory shutdownCommandFactory;
 
         [TestInitialize]
         public void Init()
         {
             File.Delete(ShutdownHistoryStorage.SHUTDOWN_HISTORY_FILE);
             sysInfoMock = new Mock<ISystemInformation>();
-            shutdownHistoryStorage = new ShutdownHistoryStorage();
             powerController = new CmdLinePowerControllerMock();
+            shutdownHistoryStorage = new ShutdownHistoryStorage();
             shutdownCalculator = new NightlyShutdownCalculator();
-            nightlyShutdownScheduler = new NightlyShutdownScheduler(shutdownHistoryStorage, powerController, sysInfoMock.Object, shutdownCalculator);
+            taskScheduler = new CommonTaskScheduler();
+            shutdownCommandFactory = new ParameterizedShutdownCommandFactory(powerController);
+            nightlyShutdownScheduler = new NightlyShutdownScheduler(shutdownHistoryStorage, sysInfoMock.Object, shutdownCalculator, taskScheduler, shutdownCommandFactory);
         }
 
         [ClassCleanup]
@@ -36,7 +42,7 @@ namespace RemoteControlService.UniTests
         }
 
         [TestMethod]
-        public async Task ScheduleShutdown_WhenLessThan10MinutesTillShutdown_ThenShutdownScheduledImmediatelyWith10MinuteDelay()
+        public void ScheduleShutdown_WhenLessThan10MinutesTillShutdown_ThenShutdownScheduledImmediatelyWith10MinuteDelay()
         {
             var d = DateTime.Now;
             var d1 = d.AddDays(-1);
@@ -47,30 +53,25 @@ namespace RemoteControlService.UniTests
             shutdownHistoryStorage.Add(d.AddSeconds(5));
             shutdownHistoryStorage.Add(d1.AddSeconds(6));
 
-            await nightlyShutdownScheduler.ScheduleShutdown();
+            nightlyShutdownScheduler.ScheduleShutdown();
 
-            Assert.IsTrue(powerController.SecondsTillShutdown <= 600);
-            Assert.IsTrue(powerController.SecondsTillShutdown >= 540);
+            Thread.Sleep(100); // Wait for the task within the CommonTaskScheduler to finish
+            Assert.AreEqual(600, powerController.SecondsTillShutdown);
         }
 
         [TestMethod]
-        public async Task ScheduleShutdown_WhenMoreThan10MinutesTillShutdown_ThenShutdownScheduled10MinutesBeforeShuttingDOwn()
+        public void ScheduleShutdown_WhenMoreThan10MinutesTillShutdown_ThenShutdownScheduled10MinutesBeforeShuttingDown()
         {
             var d = DateTime.Now;
-            var d1 = d.AddDays(-2);
             sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(d.AddMinutes(10).AddSeconds(4));
-            shutdownHistoryStorage.Add(d.AddMinutes(10).AddSeconds(4));
+            shutdownHistoryStorage.Add(d.AddMinutes(10).AddSeconds(6));
             shutdownHistoryStorage.Add(d.AddMinutes(10).AddSeconds(8));
 
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            await nightlyShutdownScheduler.ScheduleShutdown();
-            stopwatch.Stop();
+            nightlyShutdownScheduler.ScheduleShutdown();
 
-            Assert.IsTrue(stopwatch.ElapsedMilliseconds <= 6100);
-            Assert.IsTrue(stopwatch.ElapsedMilliseconds > 5000);
-            Assert.IsTrue(powerController.SecondsTillShutdown <= 600);
-            Assert.IsTrue(powerController.SecondsTillShutdown > 540);
+            Assert.IsTrue(powerController.SecondsTillShutdown == 0);
+            Thread.Sleep(7000); // Wait for the task within the CommonTaskScheduler to finish
+            Assert.AreEqual(600, powerController.SecondsTillShutdown);
         }
     }
 }

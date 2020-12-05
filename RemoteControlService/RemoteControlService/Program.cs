@@ -1,10 +1,11 @@
 ﻿using Autofac;
-using RemoteControlService.ReceiverDevice;
-using RemoteControlService.ReceiverDevice.Commands;
-using RemoteControlService.ReceiverDevice.Controllers;
-using RemoteControlService.ReceiverDevice.NightlyShutdown;
-using RemoteControlService.ReceiverDevice.MessageReception;
 using System.ServiceProcess;
+using RemoteControlService.Common.TaskScheduling;
+using RemoteControlService.Commands;
+using RemoteControlService.NightlyShutdown;
+using RemoteControlService.MessageReception;
+using RemoteControlService.Controllers;
+using RemoteControlService.Commands.CommandFactories;
 
 namespace RemoteControlService
 {
@@ -36,7 +37,7 @@ namespace RemoteControlService
             var builder = new ContainerBuilder();
             builder.RegisterType<RemoteControlService>();
             builder.RegisterType<Receiver>();
-            builder.RegisterType<CommandFactory>();
+            builder.RegisterType<JsonCommandFactory>();
             builder.RegisterType<MessageReceptionist>().As<IMessageReceptionist>();
             builder.RegisterType<NightlyShutdownScheduler>().As<IShutdownScheduler>();
             builder.RegisterType<ShutdownHistoryStorage>().As<IShutdownHistoryStorage>();
@@ -44,6 +45,8 @@ namespace RemoteControlService
             builder.RegisterType<CmdLineVolumeController>().As<IVolumeController>();
             builder.RegisterType<SystemInformation>().As<ISystemInformation>();
             builder.RegisterType<NightlyShutdownCalculator>().As<IShutdownCalculator>();
+            builder.RegisterType<CommonTaskScheduler>().As<ITaskScheduler>();
+            builder.RegisterType<ParameterizedShutdownCommandFactory>().As<IShutdownCommandFactory>();
             return builder.Build();
         }
     }

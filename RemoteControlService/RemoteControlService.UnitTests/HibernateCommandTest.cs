@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RemoteControlService.ReceiverDevice.Commands;
+using RemoteControlService.Commands;
 using RemoteControlService.UniTests.Mocks;
 
 namespace RemoteControlService.UniTests

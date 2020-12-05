@@ -92,40 +92,46 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ReceiverDevice\CmdLineUtils.cs" />
-    <Compile Include="ReceiverDevice\Commands\CancelShutdownCommand.cs" />
+    <Compile Include="Common\DataStructures\ConcurrentHeap.cs" />
+    <Compile Include="Common\DataStructures\ConcurrentPriorityQueue.cs" />
+    <Compile Include="Common\TaskScheduling\ITaskScheduler.cs" />
+    <Compile Include="Common\TaskScheduling\CommonTaskScheduler.cs" />
+    <Compile Include="Utils\CmdLineUtils.cs" />
+    <Compile Include="Commands\CancelShutdownCommand.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ProjectInstaller.Designer.cs">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
-    <Compile Include="ReceiverDevice\CommandFactory.cs" />
-    <Compile Include="ReceiverDevice\Commands\ICommand.cs" />
-    <Compile Include="ReceiverDevice\Commands\IPowerController.cs" />
-    <Compile Include="ReceiverDevice\Commands\IVolumeController.cs" />
-    <Compile Include="ReceiverDevice\Commands\HibernateCommand.cs" />
-    <Compile Include="ReceiverDevice\Controllers\CmdLinePowerController.cs" />
-    <Compile Include="ReceiverDevice\Controllers\CmdLineVolumeController.cs" />
-    <Compile Include="ReceiverDevice\NightlyShutdown\NightlyShutdownScheduler.cs" />
-    <Compile Include="ReceiverDevice\NightlyShutdown\IShutdownScheduler.cs" />
-    <Compile Include="ReceiverDevice\NightlyShutdown\IShutdownCalculator.cs" />
-    <Compile Include="ReceiverDevice\NightlyShutdown\IShutdownHistoryStorage.cs" />
-    <Compile Include="ReceiverDevice\NightlyShutdown\ISystemInformation.cs" />
-    <Compile Include="ReceiverDevice\NightlyShutdown\NightlyShutdownCalculator.cs" />
-    <Compile Include="ReceiverDevice\NightlyShutdown\SystemInformation.cs" />
-    <Compile Include="ReceiverDevice\MessageReception\IMessageReceptionist.cs" />
-    <Compile Include="ReceiverDevice\JSONUtils.cs" />
-    <Compile Include="ReceiverDevice\DTOs\CommandDTO.cs" />
-    <Compile Include="ReceiverDevice\MessageReception\MessageReceivedEventArgs.cs" />
-    <Compile Include="ReceiverDevice\MessageReception\MessageReceptionist.cs" />
-    <Compile Include="ReceiverDevice\Receiver.cs" />
-    <Compile Include="ReceiverDevice\Commands\SetVolumeCommand.cs" />
-    <Compile Include="ReceiverDevice\DTOs\SetVolumeCommandDTO.cs" />
-    <Compile Include="ReceiverDevice\Commands\ShutdownCommand.cs" />
-    <Compile Include="ReceiverDevice\DTOs\ShutdownCommandDTO.cs" />
-    <Compile Include="ReceiverDevice\MessageReception\StateObject.cs" />
-    <Compile Include="ReceiverDevice\NightlyShutdown\ShutdownHistoryStorage.cs" />
+    <Compile Include="Commands\CommandFactories\ParameterizedShutdownCommandFactory.cs" />
+    <Compile Include="Commands\IShutdownCommandFactory.cs" />
+    <Compile Include="Commands\CommandFactories\JsonCommandFactory.cs" />
+    <Compile Include="Commands\ICommand.cs" />
+    <Compile Include="Commands\IPowerController.cs" />
+    <Compile Include="Commands\IVolumeController.cs" />
+    <Compile Include="Commands\HibernateCommand.cs" />
+    <Compile Include="Controllers\CmdLinePowerController.cs" />
+    <Compile Include="Controllers\CmdLineVolumeController.cs" />
+    <Compile Include="NightlyShutdown\NightlyShutdownScheduler.cs" />
+    <Compile Include="NightlyShutdown\IShutdownScheduler.cs" />
+    <Compile Include="NightlyShutdown\IShutdownCalculator.cs" />
+    <Compile Include="NightlyShutdown\IShutdownHistoryStorage.cs" />
+    <Compile Include="NightlyShutdown\ISystemInformation.cs" />
+    <Compile Include="NightlyShutdown\NightlyShutdownCalculator.cs" />
+    <Compile Include="NightlyShutdown\SystemInformation.cs" />
+    <Compile Include="MessageReception\IMessageReceptionist.cs" />
+    <Compile Include="Utils\JSONUtils.cs" />
+    <Compile Include="DTOs\CommandDTO.cs" />
+    <Compile Include="MessageReception\MessageReceivedEventArgs.cs" />
+    <Compile Include="MessageReception\MessageReceptionist.cs" />
+    <Compile Include="Receiver.cs" />
+    <Compile Include="Commands\SetVolumeCommand.cs" />
+    <Compile Include="DTOs\SetVolumeCommandDTO.cs" />
+    <Compile Include="Commands\ShutdownCommand.cs" />
+    <Compile Include="DTOs\ShutdownCommandDTO.cs" />
+    <Compile Include="MessageReception\StateObject.cs" />
+    <Compile Include="NightlyShutdown\ShutdownHistoryStorage.cs" />
     <Compile Include="RemoteControlService.cs">
       <SubType>Component</SubType>
     </Compile>
