@@ -96,6 +96,8 @@
     <Compile Include="Common\DataStructures\ConcurrentPriorityQueue.cs" />
     <Compile Include="Common\TaskScheduling\ITaskScheduler.cs" />
     <Compile Include="Common\TaskScheduling\CommonTaskScheduler.cs" />
+    <Compile Include="NightlyShutdown\IShutdownHistoryUpdater.cs" />
+    <Compile Include="NightlyShutdown\NightlyShutdownHistoryUpdater.cs" />
     <Compile Include="Utils\CmdLineUtils.cs" />
     <Compile Include="Commands\CancelShutdownCommand.cs" />
     <Compile Include="ProjectInstaller.cs">

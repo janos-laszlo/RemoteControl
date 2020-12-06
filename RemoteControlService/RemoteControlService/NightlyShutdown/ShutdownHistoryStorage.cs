@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace RemoteControlService.NightlyShutdown
 {
@@ -25,8 +26,13 @@ namespace RemoteControlService.NightlyShutdown
             dateTimes = JSONUtils.FromJson<HashSet<DateTime>>(File.ReadAllText(SHUTDOWN_HISTORY_FILE));
         }
 
-        public IEnumerable<DateTime> GetAll()
+        public IEnumerable<DateTime> GetAll(Func<DateTime, bool> filter = null)
         {
+            if (filter != null)
+            {
+                return dateTimes.Where(filter).ToList();
+            }
+
             return dateTimes;
         }
 

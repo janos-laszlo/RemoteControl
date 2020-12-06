@@ -47,6 +47,7 @@ namespace RemoteControlService
             builder.RegisterType<NightlyShutdownCalculator>().As<IShutdownCalculator>();
             builder.RegisterType<CommonTaskScheduler>().As<ITaskScheduler>();
             builder.RegisterType<ParameterizedShutdownCommandFactory>().As<IShutdownCommandFactory>();
+            builder.RegisterType<NightlyShutdownHistoryUpdater>().As<IShutdownHistoryUpdater>();
             return builder.Build();
         }
     }

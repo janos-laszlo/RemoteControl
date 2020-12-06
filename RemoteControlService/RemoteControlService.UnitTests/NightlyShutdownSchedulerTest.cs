@@ -15,7 +15,6 @@ namespace RemoteControlService.UniTests
     public class NightlyShutdownSchedulerTest
     {
         private NightlyShutdownScheduler nightlyShutdownScheduler;
-        private Mock<ISystemInformation> sysInfoMock;
         private CmdLinePowerControllerMock powerController;
         private ShutdownHistoryStorage shutdownHistoryStorage;
         private IShutdownCalculator shutdownCalculator;
@@ -26,13 +25,12 @@ namespace RemoteControlService.UniTests
         public void Init()
         {
             File.Delete(ShutdownHistoryStorage.SHUTDOWN_HISTORY_FILE);
-            sysInfoMock = new Mock<ISystemInformation>();
             powerController = new CmdLinePowerControllerMock();
             shutdownHistoryStorage = new ShutdownHistoryStorage();
             shutdownCalculator = new NightlyShutdownCalculator();
             taskScheduler = new CommonTaskScheduler();
             shutdownCommandFactory = new ParameterizedShutdownCommandFactory(powerController);
-            nightlyShutdownScheduler = new NightlyShutdownScheduler(shutdownHistoryStorage, sysInfoMock.Object, shutdownCalculator, taskScheduler, shutdownCommandFactory);
+            nightlyShutdownScheduler = new NightlyShutdownScheduler(shutdownHistoryStorage, shutdownCalculator, taskScheduler, shutdownCommandFactory);
         }
 
         [ClassCleanup]
@@ -46,7 +44,6 @@ namespace RemoteControlService.UniTests
         {
             var d = DateTime.Now;
             var d1 = d.AddDays(-1);
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(d.AddSeconds(2));
             shutdownHistoryStorage.Add(d.AddSeconds(2));
             shutdownHistoryStorage.Add(d1.AddSeconds(3));
             shutdownHistoryStorage.Add(d1.AddSeconds(4));
@@ -63,7 +60,6 @@ namespace RemoteControlService.UniTests
         public void ScheduleShutdown_WhenMoreThan10MinutesTillShutdown_ThenShutdownScheduled10MinutesBeforeShuttingDown()
         {
             var d = DateTime.Now;
-            sysInfoMock.Setup(s => s.GetLastSystemShutdown()).Returns(d.AddMinutes(10).AddSeconds(4));
             shutdownHistoryStorage.Add(d.AddMinutes(10).AddSeconds(6));
             shutdownHistoryStorage.Add(d.AddMinutes(10).AddSeconds(8));
 

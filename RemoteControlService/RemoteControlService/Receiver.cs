@@ -11,14 +11,17 @@ namespace RemoteControlService
     {
         private readonly IMessageReceptionist messageReceptionist;
         private readonly JsonCommandFactory commandFactory;
+        private readonly IShutdownHistoryUpdater shutdownHistoryUpdater;
         private readonly IShutdownScheduler nightlyShutdownScheduler;
 
         public Receiver(IMessageReceptionist messageReceptionist,
                         JsonCommandFactory commandFactory,
+                        IShutdownHistoryUpdater shutdownHistoryUpdater,
                         IShutdownScheduler nightlyShutdownScheduler)
         {
             this.messageReceptionist = messageReceptionist;
             this.commandFactory = commandFactory;
+            this.shutdownHistoryUpdater = shutdownHistoryUpdater;
             this.nightlyShutdownScheduler = nightlyShutdownScheduler;
         }
 
@@ -26,6 +29,7 @@ namespace RemoteControlService
         {
             messageReceptionist.MessageReceived += OnMessageReceived;
             messageReceptionist.Start();
+            shutdownHistoryUpdater.UpdateShutdownHistory();
             nightlyShutdownScheduler.ScheduleShutdown();
             Trace.WriteLine("The receiver has started.");
         }
