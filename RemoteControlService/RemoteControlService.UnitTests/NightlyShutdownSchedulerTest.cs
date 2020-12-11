@@ -1,13 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using RemoteControlService.Commands;
-using RemoteControlService.Commands.CommandFactories;
-using RemoteControlService.Common.TaskScheduling;
-using RemoteControlService.NightlyShutdown;
+﻿using Domain.Commands;
+using Domain.Common.TaskScheduling;
+using Domain.NightlyShutdown;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RemoteControlService.UniTests.Mocks;
 using System;
 using System.IO;
 using System.Threading;
+using WindowsLibrary.CommandFactories;
+using WindowsLibrary.NightlyShutdown;
 
 namespace RemoteControlService.UniTests
 {

@@ -1,0 +1,6 @@
+D:\Code\repos\RemoteControl\RemoteControlService\Domain\bin\Release\Domain.dll
+D:\Code\repos\RemoteControl\RemoteControlService\Domain\bin\Release\Domain.pdb
+D:\Code\repos\RemoteControl\RemoteControlService\Domain\obj\Release\Domain.csprojAssemblyReference.cache
+D:\Code\repos\RemoteControl\RemoteControlService\Domain\obj\Release\Domain.csproj.CoreCompileInputs.cache
+D:\Code\repos\RemoteControl\RemoteControlService\Domain\obj\Release\Domain.dll
+D:\Code\repos\RemoteControl\RemoteControlService\Domain\obj\Release\Domain.pdb

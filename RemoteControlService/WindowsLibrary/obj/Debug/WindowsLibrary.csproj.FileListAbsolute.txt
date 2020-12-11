@@ -1,0 +1,9 @@
+D:\Code\repos\RemoteControl\RemoteControlService\WindowsLibrary\bin\Debug\WindowsLibrary.dll
+D:\Code\repos\RemoteControl\RemoteControlService\WindowsLibrary\bin\Debug\WindowsLibrary.pdb
+D:\Code\repos\RemoteControl\RemoteControlService\WindowsLibrary\bin\Debug\Domain.dll
+D:\Code\repos\RemoteControl\RemoteControlService\WindowsLibrary\bin\Debug\Domain.pdb
+D:\Code\repos\RemoteControl\RemoteControlService\WindowsLibrary\obj\Debug\WindowsLibrary.csprojAssemblyReference.cache
+D:\Code\repos\RemoteControl\RemoteControlService\WindowsLibrary\obj\Debug\WindowsLibrary.csproj.CoreCompileInputs.cache
+D:\Code\repos\RemoteControl\RemoteControlService\WindowsLibrary\obj\Debug\WindowsLibrary.csproj.CopyComplete
+D:\Code\repos\RemoteControl\RemoteControlService\WindowsLibrary\obj\Debug\WindowsLibrary.dll
+D:\Code\repos\RemoteControl\RemoteControlService\WindowsLibrary\obj\Debug\WindowsLibrary.pdb

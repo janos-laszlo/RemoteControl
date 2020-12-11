@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RemoteControlService.Commands;
+﻿using Domain.Commands;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RemoteControlService.UniTests.Mocks;
 
 namespace RemoteControlService.UniTests

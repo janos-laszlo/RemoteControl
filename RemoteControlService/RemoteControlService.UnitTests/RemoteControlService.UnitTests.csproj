@@ -51,9 +51,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RemoteControlService\RemoteControlService.csproj">
-      <Project>{76069bec-7b77-4fb6-ae00-9491d1ca3796}</Project>
-      <Name>RemoteControlService</Name>
+    <ProjectReference Include="..\Domain\Domain.csproj">
+      <Project>{9f5c8e97-7edc-4ea7-aca0-70e9ca92cf79}</Project>
+      <Name>Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsLibrary\WindowsLibrary.csproj">
+      <Project>{1571bc87-8077-4b4f-8fb0-7e4fa3f38fe6}</Project>
+      <Name>WindowsLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

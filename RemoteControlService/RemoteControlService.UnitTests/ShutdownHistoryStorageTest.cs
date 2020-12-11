@@ -1,9 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RemoteControlService.NightlyShutdown;
+﻿using Domain.NightlyShutdown;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using WindowsLibrary.NightlyShutdown;
 
 namespace RemoteControlService.UniTests
 {

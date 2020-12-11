@@ -1,11 +1,14 @@
 ﻿using Autofac;
+using Domain.CommandFactories;
+using Domain.Commands;
+using Domain.Common.TaskScheduling;
+using Domain.MessageReception;
+using Domain.NightlyShutdown;
 using System.ServiceProcess;
-using RemoteControlService.Common.TaskScheduling;
-using RemoteControlService.Commands;
-using RemoteControlService.NightlyShutdown;
-using RemoteControlService.MessageReception;
-using RemoteControlService.Controllers;
-using RemoteControlService.Commands.CommandFactories;
+using WindowsLibrary.CommandFactories;
+using WindowsLibrary.Controllers;
+using WindowsLibrary.MessageReception;
+using WindowsLibrary.NightlyShutdown;
 
 namespace RemoteControlService
 {
@@ -37,7 +40,7 @@ namespace RemoteControlService
             var builder = new ContainerBuilder();
             builder.RegisterType<RemoteControlService>();
             builder.RegisterType<Receiver>();
-            builder.RegisterType<JsonCommandFactory>();
+            builder.RegisterType<JsonCommandFactory>().As<ITextCommandFactory>();
             builder.RegisterType<MessageReceptionist>().As<IMessageReceptionist>();
             builder.RegisterType<NightlyShutdownScheduler>().As<IShutdownScheduler>();
             builder.RegisterType<ShutdownHistoryStorage>().As<IShutdownHistoryStorage>();

@@ -1,21 +1,21 @@
-﻿using System;
+﻿using Domain.CommandFactories;
+using Domain.Commands;
+using Domain.MessageReception;
+using Domain.NightlyShutdown;
+using System;
 using System.Diagnostics;
-using RemoteControlService.NightlyShutdown;
-using RemoteControlService.MessageReception;
-using RemoteControlService.Commands;
-using RemoteControlService.Commands.CommandFactories;
 
 namespace RemoteControlService
 {
     public class Receiver
     {
         private readonly IMessageReceptionist messageReceptionist;
-        private readonly JsonCommandFactory commandFactory;
+        private readonly ITextCommandFactory commandFactory;
         private readonly IShutdownHistoryUpdater shutdownHistoryUpdater;
         private readonly IShutdownScheduler nightlyShutdownScheduler;
 
         public Receiver(IMessageReceptionist messageReceptionist,
-                        JsonCommandFactory commandFactory,
+                        ITextCommandFactory commandFactory,
                         IShutdownHistoryUpdater shutdownHistoryUpdater,
                         IShutdownScheduler nightlyShutdownScheduler)
         {

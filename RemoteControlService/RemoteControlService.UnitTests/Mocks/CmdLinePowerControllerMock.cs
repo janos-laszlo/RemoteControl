@@ -1,4 +1,4 @@
-﻿using RemoteControlService.Commands;
+﻿using Domain.Commands;
 using System.Diagnostics;
 
 namespace RemoteControlService.UniTests.Mocks
