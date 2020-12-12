@@ -37,7 +37,7 @@ namespace Domain.NightlyShutdown
 
         private static bool IsHourOfNight(DateTime lastSystemShutdown)
         {
-            return BEGINNING_OF_NIGHT <= lastSystemShutdown.Hour && lastSystemShutdown.Hour <= END_OF_NIGHT;
+            return BEGINNING_OF_NIGHT <= lastSystemShutdown.Hour || lastSystemShutdown.Hour <= END_OF_NIGHT;
         }
     }
 }
