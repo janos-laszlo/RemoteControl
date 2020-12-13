@@ -1,6 +1,6 @@
 ﻿using Domain.NightlyShutdown;
-using Domain.Tests.Mocks;
 using Moq;
+using RemoteControlService.UniTests.Mocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +22,7 @@ namespace RemoteControlService.UniTests
         public void UpdateShutdownHistory_WhenLastShutdownOccuredAtDaytime_ThenNotAddedToShutdownHistoryStorage(DateTime lastSystemShutdown)
         {
             var systemInformationMock = new Mock<ISystemInformation>();
-            systemInformationMock.Setup(s => s.GetLastSystemShutdown()).Returns(lastSystemShutdown);            
+            systemInformationMock.Setup(s => s.GetLastSystemShutdown()).Returns(lastSystemShutdown);
             NightlyShutdownHistoryUpdater sut = new NightlyShutdownHistoryUpdater(systemInformationMock.Object, shutdownHistoryStorage);
 
             sut.UpdateShutdownHistory();

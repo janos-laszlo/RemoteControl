@@ -1,20 +1,20 @@
 ﻿using Domain.Commands;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RemoteControlService.UniTests.Mocks;
+using Xunit;
 
 namespace RemoteControlService.UniTests
 {
-    [TestClass]
     public class HibernateCommandTest
     {
-        [TestMethod]
+        [Fact]
         public void Execute_Hibernation_WillHibernate()
         {
-            // Arrange
-            ICommand cmd = new HibernateCommand(new CmdLinePowerControllerMock());
+            CmdLinePowerControllerMock powerController = new CmdLinePowerControllerMock();
+            ICommand cmd = new HibernateCommand(powerController);
 
-            // Act
             cmd.Execute();
+
+            Assert.Equal(1, powerController.NumOfHibernations);
         }
     }
 }

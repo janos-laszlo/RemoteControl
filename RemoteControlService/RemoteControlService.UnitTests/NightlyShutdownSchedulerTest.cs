@@ -1,28 +1,26 @@
 ﻿using Domain.Commands;
 using Domain.Common.TaskScheduling;
 using Domain.NightlyShutdown;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RemoteControlService.UniTests.Mocks;
 using System;
 using System.IO;
 using System.Threading;
 using WindowsLibrary.CommandFactories;
 using WindowsLibrary.NightlyShutdown;
+using Xunit;
 
 namespace RemoteControlService.UniTests
 {
-    [TestClass]
     public class NightlyShutdownSchedulerTest
     {
-        private NightlyShutdownScheduler nightlyShutdownScheduler;
-        private CmdLinePowerControllerMock powerController;
-        private ShutdownHistoryStorage shutdownHistoryStorage;
-        private IShutdownCalculator shutdownCalculator;
-        private ITaskScheduler taskScheduler;
-        private IShutdownCommandFactory shutdownCommandFactory;
+        readonly NightlyShutdownScheduler nightlyShutdownScheduler;
+        readonly CmdLinePowerControllerMock powerController;
+        readonly ShutdownHistoryStorage shutdownHistoryStorage;
+        readonly IShutdownCalculator shutdownCalculator;
+        readonly ITaskScheduler taskScheduler;
+        readonly IShutdownCommandFactory shutdownCommandFactory;
 
-        [TestInitialize]
-        public void Init()
+        public NightlyShutdownSchedulerTest()
         {
             File.Delete(ShutdownHistoryStorage.SHUTDOWN_HISTORY_FILE);
             powerController = new CmdLinePowerControllerMock();
@@ -33,13 +31,7 @@ namespace RemoteControlService.UniTests
             nightlyShutdownScheduler = new NightlyShutdownScheduler(shutdownHistoryStorage, shutdownCalculator, taskScheduler, shutdownCommandFactory);
         }
 
-        [ClassCleanup]
-        public static void CleanClass()
-        {
-            File.Delete(ShutdownHistoryStorage.SHUTDOWN_HISTORY_FILE);
-        }
-
-        [TestMethod]
+        [Fact]
         public void ScheduleShutdown_WhenLessThan10MinutesTillShutdown_ThenShutdownScheduledImmediatelyWith10MinuteDelay()
         {
             var d = DateTime.Now;
@@ -53,10 +45,10 @@ namespace RemoteControlService.UniTests
             nightlyShutdownScheduler.ScheduleShutdown();
 
             Thread.Sleep(100); // Wait for the task within the CommonTaskScheduler to finish
-            Assert.AreEqual(600, powerController.SecondsTillShutdown);
+            Assert.Equal(600, powerController.SecondsTillShutdown);
         }
 
-        [TestMethod]
+        [Fact]
         public void ScheduleShutdown_WhenMoreThan10MinutesTillShutdown_ThenShutdownScheduled10MinutesBeforeShuttingDown()
         {
             var d = DateTime.Now;
@@ -65,9 +57,9 @@ namespace RemoteControlService.UniTests
 
             nightlyShutdownScheduler.ScheduleShutdown();
 
-            Assert.IsTrue(powerController.SecondsTillShutdown == 0);
+            Assert.True(powerController.SecondsTillShutdown == 0);
             Thread.Sleep(7000); // Wait for the task within the CommonTaskScheduler to finish
-            Assert.AreEqual(600, powerController.SecondsTillShutdown);
+            Assert.Equal(600, powerController.SecondsTillShutdown);
         }
     }
 }

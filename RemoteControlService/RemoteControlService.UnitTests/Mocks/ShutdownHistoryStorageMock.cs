@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Domain.Tests.Mocks
+namespace RemoteControlService.UniTests.Mocks
 {
     class ShutdownHistoryStorageMock : IShutdownHistoryStorage
     {

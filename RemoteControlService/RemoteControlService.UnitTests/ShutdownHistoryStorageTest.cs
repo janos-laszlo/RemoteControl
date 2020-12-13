@@ -1,20 +1,18 @@
 ﻿using Domain.NightlyShutdown;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using WindowsLibrary.NightlyShutdown;
+using Xunit;
 
 namespace RemoteControlService.UniTests
 {
-    [TestClass]
     public class ShutdownHistoryStorageTest
     {
-        private IShutdownHistoryStorage shutdownHistoryStorage;
+        readonly IShutdownHistoryStorage shutdownHistoryStorage;
 
-        [TestInitialize]
-        public void Init()
+        public ShutdownHistoryStorageTest()
         {
             File.Delete(ShutdownHistoryStorage.SHUTDOWN_HISTORY_FILE);
             shutdownHistoryStorage = new ShutdownHistoryStorage();
@@ -23,29 +21,23 @@ namespace RemoteControlService.UniTests
             shutdownHistoryStorage.Add(DateTime.UtcNow.AddDays(1));
         }
 
-        [ClassCleanup]
-        public static void CleanClass()
-        {
-            File.Delete(ShutdownHistoryStorage.SHUTDOWN_HISTORY_FILE);
-        }
-
-        [TestMethod]
+        [Fact]
         public void GetAll_WhenDatetimesInStorage_ThenReturnedWithCorrectValues()
         {
             IEnumerable<DateTime> times = shutdownHistoryStorage.GetAll();
 
-            Assert.IsTrue(times.Count() == 3);
+            Assert.Equal(3, times.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void Add_WhenNewDatetimesAdded_ThenStorageIncreaseExpected()
         {
             IEnumerable<DateTime> times = shutdownHistoryStorage.GetAll();
             shutdownHistoryStorage.Add(DateTime.Now.AddMinutes(3));
-            Assert.IsTrue(times.Count() == 4);
+            Assert.Equal(4, times.Count());
         }
 
-        [TestMethod]
+        [Fact]
         public void Add_WhenDatetimesRemoved_ThenStorageDecreaseExpected()
         {
             var d = DateTime.Now;
@@ -56,7 +48,7 @@ namespace RemoteControlService.UniTests
 
             shutdownHistoryStorage.Remove(d.AddDays(2));
             shutdownHistoryStorage.Remove(d.AddDays(12));
-            Assert.IsTrue(times.Count() == 4);
+            Assert.Equal(4, times.Count());
         }
     }
 }

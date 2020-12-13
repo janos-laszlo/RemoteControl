@@ -1,12 +1,11 @@
 ﻿using Domain.NightlyShutdown;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Xunit;
 
 namespace RemoteControlService.UniTests
 {
-    [TestClass]
     public class NightlyShutdownCalculatorTest
     {
         private readonly NightlyShutdownCalculator nightlyShutdownCalculator;
@@ -16,23 +15,21 @@ namespace RemoteControlService.UniTests
             nightlyShutdownCalculator = new NightlyShutdownCalculator();
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [Fact]
         public void CalculateShutdownTime_NullInput_ArgumentException()
         {
             IEnumerable<DateTime> times = null;
-            nightlyShutdownCalculator.GetNextShutdown(times);
+            Assert.Throws<ArgumentException>(() => nightlyShutdownCalculator.GetNextShutdown(times));
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
+        [Fact]
         public void CalculateShutdownTime_EmptyCollection_ArgumentException()
         {
             IEnumerable<DateTime> times = Enumerable.Empty<DateTime>();
-            nightlyShutdownCalculator.GetNextShutdown(times);
+            Assert.Throws<ArgumentException>(() => nightlyShutdownCalculator.GetNextShutdown(times));
         }
 
-        [TestMethod]
+        [Fact]
         public void CalculateNextShutdown_AllTimesGreaterThanMinTime()
         {
             var times = new DateTime[]
@@ -47,10 +44,10 @@ namespace RemoteControlService.UniTests
 
             var now = DateTime.Now;
             DateTime expected = new DateTime(now.Year, now.Month, now.Day, 22, 30, 0);
-            Assert.IsTrue(expected == result || expected.AddDays(1) == result);
+            Assert.True(expected == result || expected.AddDays(1) == result);
         }
 
-        [TestMethod]
+        [Fact]
         public void CalculateShutdownTime_AllTimesLessThanMinTime()
         {
             var times = new DateTime[]
@@ -66,10 +63,10 @@ namespace RemoteControlService.UniTests
 
             var now = DateTime.Now;
             DateTime expected = new DateTime(now.Year, now.Month, now.Day, 4, 0, 0);
-            Assert.IsTrue(expected == result || expected.AddDays(1) == result);
+            Assert.True(expected == result || expected.AddDays(1) == result);
         }
 
-        [TestMethod]
+        [Fact]
         public void CalculateShutdownTime_AllTimesGreaterAndLessThanMinTime()
         {
             var shutdownHistory = new DateTime[]
@@ -85,7 +82,7 @@ namespace RemoteControlService.UniTests
 
             var now = DateTime.Now;
             DateTime expected = new DateTime(now.Year, now.Month, now.Day, 0, 0, 0);
-            Assert.IsTrue(expected == result || expected.AddDays(1) == result);
+            Assert.True(expected == result || expected.AddDays(1) == result);
         }
     }
 }
