@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace RemoteControlService
 {
-    public class Receiver
+    class Receiver
     {
         private readonly IMessageReceptionist messageReceptionist;
         private readonly ITextCommandFactory commandFactory;

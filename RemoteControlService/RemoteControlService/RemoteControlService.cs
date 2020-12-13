@@ -3,7 +3,7 @@ using System.ServiceProcess;
 
 namespace RemoteControlService
 {
-    public partial class RemoteControlService : ServiceBase
+    partial class RemoteControlService : ServiceBase
     {
         readonly Receiver receiver;
 

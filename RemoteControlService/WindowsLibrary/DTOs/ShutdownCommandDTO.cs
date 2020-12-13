@@ -3,7 +3,7 @@
 namespace WindowsLibrary.DTOs
 {
     [DataContract]
-    public class ShutdownCommandDTO
+    class ShutdownCommandDTO
     {
         [DataMember(Name = "seconds")]
         public int Seconds { get; set; }

@@ -3,7 +3,7 @@
 namespace WindowsLibrary.DTOs
 {
     [DataContract]
-    public class SetVolumeCommandDTO
+    class SetVolumeCommandDTO
     {
         [DataMember(Name = "percent")]
         public int Percent { get; set; }

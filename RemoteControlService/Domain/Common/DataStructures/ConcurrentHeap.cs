@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Domain.Common.DataStructures
 {
-    public class ConcurrentHeap<T>
+    class ConcurrentHeap<T>
     {
         const int DEFAULT_LENGTH = 100;
         readonly ReaderWriterLockSlim readerWriterLock = new ReaderWriterLockSlim();

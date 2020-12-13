@@ -92,3 +92,9 @@ RemoteControlService/.vs
 RemoteControlService/packages
 RemoteControlService/ServiceSetup/Debug
 RemoteControlService/ServiceSetup/Release
+RemoteControlService/Domain/bin
+RemoteControlService/Domain/obj
+RemoteControlService/Domain.Tests/bin
+RemoteControlService/Domain.Tests/obj
+RemoteControlService/WindowsLibrary/bin
+RemoteControlService/WindowsLibrary/obj

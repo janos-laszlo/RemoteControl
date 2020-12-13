@@ -3,7 +3,7 @@
 namespace WindowsLibrary.DTOs
 {
     [DataContract(Name = "Command")]
-    public class CommandDTO
+    class CommandDTO
     {
         [DataMember(Name = "name")]
         public string Name { get; set; }
