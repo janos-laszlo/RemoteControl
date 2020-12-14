@@ -43,14 +43,14 @@ namespace RemoteControlService
             builder.RegisterType<JsonCommandFactory>().As<ITextCommandFactory>();
             builder.RegisterType<MessageReceptionist>().As<IMessageReceptionist>();
             builder.RegisterType<NightlyShutdownScheduler>().As<IShutdownScheduler>();
-            builder.RegisterType<ShutdownHistoryStorage>().As<IShutdownHistoryStorage>();
             builder.RegisterType<CmdLinePowerController>().As<IPowerController>();
             builder.RegisterType<CmdLineVolumeController>().As<IVolumeController>();
             builder.RegisterType<SystemInformation>().As<ISystemInformation>();
             builder.RegisterType<NightlyShutdownCalculator>().As<IShutdownCalculator>();
-            builder.RegisterType<CommonTaskScheduler>().As<ITaskScheduler>();
             builder.RegisterType<ParameterizedShutdownCommandFactory>().As<IShutdownCommandFactory>();
             builder.RegisterType<NightlyShutdownHistoryUpdater>().As<IShutdownHistoryUpdater>();
+            builder.RegisterType<ShutdownHistoryStorage>().As<IShutdownHistoryStorage>().SingleInstance();
+            builder.RegisterType<CommonTaskScheduler>().As<ITaskScheduler>().SingleInstance();
             return builder.Build();
         }
     }
