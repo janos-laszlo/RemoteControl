@@ -7,7 +7,9 @@ namespace Domain.Common.TaskScheduling
 {
     public class CommonTaskScheduler : ITaskScheduler
     {
-        private readonly ConcurrentPriorityQueue<ScheduledTask> tasks = new ConcurrentPriorityQueue<ScheduledTask>((s1, s2) => s1.ExecuteAt < s2.ExecuteAt);
+        private readonly ConcurrentPriorityQueue<ScheduledTask> tasks =
+            new ConcurrentPriorityQueue<ScheduledTask>(
+                (s1, s2) => s1.ExecuteAt < s2.ExecuteAt);
         private readonly Timer timer = new Timer();
 
         public CommonTaskScheduler()
@@ -36,7 +38,9 @@ namespace Domain.Common.TaskScheduling
         {
             if (tasks.TryPeek(out ScheduledTask topTask))
             {
-                timer.Interval = Math.Max(1, (topTask.ExecuteAt - DateTime.Now).TotalMilliseconds);
+                timer.Interval = Math.Max(
+                    1,
+                    (topTask.ExecuteAt - DateTime.Now).TotalMilliseconds);
             }
             else
             {

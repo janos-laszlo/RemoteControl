@@ -26,18 +26,18 @@ namespace Domain.NightlyShutdown
                 return;
             }
 
+            shutdownHistoryStorage.Add(lastSystemShutdown);
+
             IEnumerable<DateTime> times = shutdownHistoryStorage.GetAll(IsHourOfNight);
-            if (times.Count() >= HISTORY_MAX_SIZE)
+            if (times.Count() > HISTORY_MAX_SIZE)
             {
                 shutdownHistoryStorage.Remove(times.Min());
             }
-
-            shutdownHistoryStorage.Add(lastSystemShutdown);
         }
 
-        private static bool IsHourOfNight(DateTime lastSystemShutdown)
+        private static bool IsHourOfNight(DateTime dateTime)
         {
-            return BEGINNING_OF_NIGHT <= lastSystemShutdown.Hour || lastSystemShutdown.Hour <= END_OF_NIGHT;
+            return BEGINNING_OF_NIGHT <= dateTime.Hour || dateTime.Hour <= END_OF_NIGHT;
         }
     }
 }

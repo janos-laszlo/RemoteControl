@@ -39,7 +39,6 @@ namespace WindowsLibrary.MessageReception
             {
                 // Create a TCP/IP socket.  
                 listener = new Socket(addressFamily: localEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
                 // Bind the socket to the local endpoint and listen for incoming connections.  
                 try
                 {
@@ -50,12 +49,10 @@ namespace WindowsLibrary.MessageReception
                     {
                         // Set the event to nonsignaled state.  
                         allDone.Reset();
-
                         // Start an asynchronous socket to listen for connections.                          
                         listener.BeginAccept(
                             new AsyncCallback(AcceptCallback),
                             listener);
-
                         // Wait until a connection is made before continuing.
                         allDone.WaitOne();
                     }
@@ -69,7 +66,6 @@ namespace WindowsLibrary.MessageReception
                     listener.Dispose();
                 }
             });
-
             messageListenerThread.Start();
         }
 
@@ -102,9 +98,7 @@ namespace WindowsLibrary.MessageReception
                 Thread.Sleep(TimeSpan.FromSeconds(5));
                 ip = GetMyIP();
             }
-
             Trace.WriteLine($"My IP:{ip}");
-
             localEndPoint = new IPEndPoint(ip, Port);
         }
 
@@ -118,7 +112,6 @@ namespace WindowsLibrary.MessageReception
                     return ip;
                 }
             }
-
             return IPAddress.Loopback;
         }
 
@@ -129,7 +122,7 @@ namespace WindowsLibrary.MessageReception
 
         private void SubscribeToNetworkAddressChangedEvent()
         {
-            NetworkChange.NetworkAddressChanged += new NetworkAddressChangedEventHandler(AddressChangedCallback);
+            NetworkChange.NetworkAddressChanged += AddressChangedCallback;
         }
 
         private void AddressChangedCallback(object sender, EventArgs e)
@@ -139,7 +132,6 @@ namespace WindowsLibrary.MessageReception
             {
                 return;
             }
-
             Trace.WriteLine("Address changed");
             SetLocalEndPoint();
             if (shouldRun)
@@ -166,7 +158,6 @@ namespace WindowsLibrary.MessageReception
         {
             // Signal thread to continue.
             allDone.Set();
-
             Socket listener = ar.AsyncState as Socket;
             Socket handler;
             try
@@ -182,38 +173,30 @@ namespace WindowsLibrary.MessageReception
             {
                 workSocket = handler
             };
-
             handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
         }
 
         private void ReadCallback(IAsyncResult ar)
         {
             var message = string.Empty;
-
             // Retrieve the state object and the handler socket
             // from the asynchronous state object.
             StateObject state = (StateObject)ar.AsyncState;
             Socket handler = state.workSocket;
-
             // Read data from the client socket.
             int bytesRead = handler.EndReceive(ar);
-
             if (bytesRead > 0)
             {
                 // There  might be more data, so store the data received so far.
                 state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-
                 // Check for end-of-file tag. If it is not there, read
                 // more data.
                 if (state.sb[state.sb.Length - 1] == MessageTerminator)
                 {
                     // All the data has been read from the client.
                     message = state.sb.ToString(0, state.sb.Length - 1);
-
                     Trace.WriteLine($"Read {message.Length} bytes from {((IPEndPoint)handler.RemoteEndPoint).Address}. Data : {message}");
-
                     OnMessageReceived(message);
-
                     CloseHandler(handler);
                 }
                 else
@@ -253,7 +236,6 @@ namespace WindowsLibrary.MessageReception
                 using (udpClient = new UdpClient(Port))
                 {
                     var clientEndpoint = new IPEndPoint(IPAddress.Any, 0);
-
                     while (shouldRun)
                     {
                         TryListeningAndRespondingToNameLookup(udpClient, clientEndpoint);
