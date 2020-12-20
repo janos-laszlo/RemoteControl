@@ -28,7 +28,11 @@ namespace RemoteControlService.UniTests
             shutdownCalculator = new NightlyShutdownCalculator();
             taskScheduler = new CommonTaskScheduler();
             shutdownCommandFactory = new ParameterizedShutdownCommandFactory(powerController);
-            nightlyShutdownScheduler = new NightlyShutdownScheduler(shutdownHistoryStorage, shutdownCalculator, taskScheduler, shutdownCommandFactory);
+            nightlyShutdownScheduler = new NightlyShutdownScheduler(
+                shutdownHistoryStorage, 
+                shutdownCalculator, 
+                taskScheduler, 
+                shutdownCommandFactory);
         }
 
         [Fact]

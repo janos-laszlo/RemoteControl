@@ -12,7 +12,9 @@ namespace WindowsLibrary.Controllers
 
         public void ScheduleShutdown(int seconds, bool overrideScheduledShutdown)
         {
-            string arguments = overrideScheduledShutdown ? $"/C SHUTDOWN /A & SHUTDOWN /S /T {seconds}" : $"/C SHUTDOWN /S /T {seconds}";
+            string arguments = overrideScheduledShutdown ?
+                $"/C SHUTDOWN /A & SHUTDOWN /S /T {seconds}" :
+                $"/C SHUTDOWN /S /T {seconds}";
             CmdLineUtils.InvokeCommandLineCommand(arguments);
         }
 

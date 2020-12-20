@@ -19,14 +19,16 @@ namespace RemoteControlService.UniTests
         public void CalculateShutdownTime_NullInput_ArgumentException()
         {
             IEnumerable<DateTime> times = null;
-            Assert.Throws<ArgumentException>(() => nightlyShutdownCalculator.GetNextShutdown(times));
+            Assert.Throws<ArgumentException>(
+                () => nightlyShutdownCalculator.GetNextShutdown(times));
         }
 
         [Fact]
         public void CalculateShutdownTime_EmptyCollection_ArgumentException()
         {
             IEnumerable<DateTime> times = Enumerable.Empty<DateTime>();
-            Assert.Throws<ArgumentException>(() => nightlyShutdownCalculator.GetNextShutdown(times));
+            Assert.Throws<ArgumentException>(
+                () => nightlyShutdownCalculator.GetNextShutdown(times));
         }
 
         [Fact]

@@ -10,7 +10,8 @@ namespace Domain.Common.DataStructures
         readonly Func<T, T, bool> swapPredicate;
         T[] _items;
         int _count;
-        public ConcurrentHeap(Func<T, T, bool> swapPredicate) : this(DEFAULT_LENGTH, swapPredicate) { }
+        public ConcurrentHeap(Func<T, T, bool> swapPredicate) : 
+            this(DEFAULT_LENGTH, swapPredicate) { }
         public ConcurrentHeap(int length, Func<T, T, bool> swapPredicate)
         {
             this.swapPredicate = swapPredicate;

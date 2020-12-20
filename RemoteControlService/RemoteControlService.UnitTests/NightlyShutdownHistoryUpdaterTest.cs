@@ -32,7 +32,7 @@ namespace RemoteControlService.UniTests
 
         [Theory]
         [MemberData(nameof(GetNightTimeDateTimes))]
-        public void UpdateShutdownHistory_WhenLastShutdownOccuredAtNightTime_ThenNotAddedToShutdownHistoryStorage(DateTime lastSystemShutdown)
+        public void UpdateShutdownHistory_WhenLastShutdownOccuredAtNightTime_ThenAddedToShutdownHistoryStorage(DateTime lastSystemShutdown)
         {
             var systemInformationMock = new Mock<ISystemInformation>();
             systemInformationMock.Setup(s => s.GetLastSystemShutdown()).Returns(lastSystemShutdown);

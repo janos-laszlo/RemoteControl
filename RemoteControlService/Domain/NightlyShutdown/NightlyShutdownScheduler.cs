@@ -44,7 +44,9 @@ namespace Domain.NightlyShutdown
             taskScheduler.ScheduleTask(shutdownTask, nextShutdown.AddMinutes(-10));
             Trace.TraceInformation($"Shutdown was scheduled to happen at: {nextShutdown}");
             
-            void shutdownTask() => shutdownCommandFactory.CreateShutdownCommand(seconds: 600, overrideScheduledShutdown: false).Execute();
+            void shutdownTask() => shutdownCommandFactory.CreateShutdownCommand(
+                seconds: 600, 
+                overrideScheduledShutdown: false).Execute();
         }
     }
 }

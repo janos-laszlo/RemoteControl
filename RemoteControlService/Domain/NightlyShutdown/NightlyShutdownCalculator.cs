@@ -9,14 +9,20 @@ namespace Domain.NightlyShutdown
         private static readonly TimeSpan MIN_TIME = new TimeSpan(22, 0, 0);
 
         /// <summary>
-        /// Returns the average of the <paramref name="shutdownHistory"/> having as base time 22:00. The times in the collection are considered to be ahead of 22:00.
-        /// <para>Ex: <paramref name="shutdownHistory"/> = [23:00, 01:00] should output 00:00 not 12:00 </para>
+        /// Returns the average of the <paramref name="shutdownHistory"/> having as 
+        /// base time 22:00. The times in the collection are considered to be ahead of 22:00.
+        /// <para>Ex: <paramref name="shutdownHistory"/> = [23:00, 01:00] 
+        /// should output 00:00 not 12:00 </para>
         /// </summary>
         /// <param name="shutdownHistory">A collection of <see cref="DateTime"/>.</param>
         public DateTime GetNextShutdown(IEnumerable<DateTime> shutdownHistory)
         {
-            if (shutdownHistory == null || !shutdownHistory.Any()) throw new ArgumentException($"Collection contains no elements.", nameof(shutdownHistory));
-            IEnumerable<TimeSpan> shutdownHistoryTimes = shutdownHistory.Select(d => new TimeSpan(d.Hour, d.Minute, d.Second));
+            if (shutdownHistory == null || !shutdownHistory.Any()) 
+                throw new ArgumentException(
+                    $"Collection contains no elements.", 
+                    nameof(shutdownHistory));
+            IEnumerable<TimeSpan> shutdownHistoryTimes = 
+                shutdownHistory.Select(d => new TimeSpan(d.Hour, d.Minute, d.Second));
             TimeSpan nextShutdownTime = CalculateAverageTimeForTimeInterval(shutdownHistoryTimes);
             return GetNextClosestShutdownDateTime(nextShutdownTime);
         }

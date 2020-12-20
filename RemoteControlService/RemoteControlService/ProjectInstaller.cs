@@ -30,7 +30,9 @@ namespace RemoteControlService
             base.OnAfterUninstall(savedState);
 
             string path = Path.GetDirectoryName(Context.Parameters["assemblypath"]);
-            RemoveFirewallRuleForProgram(Path.Combine(path, "RemoteControlService.exe"), ServiceName);
+            RemoveFirewallRuleForProgram(
+                Path.Combine(path, "RemoteControlService.exe"),
+                ServiceName);
         }
 
         private void RemoveFirewallRuleForProgram(string exeFullPath, string displayName)
@@ -39,7 +41,8 @@ namespace RemoteControlService
                 new ProcessStartInfo
                 {
                     FileName = "netsh",
-                    Arguments = string.Format("advfirewall firewall delete rule name = \"{0}\" program = \"{1}\"", displayName, exeFullPath),
+                    Arguments = string.Format("advfirewall firewall delete rule " +
+                        "name = \"{0}\" program = \"{1}\"", displayName, exeFullPath),
                     WindowStyle = ProcessWindowStyle.Hidden
                 });
 
@@ -52,7 +55,10 @@ namespace RemoteControlService
                 new ProcessStartInfo
                 {
                     FileName = "netsh",
-                    Arguments = string.Format("advfirewall firewall add rule name = \"{0}\" dir=in action=allow program=\"{1}\" enable = yes profile = PUBLIC", displayName, exeFullPath),
+                    Arguments = string.Format("advfirewall firewall add rule name = \"{0}\" " +
+                        "dir=in action=allow program=\"{1}\" enable = yes profile = PUBLIC",
+                        displayName,
+                        exeFullPath),
                     WindowStyle = ProcessWindowStyle.Hidden
                 });
 
@@ -77,7 +83,9 @@ namespace RemoteControlService
 
         }
 
-        private void RemoteControlServiceProcessInstaller_AfterInstall(object sender, InstallEventArgs e)
+        private void RemoteControlServiceProcessInstaller_AfterInstall(
+            object sender,
+            InstallEventArgs e)
         {
 
         }

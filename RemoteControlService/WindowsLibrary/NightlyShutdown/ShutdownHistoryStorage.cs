@@ -12,7 +12,8 @@ namespace WindowsLibrary.NightlyShutdown
 #if DEBUG
         public const string SHUTDOWN_HISTORY_FILE = "shutdownHistory.json";
 #else
-        public static readonly string SHUTDOWN_HISTORY_FILE = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "shutdownHistory.json");
+        public static readonly string SHUTDOWN_HISTORY_FILE = 
+            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "shutdownHistory.json");
 #endif
         private readonly HashSet<DateTime> dateTimes;
 
@@ -24,7 +25,8 @@ namespace WindowsLibrary.NightlyShutdown
                 File.WriteAllText(SHUTDOWN_HISTORY_FILE, "[]");
             }
 
-            dateTimes = JSONUtils.FromJson<HashSet<DateTime>>(File.ReadAllText(SHUTDOWN_HISTORY_FILE));
+            dateTimes = JSONUtils.FromJson<HashSet<DateTime>>(
+                File.ReadAllText(SHUTDOWN_HISTORY_FILE));
         }
 
         public IEnumerable<DateTime> GetAll(Func<DateTime, bool> filter = null)

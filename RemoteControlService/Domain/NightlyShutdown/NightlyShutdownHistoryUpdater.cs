@@ -12,7 +12,9 @@ namespace Domain.NightlyShutdown
         private readonly ISystemInformation systemInformation;
         private readonly IShutdownHistoryStorage shutdownHistoryStorage;
 
-        public NightlyShutdownHistoryUpdater(ISystemInformation systemInformation, IShutdownHistoryStorage shutdownHistoryStorage)
+        public NightlyShutdownHistoryUpdater(
+            ISystemInformation systemInformation,
+            IShutdownHistoryStorage shutdownHistoryStorage)
         {
             this.systemInformation = systemInformation;
             this.shutdownHistoryStorage = shutdownHistoryStorage;

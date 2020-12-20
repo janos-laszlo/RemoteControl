@@ -38,7 +38,10 @@ namespace WindowsLibrary.MessageReception
             messageListenerThread = new Thread(() =>
             {
                 // Create a TCP/IP socket.  
-                listener = new Socket(addressFamily: localEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                listener = new Socket(
+                    addressFamily: localEndPoint.AddressFamily,
+                    SocketType.Stream,
+                    ProtocolType.Tcp);
                 // Bind the socket to the local endpoint and listen for incoming connections.  
                 try
                 {
@@ -173,7 +176,13 @@ namespace WindowsLibrary.MessageReception
             {
                 workSocket = handler
             };
-            handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
+            handler.BeginReceive(
+                state.buffer,
+                0,
+                StateObject.BufferSize,
+                0,
+                new AsyncCallback(ReadCallback),
+                state);
         }
 
         private void ReadCallback(IAsyncResult ar)
@@ -195,14 +204,21 @@ namespace WindowsLibrary.MessageReception
                 {
                     // All the data has been read from the client.
                     message = state.sb.ToString(0, state.sb.Length - 1);
-                    Trace.WriteLine($"Read {message.Length} bytes from {((IPEndPoint)handler.RemoteEndPoint).Address}. Data : {message}");
+                    Trace.WriteLine($"Read {message.Length} bytes from " +
+                        $"{((IPEndPoint)handler.RemoteEndPoint).Address}. Data : {message}");
                     OnMessageReceived(message);
                     CloseHandler(handler);
                 }
                 else
                 {
                     // Not all data received. Get more.
-                    handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReadCallback), state);
+                    handler.BeginReceive(
+                        state.buffer,
+                        0,
+                        StateObject.BufferSize,
+                        0,
+                        new AsyncCallback(ReadCallback),
+                        state);
                 }
             }
         }
@@ -244,7 +260,9 @@ namespace WindowsLibrary.MessageReception
             }).Start();
         }
 
-        private void TryListeningAndRespondingToNameLookup(UdpClient udpClient, IPEndPoint clientEndpoint)
+        private void TryListeningAndRespondingToNameLookup(
+            UdpClient udpClient,
+            IPEndPoint clientEndpoint)
         {
             try
             {
@@ -254,12 +272,15 @@ namespace WindowsLibrary.MessageReception
             {
                 if (shouldRun)
                 {
-                    Trace.TraceError($"Error occured while listening and responding to name lookup: {e.Message}");
+                    Trace.TraceError($"Error occured while listening " +
+                        $"and responding to name lookup: {e.Message}");
                 }
             }
         }
 
-        private static void ListenAndRespondToNameLookup(UdpClient udpClient, IPEndPoint clientEndpoint)
+        private static void ListenAndRespondToNameLookup(
+            UdpClient udpClient,
+            IPEndPoint clientEndpoint)
         {
             var clientRequestBytes = udpClient.Receive(ref clientEndpoint);
             var clientRequestMessage = Encoding.ASCII.GetString(clientRequestBytes);
