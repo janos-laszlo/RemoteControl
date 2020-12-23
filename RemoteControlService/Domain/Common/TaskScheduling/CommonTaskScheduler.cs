@@ -19,9 +19,9 @@ namespace Domain.Common.TaskScheduling
             timer.Start();
         }
 
-        public void ScheduleTask(Action task, DateTime executeAt)
+        public void ScheduleTask(ScheduledTask scheduledTask)
         {
-            tasks.Enqueue(new ScheduledTask(task, executeAt));
+            tasks.Enqueue(scheduledTask);
             SetTimerIntervalToPriorityQueueTop();
         }
 
@@ -47,16 +47,5 @@ namespace Domain.Common.TaskScheduling
                 timer.Interval = int.MaxValue;
             }
         }
-    }
-
-    class ScheduledTask
-    {
-        public ScheduledTask(Action task, DateTime executeAt)
-        {
-            Task = task;
-            ExecuteAt = executeAt;
-        }
-        public Action Task { get; set; }
-        public DateTime ExecuteAt { get; set; }
     }
 }

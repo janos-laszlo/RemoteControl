@@ -19,6 +19,7 @@ namespace Domain.NightlyShutdown
         private readonly IShutdownCalculator nightlyShutdownCalculator;
         private readonly ITaskScheduler taskScheduler;
         private readonly IShutdownCommandFactory shutdownCommandFactory;
+        private ScheduledTask shutdownTask;
 
         public NightlyShutdownScheduler(IShutdownHistoryStorage shutdownHistoryStorage,
                                         IShutdownCalculator nightlyShutdownCalculator,
@@ -41,11 +42,22 @@ namespace Domain.NightlyShutdown
             }
 
             DateTime nextShutdown = nightlyShutdownCalculator.GetNextShutdown(shutdownHistory);
-            taskScheduler.ScheduleTask(shutdownTask, nextShutdown.AddMinutes(-10));
+            shutdownTask = CreateShutdownScheduledTask(nextShutdown.AddMinutes(-10));
+            taskScheduler.ScheduleTask(shutdownTask);
             Trace.TraceInformation($"Shutdown was scheduled to happen at: {nextShutdown}");
-            
+        }
+
+        public void CancelShutdown()
+        {
+            shutdownTask.Cancel();
+        }
+
+        private ScheduledTask CreateShutdownScheduledTask(DateTime executeAt)
+        {
+            return new ScheduledTask(shutdownTask, executeAt);
+
             void shutdownTask() => shutdownCommandFactory.CreateShutdownCommand(
-                seconds: 600, 
+                seconds: 600,
                 overrideScheduledShutdown: false).Execute();
         }
     }

@@ -38,6 +38,7 @@ namespace RemoteControlService
         {
             messageReceptionist.MessageReceived -= OnMessageReceived;
             messageReceptionist.Stop();
+            nightlyShutdownScheduler.CancelShutdown();
             Trace.WriteLine("The receiver has stopped.");
         }
 
