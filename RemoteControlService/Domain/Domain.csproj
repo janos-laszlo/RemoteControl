@@ -52,6 +52,7 @@
     <Compile Include="Commands\ShutdownCommand.cs" />
     <Compile Include="Common\DataStructures\ConcurrentHeap.cs" />
     <Compile Include="Common\DataStructures\ConcurrentPriorityQueue.cs" />
+    <Compile Include="Common\DataStructures\Heap.cs" />
     <Compile Include="Common\TaskScheduling\CommonTaskScheduler.cs" />
     <Compile Include="Common\TaskScheduling\ITaskScheduler.cs" />
     <Compile Include="Common\TaskScheduling\ScheduledTask.cs" />
