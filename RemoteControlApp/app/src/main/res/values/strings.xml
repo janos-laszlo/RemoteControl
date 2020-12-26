@@ -12,4 +12,6 @@
     <string name="hibernate">HIBERNATE</string>
     <string name="gt"><![CDATA[>]]></string>
     <string name="lt"><![CDATA[<]]></string>
+    <string name="yes">Yes</string>
+    <string name="shutdown_now">Are you sure you want to shutdown right now?</string>
 </resources>

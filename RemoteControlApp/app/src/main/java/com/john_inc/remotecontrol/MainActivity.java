@@ -29,12 +29,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private static final int SIXTY_SECONDS = 60;
-    private ArrayList<Receiver> receivers = new ArrayList<>();
-    private ArrayList<String> receiverNames = new ArrayList<>();
+    private final ArrayList<Receiver> receivers = new ArrayList<>();
+    private final ArrayList<String> receiverNames = new ArrayList<>();
+    private final Transmitter transmitter = new Transmitter();
+    private final NetworkEvents networkEvents = new NetworkEvents(this);
+    private final AtomicBoolean threadLock = new AtomicBoolean(false);
     private Receiver selectedReceiver;
-    private Transmitter transmitter = new Transmitter();
-    private NetworkEvents networkEvents = new NetworkEvents(this);
-    private AtomicBoolean threadLock = new AtomicBoolean(false);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +156,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         int seconds;
         seconds = minutes.isEmpty() ? 0 : (Integer.parseInt(minutes) * SIXTY_SECONDS);
 
-        sendCommand(new ShutdownCommandDTO(String.valueOf(seconds)));
+        if (seconds < SIXTY_SECONDS) {
+            new ConfirmationDialog(getString(R.string.shutdown_now),
+                    (dialog, which) -> MainActivity.this.sendCommand(new ShutdownCommandDTO(String.valueOf(seconds))),
+                    (dialog, which) -> {
+                    })
+                    .show(getSupportFragmentManager(), "MainActivity");
+        } else {
+            sendCommand(new ShutdownCommandDTO(String.valueOf(seconds)));
+        }
     }
 
     public void cancelShutdown(View v) {
