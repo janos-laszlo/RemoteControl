@@ -38,6 +38,10 @@ namespace WindowsLibrary.CommandFactories
                 nameof(HibernateCommand),
                 (json) => new HibernateCommand(
                     new CmdLinePowerController())
+            },
+            {
+                nameof(GetNextShutdownCommand),
+                (json) => new GetNextShutdownCommand()
             }
         };
 

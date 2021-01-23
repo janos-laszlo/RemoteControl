@@ -7,7 +7,7 @@ namespace Domain.Commands
     {
         public Maybe<string> Execute()
         {
-            return Maybe<string>.Some("nextShutdown");
+            return Maybe<string>.Some(ShutdownCommand.NextShutdownDateTime.ToString());
         }
     }
 }

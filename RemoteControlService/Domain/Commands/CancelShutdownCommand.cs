@@ -1,6 +1,7 @@
 ﻿using Domain.CommandFactories;
 using Domain.Common.Utilities;
 using Domain.Controllers;
+using System;
 
 namespace Domain.Commands
 {
@@ -16,6 +17,7 @@ namespace Domain.Commands
         public Maybe<string> Execute()
         {
             powerController.CancelShutdown();
+            ShutdownCommand.NextShutdownDateTime = DateTime.MinValue;
             return Maybe<string>.None();
         }
     }

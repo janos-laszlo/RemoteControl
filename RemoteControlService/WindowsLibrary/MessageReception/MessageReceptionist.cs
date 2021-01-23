@@ -208,8 +208,9 @@ namespace WindowsLibrary.MessageReception
                     Trace.WriteLine($"Read {message.Length} bytes from " +
                         $"{((IPEndPoint)handler.RemoteEndPoint).Address}. Data : {message}");
                     Maybe<string> maybeResponse = MessageProcessor(message);
-                    maybeResponse.Do((response) => Send(handler, response));
-                    CloseHandler(handler);
+                    maybeResponse.Match(
+                        none: () => CloseHandler(handler),
+                        some: (response) => Send(handler, response));
                 }
                 else
                 {
@@ -229,7 +230,7 @@ namespace WindowsLibrary.MessageReception
         {
             // Convert the string data to byte data using ASCII encoding.  
             byte[] byteData = Encoding.ASCII.GetBytes(data);
-
+            Trace.WriteLine($"Sent \"{data}\" to client.");
             // Begin sending the data to the remote device.  
             handler.BeginSend(byteData, 0, byteData.Length, 0,
                 new AsyncCallback(SendCallback), handler);
@@ -241,10 +242,9 @@ namespace WindowsLibrary.MessageReception
             {
                 // Retrieve the socket from the state object.  
                 Socket handler = (Socket)ar.AsyncState;
-
                 // Complete sending the data to the remote device.  
                 int bytesSent = handler.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to client.", bytesSent);
+                CloseHandler(handler);
             }
             catch (Exception e)
             {

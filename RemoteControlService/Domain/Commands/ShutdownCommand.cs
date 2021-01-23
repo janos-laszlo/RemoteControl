@@ -8,7 +8,7 @@ namespace Domain.Commands
 {
     public class ShutdownCommand : ICommand
     {
-        public static readonly DateTime NextShutdownDateTime = DateTime.MinValue;
+        public static DateTime NextShutdownDateTime = DateTime.MinValue;
         private readonly IPowerController powerController;
         private readonly ShutdownArgs shutdownArgs;
 
@@ -24,6 +24,7 @@ namespace Domain.Commands
         public Maybe<string> Execute()
         {
             powerController.ScheduleShutdown(shutdownArgs);
+            NextShutdownDateTime = DateTime.Now.AddSeconds(shutdownArgs.Seconds);
             return Maybe<string>.None();
         }
     }

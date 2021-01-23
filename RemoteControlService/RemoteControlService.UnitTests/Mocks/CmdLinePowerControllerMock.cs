@@ -1,4 +1,5 @@
-﻿using Domain.Controllers;
+﻿using Domain.Commands.Arguments;
+using Domain.Controllers;
 using System.Diagnostics;
 
 namespace RemoteControlService.UniTests.Mocks
@@ -7,7 +8,7 @@ namespace RemoteControlService.UniTests.Mocks
     {
         public int NumOfCancelledShutdowns { get; private set; }
         public int NumOfHibernations { get; private set; }
-        public string Arguments { get; private set; }
+        public int SecondsTillShutdown { get; private set; }
 
         public void CancelShutdown()
         {
@@ -19,10 +20,10 @@ namespace RemoteControlService.UniTests.Mocks
             ++NumOfHibernations;
         }
 
-        public void ScheduleShutdown(string arguments)
+        public void ScheduleShutdown(ShutdownArgs arguments)
         {
             Trace.TraceInformation($"Shutdown was called with args: {arguments}");
-            Arguments = arguments;
+            SecondsTillShutdown = arguments.Seconds;
         }
     }
 }
