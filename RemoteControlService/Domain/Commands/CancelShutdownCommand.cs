@@ -17,7 +17,7 @@ namespace Domain.Commands
         public Maybe<string> Execute()
         {
             powerController.CancelShutdown();
-            ShutdownCommand.NextShutdownDateTime = DateTime.MinValue;
+            ShutdownCommand.NextShutdownDateTime = Maybe<DateTime>.None();
             return Maybe<string>.None();
         }
     }
