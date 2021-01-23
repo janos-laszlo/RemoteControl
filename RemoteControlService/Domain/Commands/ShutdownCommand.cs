@@ -1,33 +1,30 @@
-﻿using System;
+﻿using Domain.Builders;
+using Domain.CommandFactories;
+using Domain.Common.Utilities;
+using Domain.Controllers;
+using System;
 
 namespace Domain.Commands
 {
     public class ShutdownCommand : ICommand
     {
-        private readonly int seconds;
+        public static readonly DateTime NextShutdownDateTime = DateTime.MinValue;
         private readonly IPowerController powerController;
-        private readonly bool overrideScheduledShutdown = true;
-
-        public ShutdownCommand(int seconds, IPowerController powerController)
-        {
-            if (seconds < 0) 
-                throw new ArgumentException(
-                    $"seconds expected to be a positive integer, but was {seconds}");
-            this.seconds = seconds;
-            this.powerController = powerController;
-        }
+        private readonly IShutdownCommandArgumentsBuilder shutdownCommandArgumentsBuilder;
 
         public ShutdownCommand(
-            int seconds, 
-            IPowerController powerController, 
-            bool overrideScheduledShutdown) : this(seconds, powerController)
+            IPowerController powerController,
+            IShutdownCommandArgumentsBuilder shutdownCommandArgumentsBuilder)
         {
-            this.overrideScheduledShutdown = overrideScheduledShutdown;
+
+            this.powerController = powerController;
+            this.shutdownCommandArgumentsBuilder = shutdownCommandArgumentsBuilder;
         }
 
-        public void Execute()
+        public Maybe<string> Execute()
         {
-            powerController.ScheduleShutdown(seconds, overrideScheduledShutdown);
+            powerController.ScheduleShutdown(shutdownCommandArgumentsBuilder.Build());
+            return Maybe<string>.None();
         }
     }
 }

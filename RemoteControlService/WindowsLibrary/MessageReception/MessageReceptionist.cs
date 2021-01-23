@@ -1,4 +1,5 @@
-﻿using Domain.MessageReception;
+﻿using Domain.Common.Utilities;
+using Domain.MessageReception;
 using System;
 using System.Diagnostics;
 using System.Net;
@@ -79,7 +80,7 @@ namespace WindowsLibrary.MessageReception
             StopNameLookupReceptionist();
         }
 
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
+        public Func<string, Maybe<string>> MessageProcessor { get; set; } = x => Maybe<string>.None();
 
         private void StopMessageListener()
         {
@@ -206,7 +207,8 @@ namespace WindowsLibrary.MessageReception
                     message = state.sb.ToString(0, state.sb.Length - 1);
                     Trace.WriteLine($"Read {message.Length} bytes from " +
                         $"{((IPEndPoint)handler.RemoteEndPoint).Address}. Data : {message}");
-                    OnMessageReceived(message);
+                    Maybe<string> maybeResponse = MessageProcessor(message);
+                    maybeResponse.Do((response) => Send(handler, response));
                     CloseHandler(handler);
                 }
                 else
@@ -220,6 +222,33 @@ namespace WindowsLibrary.MessageReception
                         new AsyncCallback(ReadCallback),
                         state);
                 }
+            }
+        }
+
+        private static void Send(Socket handler, string data)
+        {
+            // Convert the string data to byte data using ASCII encoding.  
+            byte[] byteData = Encoding.ASCII.GetBytes(data);
+
+            // Begin sending the data to the remote device.  
+            handler.BeginSend(byteData, 0, byteData.Length, 0,
+                new AsyncCallback(SendCallback), handler);
+        }
+
+        private static void SendCallback(IAsyncResult ar)
+        {
+            try
+            {
+                // Retrieve the socket from the state object.  
+                Socket handler = (Socket)ar.AsyncState;
+
+                // Complete sending the data to the remote device.  
+                int bytesSent = handler.EndSend(ar);
+                Console.WriteLine("Sent {0} bytes to client.", bytesSent);
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine(e.ToString());
             }
         }
 
@@ -237,11 +266,6 @@ namespace WindowsLibrary.MessageReception
             {
                 handler.Close();
             }
-        }
-
-        private void OnMessageReceived(string message)
-        {
-            MessageReceived?.Invoke(this, new MessageReceivedEventArgs(message));
         }
 
         private void StartNameLookupReceptionist()

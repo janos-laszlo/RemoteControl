@@ -1,5 +1,4 @@
-﻿using Domain.Commands;
-using Domain.Common.TaskScheduling;
+﻿using Domain.CommandFactories;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,18 +16,14 @@ namespace Domain.NightlyShutdown
     {
         private readonly IShutdownHistoryStorage shutdownHistoryStorage;
         private readonly IShutdownCalculator nightlyShutdownCalculator;
-        private readonly ITaskScheduler taskScheduler;
         private readonly IShutdownCommandFactory shutdownCommandFactory;
-        private ScheduledTask shutdownTask;
 
         public NightlyShutdownScheduler(IShutdownHistoryStorage shutdownHistoryStorage,
                                         IShutdownCalculator nightlyShutdownCalculator,
-                                        ITaskScheduler taskScheduler,
                                         IShutdownCommandFactory shutdownCommandFactory)
         {
             this.shutdownHistoryStorage = shutdownHistoryStorage;
             this.nightlyShutdownCalculator = nightlyShutdownCalculator;
-            this.taskScheduler = taskScheduler;
             this.shutdownCommandFactory = shutdownCommandFactory;
         }
 
@@ -41,24 +36,27 @@ namespace Domain.NightlyShutdown
                 return;
             }
 
-            DateTime nextShutdown = nightlyShutdownCalculator.GetNextShutdown(shutdownHistory);
-            shutdownTask = CreateShutdownScheduledTask(nextShutdown.AddMinutes(-10));
-            taskScheduler.ScheduleTask(shutdownTask);
-            Trace.TraceInformation($"Shutdown was scheduled to happen at: {nextShutdown}");
+            DateTime NextForecastedShutdownTime = nightlyShutdownCalculator.GetNextShutdown(shutdownHistory);
+            DateTime nextShutdownTime = AddBuffer(NextForecastedShutdownTime, minutes: 10);
+            ExecuteDailyShutdownAt(nextShutdownTime);
+            Trace.TraceInformation($"Shutdown was scheduled to happen at: {nextShutdownTime}");
+        }
+
+        private DateTime AddBuffer(DateTime nextShutdownTime, int minutes)
+        {
+            DateTime now = DateTime.Now;
+            return nextShutdownTime.AddMinutes(-minutes) > now ?
+                nextShutdownTime : now.AddMinutes(minutes);
+        }
+
+        private void ExecuteDailyShutdownAt(DateTime nextShutdownTime)
+        {
+            shutdownCommandFactory.CreateDailyShutdownCommand(nextShutdownTime).Execute();
         }
 
         public void CancelShutdown()
         {
-            shutdownTask.Cancel();
-        }
-
-        private ScheduledTask CreateShutdownScheduledTask(DateTime executeAt)
-        {
-            return new ScheduledTask(shutdownTask, executeAt);
-
-            void shutdownTask() => shutdownCommandFactory.CreateShutdownCommand(
-                seconds: 600,
-                overrideScheduledShutdown: false).Execute();
+            shutdownCommandFactory.CreateCancelShutdownCommand().Execute();
         }
     }
 }

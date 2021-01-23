@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Common.Utilities;
+using System;
 
 namespace Domain.MessageReception
 {
@@ -6,7 +7,6 @@ namespace Domain.MessageReception
     {
         void Start();
         void Stop();
-
-        event EventHandler<MessageReceivedEventArgs> MessageReceived;
+        Func<string, Maybe<string>> MessageProcessor { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Domain.Commands;
+﻿using Domain.CommandFactories;
+using Domain.Commands;
 using RemoteControlService.UniTests.Mocks;
 using Xunit;
 

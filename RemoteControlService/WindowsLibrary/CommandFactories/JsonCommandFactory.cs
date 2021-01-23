@@ -2,6 +2,7 @@
 using Domain.Commands;
 using System;
 using System.Collections.Generic;
+using WindowsLibrary.Builders;
 using WindowsLibrary.Controllers;
 using WindowsLibrary.DTOs;
 using WindowsLibrary.Utils;
@@ -10,13 +11,17 @@ namespace WindowsLibrary.CommandFactories
 {
     public class JsonCommandFactory : ITextCommandFactory
     {
-        static readonly Dictionary<string, Func<string, ICommand>> CommandTypes = new Dictionary<string, Func<string, ICommand>>
+        static readonly Dictionary<string, Func<string, ICommand>> CommandTypes =
+            new Dictionary<string, Func<string, ICommand>>
         {
             {
                 nameof(ShutdownCommand),
                 (json) =>  new ShutdownCommand(
-                    Create<ShutdownCommandDTO>(json).Seconds,
-                    new CmdLinePowerController())
+                    new CmdLinePowerController(),
+                    new WindowsShutdownCommandArgumentsBuilder()
+                        .WithSeconds(Create<ShutdownCommandDTO>(json).Seconds)
+                        .ShouldOverrideExistingShutdown(true)
+                        .ShouldShowNotification(true))
             },
             {
                 nameof(CancelShutdownCommand),
@@ -40,7 +45,7 @@ namespace WindowsLibrary.CommandFactories
         {
             var cmd = JSONUtils.FromJson<CommandDTO>(unparsedCmd);
 
-            if (!CommandTypes.ContainsKey(cmd.Name)) 
+            if (!CommandTypes.ContainsKey(cmd.Name))
                 throw new Exception($"Command type {cmd.Name} is not handled");
 
             return CommandTypes[cmd.Name](cmd.Command);

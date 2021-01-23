@@ -41,7 +41,7 @@
             // RemoteControlServiceInstaller
             // 
             this.RemoteControlServiceInstaller.Description = "Execute actions on this device, like shuting it down, changing the volume. These " +
-    "action requests are received from a remote device.";
+                                                             "action requests are received from a remote device.";
             this.RemoteControlServiceInstaller.DisplayName = "Remote Control Service";
             this.RemoteControlServiceInstaller.ServiceName = "RemoteControlService";
             this.RemoteControlServiceInstaller.StartType = System.ServiceProcess.ServiceStartMode.Automatic;

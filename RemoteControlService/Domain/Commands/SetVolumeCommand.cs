@@ -1,4 +1,8 @@
-﻿namespace Domain.Commands
+﻿using Domain.CommandFactories;
+using Domain.Common.Utilities;
+using Domain.Controllers;
+
+namespace Domain.Commands
 {
     public class SetVolumeCommand : ICommand
     {
@@ -11,9 +15,10 @@
             this.volumeController = volumeController;
         }
 
-        public void Execute()
+        public Maybe<string> Execute()
         {
             volumeController.SetVolume(percent);
+            return Maybe<string>.None();
         }
     }
 }

@@ -1,34 +1,26 @@
-﻿using Domain.CommandFactories;
-using Domain.Commands;
-using Domain.MessageReception;
-using Domain.NightlyShutdown;
-using System;
+﻿using Domain.NightlyShutdown;
 using System.Diagnostics;
 
 namespace RemoteControlService
 {
     class Receiver
     {
-        private readonly IMessageReceptionist messageReceptionist;
-        private readonly ITextCommandFactory commandFactory;
+        private readonly CommandProcessor commandProcessor;
         private readonly IShutdownHistoryUpdater shutdownHistoryUpdater;
         private readonly IShutdownScheduler nightlyShutdownScheduler;
 
-        public Receiver(IMessageReceptionist messageReceptionist,
-                        ITextCommandFactory commandFactory,
+        public Receiver(CommandProcessor commandProcessor,
                         IShutdownHistoryUpdater shutdownHistoryUpdater,
                         IShutdownScheduler nightlyShutdownScheduler)
         {
-            this.messageReceptionist = messageReceptionist;
-            this.commandFactory = commandFactory;
+            this.commandProcessor = commandProcessor;
             this.shutdownHistoryUpdater = shutdownHistoryUpdater;
             this.nightlyShutdownScheduler = nightlyShutdownScheduler;
         }
 
         public void Start()
         {
-            messageReceptionist.MessageReceived += OnMessageReceived;
-            messageReceptionist.Start();
+            commandProcessor.Start();
             shutdownHistoryUpdater.UpdateShutdownHistory();
             nightlyShutdownScheduler.ScheduleShutdown();
             Trace.WriteLine("The receiver has started.");
@@ -36,33 +28,9 @@ namespace RemoteControlService
 
         public void Stop()
         {
-            messageReceptionist.MessageReceived -= OnMessageReceived;
-            messageReceptionist.Stop();
+            commandProcessor.Stop();
             nightlyShutdownScheduler.CancelShutdown();
             Trace.WriteLine("The receiver has stopped.");
-        }
-
-        private void OnMessageReceived(object sender, MessageReceivedEventArgs eventArgs)
-        {
-            TryParsingAndExecutingCommand(eventArgs.Message);
-        }
-
-        private void TryParsingAndExecutingCommand(string cmd)
-        {
-            try
-            {
-                ParseAndExecuteCommand(cmd);
-            }
-            catch (Exception e)
-            {
-                Trace.TraceError($"Failed to parse and execute command: {e}");
-            }
-        }
-
-        private void ParseAndExecuteCommand(string cmd)
-        {
-            ICommand command = commandFactory.Create(cmd);
-            command.Execute();
         }
     }
 }

@@ -1,9 +1,7 @@
-﻿using Domain.Commands;
-
-namespace Domain.CommandFactories
+﻿namespace Domain.CommandFactories
 {
     public interface ITextCommandFactory
     {
-        ICommand Create(string unparsedCmd);
+        ICommand Create(string command);
     }
 }

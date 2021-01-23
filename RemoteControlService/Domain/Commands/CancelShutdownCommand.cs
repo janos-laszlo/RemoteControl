@@ -1,4 +1,8 @@
-﻿namespace Domain.Commands
+﻿using Domain.CommandFactories;
+using Domain.Common.Utilities;
+using Domain.Controllers;
+
+namespace Domain.Commands
 {
     public class CancelShutdownCommand : ICommand
     {
@@ -9,9 +13,10 @@
             this.powerController = powerController;
         }
 
-        public void Execute()
+        public Maybe<string> Execute()
         {
             powerController.CancelShutdown();
+            return Maybe<string>.None();
         }
     }
 }

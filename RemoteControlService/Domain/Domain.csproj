@@ -41,13 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builders\IShutdownCommandArgumentsBuilder.cs" />
     <Compile Include="CommandFactories\ITextCommandFactory.cs" />
     <Compile Include="Commands\CancelShutdownCommand.cs" />
+    <Compile Include="Commands\GetNextShutdownCommand.cs" />
     <Compile Include="Commands\HibernateCommand.cs" />
-    <Compile Include="Commands\ICommand.cs" />
-    <Compile Include="Commands\IPowerController.cs" />
-    <Compile Include="Commands\IShutdownCommandFactory.cs" />
-    <Compile Include="Commands\IVolumeController.cs" />
+    <Compile Include="CommandFactories\ICommand.cs" />
+    <Compile Include="Common\Utilities\EnumerableExtensions.cs" />
+    <Compile Include="Common\Utilities\Maybe.cs" />
+    <Compile Include="Controllers\IPowerController.cs" />
+    <Compile Include="CommandFactories\IShutdownCommandFactory.cs" />
+    <Compile Include="Controllers\IVolumeController.cs" />
     <Compile Include="Commands\SetVolumeCommand.cs" />
     <Compile Include="Commands\ShutdownCommand.cs" />
     <Compile Include="Common\DataStructures\ConcurrentHeap.cs" />
@@ -57,7 +61,6 @@
     <Compile Include="Common\TaskScheduling\ITaskScheduler.cs" />
     <Compile Include="Common\TaskScheduling\ScheduledTask.cs" />
     <Compile Include="MessageReception\IMessageReceptionist.cs" />
-    <Compile Include="MessageReception\MessageReceivedEventArgs.cs" />
     <Compile Include="NightlyShutdown\IShutdownCalculator.cs" />
     <Compile Include="NightlyShutdown\IShutdownHistoryStorage.cs" />
     <Compile Include="NightlyShutdown\IShutdownHistoryUpdater.cs" />

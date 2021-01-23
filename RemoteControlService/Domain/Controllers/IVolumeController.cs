@@ -1,4 +1,4 @@
-﻿namespace Domain.Commands
+﻿namespace Domain.Controllers
 {
     public interface IVolumeController
     {

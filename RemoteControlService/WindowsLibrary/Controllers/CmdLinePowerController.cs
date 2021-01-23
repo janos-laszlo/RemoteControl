@@ -1,4 +1,4 @@
-﻿using Domain.Commands;
+﻿using Domain.Controllers;
 using WindowsLibrary.Utils;
 
 namespace WindowsLibrary.Controllers
@@ -10,11 +10,8 @@ namespace WindowsLibrary.Controllers
             CmdLineUtils.InvokeCommandLineCommand("/C SHUTDOWN /A");
         }
 
-        public void ScheduleShutdown(int seconds, bool overrideScheduledShutdown)
+        public void ScheduleShutdown(string arguments)
         {
-            string arguments = overrideScheduledShutdown ?
-                $"/C SHUTDOWN /A & SHUTDOWN /S /T {seconds}" :
-                $"/C SHUTDOWN /S /T {seconds}";
             CmdLineUtils.InvokeCommandLineCommand(arguments);
         }
 
