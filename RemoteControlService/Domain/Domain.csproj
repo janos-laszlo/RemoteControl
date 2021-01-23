@@ -41,8 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Builders\IShutdownCommandArgumentsBuilder.cs" />
     <Compile Include="CommandFactories\ITextCommandFactory.cs" />
+    <Compile Include="Commands\Arguments\ShutdownArgs.cs" />
     <Compile Include="Commands\CancelShutdownCommand.cs" />
     <Compile Include="Commands\GetNextShutdownCommand.cs" />
     <Compile Include="Commands\HibernateCommand.cs" />

@@ -1,8 +1,10 @@
-﻿namespace Domain.Controllers
+﻿using Domain.Commands.Arguments;
+
+namespace Domain.Controllers
 {
     public interface IPowerController
     {
-        void ScheduleShutdown(string arguments);
+        void ScheduleShutdown(ShutdownArgs arguments);
         void CancelShutdown();
         void Hibernate();
     }

@@ -1,5 +1,5 @@
-﻿using Domain.Builders;
-using Domain.CommandFactories;
+﻿using Domain.CommandFactories;
+using Domain.Commands.Arguments;
 using Domain.Common.Utilities;
 using Domain.Controllers;
 using System;
@@ -10,20 +10,20 @@ namespace Domain.Commands
     {
         public static readonly DateTime NextShutdownDateTime = DateTime.MinValue;
         private readonly IPowerController powerController;
-        private readonly IShutdownCommandArgumentsBuilder shutdownCommandArgumentsBuilder;
+        private readonly ShutdownArgs shutdownArgs;
 
         public ShutdownCommand(
             IPowerController powerController,
-            IShutdownCommandArgumentsBuilder shutdownCommandArgumentsBuilder)
+            ShutdownArgs shutdownArgs)
         {
 
             this.powerController = powerController;
-            this.shutdownCommandArgumentsBuilder = shutdownCommandArgumentsBuilder;
+            this.shutdownArgs = shutdownArgs;
         }
 
         public Maybe<string> Execute()
         {
-            powerController.ScheduleShutdown(shutdownCommandArgumentsBuilder.Build());
+            powerController.ScheduleShutdown(shutdownArgs);
             return Maybe<string>.None();
         }
     }

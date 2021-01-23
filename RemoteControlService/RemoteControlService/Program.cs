@@ -1,12 +1,10 @@
 ﻿using Autofac;
-using Domain.Builders;
 using Domain.CommandFactories;
 using Domain.Common.TaskScheduling;
 using Domain.Controllers;
 using Domain.MessageReception;
 using Domain.NightlyShutdown;
 using System.ServiceProcess;
-using WindowsLibrary.Builders;
 using WindowsLibrary.CommandFactories;
 using WindowsLibrary.Controllers;
 using WindowsLibrary.MessageReception;
@@ -54,8 +52,6 @@ namespace RemoteControlService
             builder.RegisterType<ShutdownHistoryStorage>().As<IShutdownHistoryStorage>().SingleInstance();
             builder.RegisterType<CommonTaskScheduler>().As<ITaskScheduler>().SingleInstance();
             builder.RegisterType<CommandProcessor>();
-            builder.RegisterType<WindowsShutdownCommandArgumentsBuilder>()
-                .As<IShutdownCommandArgumentsBuilder>();
             return builder.Build();
         }
     }

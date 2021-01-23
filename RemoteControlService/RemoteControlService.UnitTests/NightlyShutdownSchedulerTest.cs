@@ -1,10 +1,8 @@
-﻿using Domain.Builders;
-using Domain.CommandFactories;
+﻿using Domain.CommandFactories;
 using Domain.NightlyShutdown;
 using RemoteControlService.UniTests.Mocks;
 using System;
 using System.IO;
-using WindowsLibrary.Builders;
 using WindowsLibrary.CommandFactories;
 using WindowsLibrary.NightlyShutdown;
 using Xunit;
@@ -18,17 +16,15 @@ namespace RemoteControlService.UniTests
         readonly ShutdownHistoryStorage shutdownHistoryStorage;
         readonly IShutdownCalculator shutdownCalculator;
         readonly IShutdownCommandFactory shutdownCommandFactory;
-        readonly IShutdownCommandArgumentsBuilder shutdownArgumentsBuilder;
 
         public NightlyShutdownSchedulerTest()
         {
             File.Delete(ShutdownHistoryStorage.SHUTDOWN_HISTORY_FILE);
             powerController = new CmdLinePowerControllerMock();
-            shutdownArgumentsBuilder = new WindowsShutdownCommandArgumentsBuilder();
             shutdownHistoryStorage = new ShutdownHistoryStorage();
             shutdownCalculator = new NightlyShutdownCalculator();
             shutdownCommandFactory = new ParameterizedShutdownCommandFactory(
-                powerController, shutdownArgumentsBuilder);
+                powerController);
             nightlyShutdownScheduler = new NightlyShutdownScheduler(
                 shutdownHistoryStorage,
                 shutdownCalculator,
@@ -47,8 +43,8 @@ namespace RemoteControlService.UniTests
 
             nightlyShutdownScheduler.ScheduleShutdown();
 
-            Assert.True("/C SHUTDOWN /S /T 600 /c \" \"" == powerController.Arguments ||
-                        "/C SHUTDOWN /S /T 599 /c \" \"" == powerController.Arguments);
+            Assert.True(599 <= powerController.SecondsTillShutdown &&
+                        powerController.SecondsTillShutdown <= 600);
         }
 
         [Fact]
@@ -60,8 +56,8 @@ namespace RemoteControlService.UniTests
 
             nightlyShutdownScheduler.ScheduleShutdown();
 
-            Assert.True("/C SHUTDOWN /S /T 606 /c \" \"" == powerController.Arguments ||
-                        "/C SHUTDOWN /S /T 605 /c \" \"" == powerController.Arguments);
+            Assert.True(605 <= powerController.SecondsTillShutdown &&
+                        powerController.SecondsTillShutdown <= 606);
         }
     }
 }

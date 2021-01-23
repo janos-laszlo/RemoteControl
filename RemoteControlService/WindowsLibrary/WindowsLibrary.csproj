@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Builders\WindowsShutdownCommandArgumentsBuilder.cs" />
+    <Compile Include="Builders\ShutdownCommandArgumentsBuilder.cs" />
     <Compile Include="CommandFactories\JsonCommandFactory.cs" />
     <Compile Include="CommandFactories\ParameterizedShutdownCommandFactory.cs" />
     <Compile Include="Controllers\CmdLinePowerController.cs" />

@@ -1,6 +1,6 @@
-﻿using Domain.Builders;
-using Domain.CommandFactories;
+﻿using Domain.CommandFactories;
 using Domain.Commands;
+using Domain.Commands.Arguments;
 using Domain.Controllers;
 using System;
 
@@ -9,14 +9,11 @@ namespace WindowsLibrary.CommandFactories
     public class ParameterizedShutdownCommandFactory : IShutdownCommandFactory
     {
         private readonly IPowerController powerController;
-        private readonly IShutdownCommandArgumentsBuilder shutdownCommandArgumentsBuilder;
 
         public ParameterizedShutdownCommandFactory(
-            IPowerController powerController,
-            IShutdownCommandArgumentsBuilder shutdownCommandArgumentsBuilder)
+            IPowerController powerController)
         {
             this.powerController = powerController;
-            this.shutdownCommandArgumentsBuilder = shutdownCommandArgumentsBuilder;
         }
 
         public CancelShutdownCommand CreateCancelShutdownCommand()
@@ -29,10 +26,10 @@ namespace WindowsLibrary.CommandFactories
             int seconds = (int)(nextShutdownTime - DateTime.Now).TotalSeconds;
             return new ShutdownCommand(
                 powerController,
-                shutdownCommandArgumentsBuilder
-                    .WithSeconds(seconds)
-                    .ShouldOverrideExistingShutdown(false)
-                    .ShouldShowNotification(false));
+                new ShutdownArgs(
+                    seconds,
+                    overrideExistingShutdown: false,
+                    showNotification: false));
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Domain.CommandFactories;
 using Domain.Commands;
+using Domain.Commands.Arguments;
 using System;
 using System.Collections.Generic;
-using WindowsLibrary.Builders;
 using WindowsLibrary.Controllers;
 using WindowsLibrary.DTOs;
 using WindowsLibrary.Utils;
@@ -18,10 +18,10 @@ namespace WindowsLibrary.CommandFactories
                 nameof(ShutdownCommand),
                 (json) =>  new ShutdownCommand(
                     new CmdLinePowerController(),
-                    new WindowsShutdownCommandArgumentsBuilder()
-                        .WithSeconds(Create<ShutdownCommandDTO>(json).Seconds)
-                        .ShouldOverrideExistingShutdown(true)
-                        .ShouldShowNotification(true))
+                    new ShutdownArgs(
+                        Create<ShutdownCommandDTO>(json).Seconds,
+                        overrideExistingShutdown: true,
+                        showNotification: true))
             },
             {
                 nameof(CancelShutdownCommand),

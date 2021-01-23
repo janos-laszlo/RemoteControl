@@ -1,4 +1,6 @@
-﻿using Domain.Controllers;
+﻿using Domain.Commands.Arguments;
+using Domain.Controllers;
+using WindowsLibrary.Builders;
 using WindowsLibrary.Utils;
 
 namespace WindowsLibrary.Controllers
@@ -10,9 +12,15 @@ namespace WindowsLibrary.Controllers
             CmdLineUtils.InvokeCommandLineCommand("/C SHUTDOWN /A");
         }
 
-        public void ScheduleShutdown(string arguments)
+        public void ScheduleShutdown(ShutdownArgs shutdownArgs)
         {
-            CmdLineUtils.InvokeCommandLineCommand(arguments);
+            string args = new ShutdownCommandArgumentsBuilder()
+                .Seconds(shutdownArgs.Seconds)
+                .OverrideExistingShutdown(shutdownArgs.OverrideExistingShutdown)
+                .ShowNotification(shutdownArgs.ShowNotification)
+                .Build();
+
+            CmdLineUtils.InvokeCommandLineCommand(args);
         }
 
         public void Hibernate()
