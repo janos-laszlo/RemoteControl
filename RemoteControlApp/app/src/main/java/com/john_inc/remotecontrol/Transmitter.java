@@ -3,10 +3,13 @@ package com.john_inc.remotecontrol;
 import com.google.gson.Gson;
 import com.john_inc.remotecontrol.commands.Command;
 import com.john_inc.remotecontrol.commands.CommandDTO;
+import com.john_inc.remotecontrol.commands.CommandWithResponse;
 import com.john_inc.remotecontrol.listeners.OnReceiverFoundListener;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.DatagramPacket;
@@ -18,6 +21,7 @@ import java.net.SocketTimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Transmitter {
+    private static final String MESSAGE_TERMINATOR = "\n";
     private static final int SERVER_PORT = 11000;
     private static final int TIMEOUT = 5000;
     private static final String CONNECTION_ERROR = "Connection error!";
@@ -27,28 +31,55 @@ public class Transmitter {
         sendMessage(s, receiver);
     }
 
+    public String sendCommand(CommandWithResponse command, Receiver receiver) throws Exception {
+        String s = serializeCommand(command);
+        return sendMessageAndGetResponse(s, receiver);
+    }
+
     private String serializeCommand(Command cmd) {
         Gson serializer = new Gson();
         CommandDTO commandDTO = new CommandDTO(cmd.getName(), serializer.toJson(cmd));
         return serializer.toJson(commandDTO);
     }
 
-    private void sendMessage(final String message, Receiver receiver) throws Exception {
+    private String sendMessageAndGetResponse(final String message, Receiver receiver) throws Exception {
         Socket socket = new Socket();
+        String result;
         try {
+            socket.connect(new InetSocketAddress(receiver.getIpAddress(), SERVER_PORT), TIMEOUT);
+
+            if (socket.isConnected()) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                PrintWriter out = new PrintWriter(new BufferedWriter(
+                        new OutputStreamWriter(socket.getOutputStream())
+                ), true);
+
+                out.print(message + MESSAGE_TERMINATOR); // append the message terminator
+                out.flush();
+                result = in.readLine();
+                out.close();
+            } else
+                throw new Exception(CONNECTION_ERROR);
+        } finally {
+            socket.close();
+        }
+
+        return result;
+    }
+
+    private  void sendMessage(final String message, Receiver receiver) throws Exception {
+        try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress(receiver.getIpAddress(), SERVER_PORT), TIMEOUT);
 
             if (socket.isConnected()) {
                 PrintWriter out = new PrintWriter(new BufferedWriter(
                         new OutputStreamWriter(socket.getOutputStream())
                 ), true);
-                out.print(message + "\\"); // append the message terminator
+                out.print(message + MESSAGE_TERMINATOR);
                 out.flush();
                 out.close();
             } else
                 throw new Exception(CONNECTION_ERROR);
-        } finally {
-            socket.close();
         }
     }
 

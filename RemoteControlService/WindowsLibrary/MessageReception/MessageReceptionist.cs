@@ -13,7 +13,7 @@ namespace WindowsLibrary.MessageReception
     public class MessageReceptionist : IMessageReceptionist
     {
         readonly ManualResetEvent allDone = new ManualResetEvent(false);
-        const char MessageTerminator = '\\';
+        const char MessageTerminator = '\n';
         const int Port = 11000;
         IPEndPoint localEndPoint;
         Socket listener;
@@ -229,7 +229,7 @@ namespace WindowsLibrary.MessageReception
         private static void Send(Socket handler, string data)
         {
             // Convert the string data to byte data using ASCII encoding.  
-            byte[] byteData = Encoding.ASCII.GetBytes(data);
+            byte[] byteData = Encoding.ASCII.GetBytes(data + MessageTerminator);
             Trace.WriteLine($"Sent \"{data}\" to client.");
             // Begin sending the data to the remote device.  
             handler.BeginSend(byteData, 0, byteData.Length, 0,
