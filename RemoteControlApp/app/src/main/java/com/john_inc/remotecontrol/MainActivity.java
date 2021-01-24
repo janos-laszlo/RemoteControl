@@ -20,15 +20,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.john_inc.remotecontrol.commands.CancelShutdownDTO;
 import com.john_inc.remotecontrol.commands.Command;
 import com.john_inc.remotecontrol.commands.CommandWithResponse;
-import com.john_inc.remotecontrol.commands.GetNextShutdownCommand;
 import com.john_inc.remotecontrol.commands.HibernateCommandDTO;
 import com.john_inc.remotecontrol.commands.SetVolumeCommandDTO;
 import com.john_inc.remotecontrol.commands.ShutdownCommandDTO;
+import com.john_inc.remotecontrol.operations.NextShutdownOperations;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -41,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private final NetworkEvents networkEvents = new NetworkEvents(this);
     private final AtomicBoolean threadLock = new AtomicBoolean(false);
     private Receiver selectedReceiver;
+    private final NextShutdownOperations nextShutdownOperations =
+            new NextShutdownOperations(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,22 +163,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         if (seconds < SIXTY_SECONDS) {
             new ConfirmationDialog(getString(R.string.shutdown_now),
-                    (dialog, which) -> MainActivity.this.sendCommand(new ShutdownCommandDTO(String.valueOf(seconds))),
+                    (dialog, which) -> shutdownIn(seconds),
                     (dialog, which) -> {
                     })
                     .show(getSupportFragmentManager(), "MainActivity");
         } else {
-            sendCommand(new ShutdownCommandDTO(String.valueOf(seconds)));
+            shutdownIn(seconds);
         }
+    }
 
-        sleepOneSecond();
-        setNextShutdownTime();
+    private void shutdownIn(int seconds) {
+        MainActivity.this.sendCommand(new ShutdownCommandDTO(String.valueOf(seconds)));
+        nextShutdownOperations.setNextShutdownTime(seconds);
     }
 
     public void cancelShutdown(View v) {
         sendCommand(new CancelShutdownDTO());
-        sleepOneSecond();
-        setNextShutdownTime();
+        nextShutdownOperations.clearNextShutdownTime();
     }
 
     public void hibernate(View view) {
@@ -198,12 +198,55 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String name = parent.getItemAtPosition(position).toString();
         setSelectedReceiver(name);
-        setNextShutdownTime();
+        nextShutdownOperations.initNextShutdownTime();
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         selectedReceiver = null;
+    }
+
+    public void toggleProgressBar() {
+        final ProgressBar progressBar = findViewById(R.id.progressBar);
+
+        progressBar.post(() -> {
+            if (progressBar.isShown()) {
+                progressBar.setVisibility(View.INVISIBLE);
+            } else {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    public Receiver selectedReceiver() {
+        return selectedReceiver;
+    }
+
+    public void setErrorMessage(final String message) {
+        final TextView textView = findViewById(R.id.textView_errors);
+        textView.post(() -> textView.setText(message));
+    }
+
+    public String sendCommandAndGetResponse(CommandWithResponse cmd) {
+        AtomicReference<String> result = new AtomicReference<>("");
+        Thread t = new Thread(() -> {
+            toggleProgressBar();
+            try {
+                result.set(transmitter.sendCommand(cmd, selectedReceiver()));
+                setErrorMessage("");
+            } catch (Exception e) {
+                setErrorMessage(e.getMessage());
+            }
+            toggleProgressBar();
+        });
+
+        t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            setErrorMessage(e.getMessage());
+        }
+        return result.get();
     }
 
     // Read the IP and MAC from the preference file.
@@ -284,46 +327,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    private String sendCommandAndGetResponse(CommandWithResponse cmd) {
-        AtomicReference<String> result = new AtomicReference<>("");
-        Thread t = new Thread(() -> {
-            toggleProgressBar();
-            try {
-                result.set(transmitter.sendCommand(cmd, selectedReceiver));
-                setErrorMessage("");
-            } catch (Exception e) {
-                setErrorMessage(e.getMessage());
-            }
-            toggleProgressBar();
-        });
-
-        t.start();
-        try {
-            t.join();
-        } catch (InterruptedException e) {
-            setErrorMessage(e.getMessage());
-        }
-        return result.get();
-    }
-
     private void setupSpinner() {
         Spinner spinner = findViewById(R.id.controllable_devices_spinner);
         spinner.setOnItemSelectedListener(this);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, receiverNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-    }
-
-    private void toggleProgressBar() {
-        final ProgressBar progressBar = findViewById(R.id.progressBar);
-
-        progressBar.post(() -> {
-            if (progressBar.isShown()) {
-                progressBar.setVisibility(View.INVISIBLE);
-            } else {
-                progressBar.setVisibility(View.VISIBLE);
-            }
-        });
     }
 
     private synchronized void loadSpinnerData() {
@@ -344,39 +353,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    private void setErrorMessage(final String message) {
-        final TextView textView = findViewById(R.id.textView_errors);
-        textView.post(() -> textView.setText(message));
-    }
-
     private void setSelectedReceiver(String name) {
         selectedReceiver = null;
         for (Receiver receiver : receivers) {
             if (name.equals(receiver.getName())) {
                 selectedReceiver = receiver;
             }
-        }
-    }
-
-    private void setNextShutdownTime() {
-        try {
-
-            String nextShutdownTime = getNextShutdownTime();
-            TextView nextShutdown = findViewById(R.id.textView_nextShutdown);
-            nextShutdown.setText(nextShutdownTime);
-        } catch (Exception e) {
-            setErrorMessage(e.getMessage());
-        }
-    }
-
-    private String getNextShutdownTime() throws Exception {
-        String response = sendCommandAndGetResponse(new GetNextShutdownCommand());
-        if (response.equals("--")) {
-            return response;
-        } else {
-            SimpleDateFormat dateParser = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss", Locale.getDefault());
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm", Locale.getDefault());
-            return dateFormatter.format(Objects.requireNonNull(dateParser.parse(response)));
         }
     }
 }
