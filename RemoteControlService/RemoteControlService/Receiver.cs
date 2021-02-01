@@ -1,5 +1,6 @@
 ﻿using Domain.NightlyShutdown;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace RemoteControlService
 {
@@ -22,7 +23,12 @@ namespace RemoteControlService
         {
             commandProcessor.Start();
             shutdownHistoryUpdater.UpdateShutdownHistory();
-            nightlyShutdownScheduler.ScheduleShutdown();
+            Task.Run(async () =>
+            {
+				// Wait for Windows Task Scheduler to start up.
+                await Task.Delay(10000);
+                nightlyShutdownScheduler.ScheduleShutdown();
+            });
             Trace.WriteLine("The receiver has started.");
         }
 
