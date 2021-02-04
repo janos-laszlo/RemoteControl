@@ -7,12 +7,12 @@ import java.net.InetAddress;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class MagicPacket
+public class MagicPacket
 {
     private static final int WAKE_ON_LAN_PORT = 9;
     private static final char SEPARATOR = ':';
 
-    static String send(String mac, String ip) throws IOException, IllegalArgumentException
+    public static String send(String mac, String ip) throws IOException, IllegalArgumentException
     {
         // validate MAC and chop into array
         final String[] hex = validateMac(mac);
@@ -44,7 +44,7 @@ class MagicPacket
         return hex[0]+SEPARATOR+hex[1]+SEPARATOR+hex[2]+SEPARATOR+hex[3]+SEPARATOR+hex[4]+SEPARATOR+hex[5];
     }
 
-    static String cleanMac(String mac) throws IllegalArgumentException
+    public static String cleanMac(String mac) throws IllegalArgumentException
     {
         final String[] hex = validateMac(mac);
 

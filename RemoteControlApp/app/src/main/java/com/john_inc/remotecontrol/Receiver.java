@@ -11,11 +11,11 @@ public class Receiver {
         this.ipAddress = ipAddress;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    InetAddress getIpAddress() {
+    public InetAddress getIpAddress() {
         return ipAddress;
     }
 }
