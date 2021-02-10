@@ -16,7 +16,7 @@ namespace WindowsLibrary.CommandFactories
         {
             {
                 nameof(ShutdownCommand),
-                (json) =>  new ShutdownCommand(
+                json =>  new ShutdownCommand(
                     new CmdLinePowerController(),
                     new ShutdownArgs(
                         Create<ShutdownCommandDTO>(json).Seconds,
@@ -25,23 +25,27 @@ namespace WindowsLibrary.CommandFactories
             },
             {
                 nameof(CancelShutdownCommand),
-                (json) => new CancelShutdownCommand(
+                json => new CancelShutdownCommand(
                     new CmdLinePowerController())
             },
             {
                 nameof(SetVolumeCommand),
-                (json) => new SetVolumeCommand(
+                json => new SetVolumeCommand(
                     Create<SetVolumeCommandDTO>(json).Percent,
                     new CmdLineVolumeController())
             },
             {
                 nameof(HibernateCommand),
-                (json) => new HibernateCommand(
+                json => new HibernateCommand(
                     new CmdLinePowerController())
             },
             {
                 nameof(GetNextShutdownCommand),
-                (json) => new GetNextShutdownCommand()
+                json => new GetNextShutdownCommand()
+            },
+            {
+                nameof(GetVolumeCommand),
+                json => new GetVolumeCommand(new CmdLineVolumeController())
             }
         };
 

@@ -45,6 +45,7 @@
     <Compile Include="Commands\Arguments\ShutdownArgs.cs" />
     <Compile Include="Commands\CancelShutdownCommand.cs" />
     <Compile Include="Commands\GetNextShutdownCommand.cs" />
+    <Compile Include="Commands\GetVolumeCommand.cs" />
     <Compile Include="Commands\HibernateCommand.cs" />
     <Compile Include="CommandFactories\ICommand.cs" />
     <Compile Include="Common\Utilities\EnumerableExtensions.cs" />

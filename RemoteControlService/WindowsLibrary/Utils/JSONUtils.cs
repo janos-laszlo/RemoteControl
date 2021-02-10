@@ -10,7 +10,7 @@ namespace WindowsLibrary.Utils
         public static T FromJson<T>(string json)
         {
             var serializer = new DataContractJsonSerializer(
-                typeof(T), 
+                typeof(T),
                 GetDataContractJsonSerializerSettings());
 
             var ms = new MemoryStream(Encoding.UTF8.GetBytes(json));
@@ -23,7 +23,7 @@ namespace WindowsLibrary.Utils
         public static string ToJson<T>(T obj)
         {
             var serializer = new DataContractJsonSerializer(
-                typeof(T), 
+                typeof(T),
                 GetDataContractJsonSerializerSettings());
 
             using (var ms = new MemoryStream())

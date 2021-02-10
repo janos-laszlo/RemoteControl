@@ -2,6 +2,6 @@
 {
     public interface IVolumeController
     {
-        void SetVolume(int percent);
+        int VolumeInPercent { get; set; }
     }
 }

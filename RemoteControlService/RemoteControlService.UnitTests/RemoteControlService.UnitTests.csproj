@@ -41,6 +41,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CmdLineVolumeControllerTest.cs" />
     <Compile Include="Mocks\CmdLinePowerControllerMock.cs" />
     <Compile Include="Mocks\ShutdownHistoryStorageMock.cs" />
     <Compile Include="NightlyShutdownHistoryUpdaterTest.cs" />

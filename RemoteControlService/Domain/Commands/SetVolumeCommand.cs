@@ -17,7 +17,7 @@ namespace Domain.Commands
 
         public Maybe<string> Execute()
         {
-            volumeController.SetVolume(percent);
+            volumeController.VolumeInPercent = percent;
             return Maybe<string>.None();
         }
     }

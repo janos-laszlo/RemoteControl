@@ -25,10 +25,11 @@ namespace RemoteControlService
             shutdownHistoryUpdater.UpdateShutdownHistory();
             Task.Run(async () =>
             {
-				// Wait for Windows Task Scheduler to start up.
+                // Wait for Windows Task Scheduler to start up.
                 await Task.Delay(10000);
                 nightlyShutdownScheduler.ScheduleShutdown();
             });
+
             Trace.WriteLine("The receiver has started.");
         }
 
