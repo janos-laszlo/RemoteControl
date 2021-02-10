@@ -1,9 +1,9 @@
 package com.john_inc.remotecontrol.commands;
 
-public class GetNextShutdownCommand implements Command {
+public class GetVolumeCommand implements Command {
 
     @Override
     public String getName() {
-        return "GetNextShutdownCommand";
+        return "GetVolumeCommand";
     }
 }

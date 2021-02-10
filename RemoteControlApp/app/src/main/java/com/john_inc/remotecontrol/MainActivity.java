@@ -8,7 +8,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.john_inc.remotecontrol.commands.Command;
-import com.john_inc.remotecontrol.commands.CommandWithResponse;
 import com.john_inc.remotecontrol.operations.PowerOperations;
 import com.john_inc.remotecontrol.operations.ReceiverOperations;
 import com.john_inc.remotecontrol.operations.VolumeOperations;
@@ -34,11 +33,11 @@ public class MainActivity extends AppCompatActivity {
 
         volumeOperations.setupVolumeBar();
         receiverOperations.setupSpinner();
-        volumeOperations.updateVolumeTextView();
         powerOperations.init();
         receiverOperations.onReceiverSelected(() -> {
             powerOperations.selectedReceiver(receiverOperations.selectedReceiver());
-            powerOperations.initNextShutdownTime();
+            powerOperations.updateNextShutdownTime();
+            volumeOperations.updateVolume();
         });
     }
 
@@ -101,12 +100,12 @@ public class MainActivity extends AppCompatActivity {
         textView.post(() -> textView.setText(message));
     }
 
-    public String sendCommandAndGetResponse(CommandWithResponse cmd) {
+    public String sendCommandAndGetResponse(Command cmd) {
         AtomicReference<String> result = new AtomicReference<>("");
         Thread t = new Thread(() -> {
             toggleProgressBar();
             try {
-                result.set(transmitter.sendCommand(cmd, receiverOperations.selectedReceiver()));
+                result.set(transmitter.sendCommandAndGetResponse(cmd, receiverOperations.selectedReceiver()));
                 setErrorMessage("");
             } catch (Exception e) {
                 setErrorMessage(e.getMessage());

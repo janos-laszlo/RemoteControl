@@ -34,7 +34,7 @@ public class PowerOperations {
         selectedReceiver = receiver;
     }
 
-    public void initNextShutdownTime() {
+    public void updateNextShutdownTime() {
         try {
             String nextShutdownTime = getNextShutdownTime();
             TextView nextShutdown = activity.findViewById(R.id.textView_nextShutdown);

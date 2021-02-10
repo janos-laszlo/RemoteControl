@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.john_inc.remotecontrol.MainActivity;
 import com.john_inc.remotecontrol.R;
+import com.john_inc.remotecontrol.commands.GetVolumeCommand;
 import com.john_inc.remotecontrol.commands.SetVolumeCommandDTO;
 
 public class VolumeOperations {
@@ -15,8 +16,7 @@ public class VolumeOperations {
     }
 
     public void setupVolumeBar() {
-        SeekBar seekBar = activity.findViewById(R.id.seekBar_volume);
-
+        SeekBar seekBar = this.activity.findViewById(R.id.seekBar_volume);
         seekBar.setOnSeekBarChangeListener(
                 new SeekBar.OnSeekBarChangeListener() {
                     @Override
@@ -36,24 +36,41 @@ public class VolumeOperations {
         );
     }
 
-    public void updateVolumeTextView() {
-        TextView volumeText = activity.findViewById(R.id.textView_volume);
-        SeekBar seekBar = activity.findViewById(R.id.seekBar_volume);
-        volumeText.setText(activity.getString(R.string.volume, seekBar.getProgress()));
-    }
-
-    public void incrementVolume(){
+    public void incrementVolume() {
         addToVolume(1);
     }
 
-    public void decrementVolume(){
+    public void decrementVolume() {
         addToVolume(-1);
     }
 
+    public void updateVolume() {
+        try {
+            int volumeLevel = getVolume();
+            SeekBar seekBar = this.activity.findViewById(R.id.seekBar_volume);
+            seekBar.setProgress(volumeLevel);
+            updateVolumeTextView();
+            activity.setErrorMessage("");
+        } catch (Exception e) {
+            activity.setErrorMessage(e.getMessage());
+        }
+    }
+
     private void addToVolume(int volumeToAdd) {
-        SeekBar seekBar = activity.findViewById(R.id.seekBar_volume);
+        SeekBar seekBar = this.activity.findViewById(R.id.seekBar_volume);
         int newProgress = Math.max(0, seekBar.getProgress() + volumeToAdd);
         newProgress = Math.min(100, newProgress);
         seekBar.setProgress(newProgress);
+    }
+
+    private int getVolume() {
+        String response = activity.sendCommandAndGetResponse(new GetVolumeCommand());
+        return  Integer.parseInt(response);
+    }
+
+    private void updateVolumeTextView() {
+        TextView volumeText = activity.findViewById(R.id.textView_volume);
+        SeekBar seekBar = this.activity.findViewById(R.id.seekBar_volume);
+        volumeText.setText(activity.getString(R.string.volume, seekBar.getProgress()));
     }
 }
