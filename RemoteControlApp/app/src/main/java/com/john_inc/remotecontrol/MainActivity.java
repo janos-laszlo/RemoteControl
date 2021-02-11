@@ -19,20 +19,21 @@ public class MainActivity extends AppCompatActivity {
     private final Transmitter transmitter = new Transmitter();
     private final NetworkEvents networkEvents = new NetworkEvents(this);
 
-    private final PowerOperations powerOperations =
-            new PowerOperations(this);
-    private final VolumeOperations volumeOperations =
-            new VolumeOperations(this);
-    private final ReceiverOperations receiverOperations =
-            new ReceiverOperations(this, transmitter);
+    private PowerOperations powerOperations;
+    private VolumeOperations volumeOperations;
+    private ReceiverOperations receiverOperations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        volumeOperations.setupVolumeBar();
+        powerOperations = new PowerOperations(this);
+        volumeOperations = new VolumeOperations(this);
+        receiverOperations = new ReceiverOperations(this, transmitter);
+
         receiverOperations.setupSpinner();
+        volumeOperations.init();
         powerOperations.init();
         receiverOperations.onReceiverSelected(() -> {
             powerOperations.selectedReceiver(receiverOperations.selectedReceiver());

@@ -10,30 +10,16 @@ import com.john_inc.remotecontrol.commands.SetVolumeCommandDTO;
 
 public class VolumeOperations {
     private final MainActivity activity;
+    private final SeekBar seekBar;
 
     public VolumeOperations(MainActivity activity) {
         this.activity = activity;
+        seekBar = this.activity.findViewById(R.id.seekBar_volume);
     }
 
-    public void setupVolumeBar() {
-        SeekBar seekBar = this.activity.findViewById(R.id.seekBar_volume);
-        seekBar.setOnSeekBarChangeListener(
-                new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        activity.sendCommand(new SetVolumeCommandDTO(String.valueOf(seekBar.getProgress())));
-                        updateVolumeTextView();
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(final SeekBar seekBar) {
-                    }
-                }
-        );
+    public void init(){
+        setupVolumeBar();
+        updateVolumeTextView("--");
     }
 
     public void incrementVolume() {
@@ -47,17 +33,34 @@ public class VolumeOperations {
     public void updateVolume() {
         try {
             int volumeLevel = getVolume();
-            SeekBar seekBar = this.activity.findViewById(R.id.seekBar_volume);
             seekBar.setProgress(volumeLevel);
-            updateVolumeTextView();
             activity.setErrorMessage("");
         } catch (Exception e) {
             activity.setErrorMessage(e.getMessage());
         }
     }
 
+    private void setupVolumeBar() {
+        seekBar.setOnSeekBarChangeListener(
+                new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        activity.sendCommand(new SetVolumeCommandDTO(String.valueOf(seekBar.getProgress())));
+                        updateVolumeTextView(String.valueOf(seekBar.getProgress()));
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(final SeekBar seekBar) {
+                    }
+                }
+        );
+    }
+
     private void addToVolume(int volumeToAdd) {
-        SeekBar seekBar = this.activity.findViewById(R.id.seekBar_volume);
         int newProgress = Math.max(0, seekBar.getProgress() + volumeToAdd);
         newProgress = Math.min(100, newProgress);
         seekBar.setProgress(newProgress);
@@ -68,9 +71,8 @@ public class VolumeOperations {
         return  Integer.parseInt(response);
     }
 
-    private void updateVolumeTextView() {
-        TextView volumeText = activity.findViewById(R.id.textView_volume);
-        SeekBar seekBar = this.activity.findViewById(R.id.seekBar_volume);
-        volumeText.setText(activity.getString(R.string.volume, seekBar.getProgress()));
+    private void updateVolumeTextView(String text) {
+        TextView volumeTextView = activity.findViewById(R.id.textView_volume);
+        volumeTextView.setText(activity.getString(R.string.volume, text));
     }
 }

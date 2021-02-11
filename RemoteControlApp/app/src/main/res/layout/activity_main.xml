@@ -89,7 +89,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:max="100"
-            android:progress="10"
             app:layout_constraintEnd_toStartOf="@+id/button_increaseVolume"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"

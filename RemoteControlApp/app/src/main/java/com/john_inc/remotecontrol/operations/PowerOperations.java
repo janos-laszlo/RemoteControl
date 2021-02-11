@@ -131,6 +131,7 @@ public class PowerOperations {
 
     public void init() {
         read();
+        clearNextShutdownTime();
     }
 
     public void destroy() {
