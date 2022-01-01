@@ -77,6 +77,7 @@
     <Compile Include="CommandFactories\ParameterizedShutdownCommandFactory.cs" />
     <Compile Include="Controllers\CmdLinePowerController.cs" />
     <Compile Include="Controllers\CmdLineVolumeController.cs" />
+    <Compile Include="Controllers\KeyboardController.cs" />
     <Compile Include="DTOs\CommandDTO.cs" />
     <Compile Include="DTOs\SetVolumeCommandDTO.cs" />
     <Compile Include="DTOs\ShutdownCommandDTO.cs" />

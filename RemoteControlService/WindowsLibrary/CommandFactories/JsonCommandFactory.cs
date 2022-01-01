@@ -46,6 +46,11 @@ namespace WindowsLibrary.CommandFactories
             {
                 nameof(GetVolumeCommand),
                 json => new GetVolumeCommand(new CmdLineVolumeController())
+            },
+            {
+                nameof(OpenTaskManagerCommand),
+                json => new OpenTaskManagerCommand(
+                    new KeyboardController())
             }
         };
 

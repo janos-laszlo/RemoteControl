@@ -1,4 +1,5 @@
 ﻿
+using Domain;
 using System.ServiceProcess;
 
 namespace RemoteControlService

@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace RemoteControlService
+namespace Domain
 {
-    class Receiver
+    public class Receiver
     {
         private readonly CommandProcessor commandProcessor;
         private readonly IShutdownHistoryUpdater shutdownHistoryUpdater;

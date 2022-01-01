@@ -42,14 +42,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandFactories\ITextCommandFactory.cs" />
+    <Compile Include="CommandProcessor.cs" />
     <Compile Include="Commands\Arguments\ShutdownArgs.cs" />
     <Compile Include="Commands\CancelShutdownCommand.cs" />
     <Compile Include="Commands\GetNextShutdownCommand.cs" />
     <Compile Include="Commands\GetVolumeCommand.cs" />
     <Compile Include="Commands\HibernateCommand.cs" />
     <Compile Include="CommandFactories\ICommand.cs" />
+    <Compile Include="Commands\OpenTaskManagerCommand.cs" />
     <Compile Include="Common\Utilities\EnumerableExtensions.cs" />
     <Compile Include="Common\Utilities\Maybe.cs" />
+    <Compile Include="Controllers\IKeyboardController.cs" />
     <Compile Include="Controllers\IPowerController.cs" />
     <Compile Include="CommandFactories\IShutdownCommandFactory.cs" />
     <Compile Include="Controllers\IVolumeController.cs" />
@@ -71,6 +74,7 @@
     <Compile Include="NightlyShutdown\NightlyShutdownHistoryUpdater.cs" />
     <Compile Include="NightlyShutdown\NightlyShutdownScheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Receiver.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

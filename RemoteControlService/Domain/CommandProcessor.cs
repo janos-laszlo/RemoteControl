@@ -4,9 +4,9 @@ using Domain.MessageReception;
 using System;
 using System.Diagnostics;
 
-namespace RemoteControlService
+namespace Domain
 {
-    class CommandProcessor
+    public class CommandProcessor
     {
         private readonly IMessageReceptionist messageReceptionist;
         private readonly ITextCommandFactory commandFactory;

@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Domain;
 using Domain.CommandFactories;
 using Domain.Common.TaskScheduling;
 using Domain.Controllers;

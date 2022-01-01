@@ -86,8 +86,8 @@ lint/tmp/
 # RemoteControlService ignores
 RemoteControlService/RemoteControlService/bin
 RemoteControlService/RemoteControlService/obj
-RemoteControlService/RemoteControlService.UnitTests/bin
-RemoteControlService/RemoteControlService.UnitTests/obj
+RemoteControlService/Domain.UnitTests/bin
+RemoteControlService/Domain.UnitTests/obj
 RemoteControlService/.vs
 RemoteControlService/packages
 RemoteControlService/ServiceSetup/Debug
@@ -98,3 +98,7 @@ RemoteControlService/Domain.Tests/bin
 RemoteControlService/Domain.Tests/obj
 RemoteControlService/WindowsLibrary/bin
 RemoteControlService/WindowsLibrary/obj
+
+ReceiverWinFormsApp/ReceiverWinFormsApp/obj
+ReceiverWinFormsApp/packages
+ReceiverWinFormsApp/.vs
