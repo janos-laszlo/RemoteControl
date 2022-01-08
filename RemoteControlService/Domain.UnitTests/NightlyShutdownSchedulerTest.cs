@@ -1,5 +1,7 @@
 ﻿using Domain.CommandFactories;
 using Domain.NightlyShutdown;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using RemoteControlService.UniTests.Mocks;
 using System;
 using System.IO;
@@ -20,7 +22,7 @@ namespace RemoteControlService.UniTests
         public NightlyShutdownSchedulerTest()
         {
             File.Delete(ShutdownHistoryStorage.SHUTDOWN_HISTORY_FILE);
-            powerController = new CmdLinePowerControllerMock();
+            powerController = new CmdLinePowerControllerMock(Substitute.For<ILogger<CmdLinePowerControllerMock>>());
             shutdownHistoryStorage = new ShutdownHistoryStorage();
             shutdownCalculator = new NightlyShutdownCalculator();
             shutdownCommandFactory = new ParameterizedShutdownCommandFactory(
@@ -28,7 +30,8 @@ namespace RemoteControlService.UniTests
             nightlyShutdownScheduler = new NightlyShutdownScheduler(
                 shutdownHistoryStorage,
                 shutdownCalculator,
-                shutdownCommandFactory);
+                shutdownCommandFactory,
+                Substitute.For<ILogger<NightlyShutdownScheduler>>());
         }
 
         [Fact]

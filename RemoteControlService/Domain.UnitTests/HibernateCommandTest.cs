@@ -1,5 +1,7 @@
 ﻿using Domain.CommandFactories;
 using Domain.Commands;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using RemoteControlService.UniTests.Mocks;
 using Xunit;
 
@@ -10,7 +12,8 @@ namespace RemoteControlService.UniTests
         [Fact]
         public void Execute_Hibernation_WillHibernate()
         {
-            CmdLinePowerControllerMock powerController = new CmdLinePowerControllerMock();
+            CmdLinePowerControllerMock powerController = new CmdLinePowerControllerMock(
+                Substitute.For<ILogger<CmdLinePowerControllerMock>>());
             ICommand cmd = new HibernateCommand(powerController);
 
             cmd.Execute();

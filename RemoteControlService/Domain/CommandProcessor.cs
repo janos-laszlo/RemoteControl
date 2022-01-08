@@ -1,6 +1,7 @@
 ﻿using Domain.CommandFactories;
 using Domain.Common.Utilities;
 using Domain.MessageReception;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 
@@ -10,13 +11,16 @@ namespace Domain
     {
         private readonly IMessageReceptionist messageReceptionist;
         private readonly ITextCommandFactory commandFactory;
+        private readonly ILogger<CommandProcessor> logger;
 
         public CommandProcessor(
             IMessageReceptionist messageReceptionist,
-            ITextCommandFactory commandFactory)
+            ITextCommandFactory commandFactory,
+            ILogger<CommandProcessor> logger)
         {
             this.messageReceptionist = messageReceptionist;
             this.commandFactory = commandFactory;
+            this.logger = logger;
         }
 
         public void Start()
@@ -39,7 +43,7 @@ namespace Domain
             }
             catch (Exception e)
             {
-                Trace.TraceError($"Failed to parse and execute request: {e}");
+                logger.LogError($"Failed to parse and execute request: {e}");
                 return Maybe<string>.None();
             }
         }

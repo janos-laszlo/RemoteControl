@@ -1,4 +1,5 @@
 ﻿using Domain.NightlyShutdown;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -9,14 +10,18 @@ namespace Domain
         private readonly CommandProcessor commandProcessor;
         private readonly IShutdownHistoryUpdater shutdownHistoryUpdater;
         private readonly IShutdownScheduler nightlyShutdownScheduler;
+        private readonly ILogger<Receiver> logger;
 
-        public Receiver(CommandProcessor commandProcessor,
-                        IShutdownHistoryUpdater shutdownHistoryUpdater,
-                        IShutdownScheduler nightlyShutdownScheduler)
+        public Receiver(
+            CommandProcessor commandProcessor,
+            IShutdownHistoryUpdater shutdownHistoryUpdater,
+            IShutdownScheduler nightlyShutdownScheduler,
+            ILogger<Receiver> logger)
         {
             this.commandProcessor = commandProcessor;
             this.shutdownHistoryUpdater = shutdownHistoryUpdater;
             this.nightlyShutdownScheduler = nightlyShutdownScheduler;
+            this.logger = logger;
         }
 
         public void Start()
@@ -30,14 +35,14 @@ namespace Domain
                 nightlyShutdownScheduler.ScheduleShutdown();
             });
 
-            Trace.WriteLine("The receiver has started.");
+            logger.LogInformation("The receiver has started.");
         }
 
         public void Stop()
         {
             commandProcessor.Stop();
             nightlyShutdownScheduler.CancelShutdown();
-            Trace.WriteLine("The receiver has stopped.");
+            logger.LogInformation("The receiver has stopped.");
         }
     }
 }

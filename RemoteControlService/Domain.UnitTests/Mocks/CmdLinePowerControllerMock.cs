@@ -1,11 +1,19 @@
 ﻿using Domain.Commands.Arguments;
 using Domain.Controllers;
-using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace RemoteControlService.UniTests.Mocks
 {
     internal class CmdLinePowerControllerMock : IPowerController
     {
+        private readonly ILogger<CmdLinePowerControllerMock> logger;
+
+        public CmdLinePowerControllerMock(
+            ILogger<CmdLinePowerControllerMock> logger)
+        {
+            this.logger = logger;
+        }
+
         public int NumOfCancelledShutdowns { get; private set; }
         public int NumOfHibernations { get; private set; }
         public int SecondsTillShutdown { get; private set; }
@@ -22,7 +30,7 @@ namespace RemoteControlService.UniTests.Mocks
 
         public void ScheduleShutdown(ShutdownArgs arguments)
         {
-            Trace.TraceInformation($"Shutdown was called with args: {arguments}");
+            logger.LogInformation($"Shutdown was called with args: {arguments}");
             SecondsTillShutdown = arguments.Seconds;
         }
     }

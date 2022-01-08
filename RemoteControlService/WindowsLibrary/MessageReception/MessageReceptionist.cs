@@ -1,7 +1,7 @@
 ﻿using Domain.Common.Utilities;
 using Domain.MessageReception;
+using Microsoft.Extensions.Logging;
 using System;
-using System.Diagnostics;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -13,6 +13,7 @@ namespace WindowsLibrary.MessageReception
     public class MessageReceptionist : IMessageReceptionist
     {
         readonly ManualResetEvent allDone = new ManualResetEvent(false);
+        private readonly ILogger<MessageReceptionist> logger;
         const char MessageTerminator = '\n';
         const int Port = 11000;
         IPEndPoint localEndPoint;
@@ -21,8 +22,10 @@ namespace WindowsLibrary.MessageReception
         Thread messageListenerThread;
         private UdpClient udpClient;
 
-        public MessageReceptionist()
+        public MessageReceptionist(ILogger<MessageReceptionist> logger)
         {
+            this.logger = logger;
+
             SetLocalEndPoint();
             SubscribeToNetworkAddressChangedEvent();
         }
@@ -48,7 +51,7 @@ namespace WindowsLibrary.MessageReception
                 {
                     listener.Bind(localEndPoint);
                     listener.Listen(10);
-                    Trace.WriteLine("Listening for a connection...");
+                    logger.LogInformation("Listening for a connection...");
                     while (shouldRun)
                     {
                         // Set the event to nonsignaled state.  
@@ -63,7 +66,7 @@ namespace WindowsLibrary.MessageReception
                 }
                 catch (Exception e)
                 {
-                    Trace.WriteLine(e.ToString());
+                    logger.LogInformation(e.ToString());
                 }
                 finally
                 {
@@ -98,11 +101,12 @@ namespace WindowsLibrary.MessageReception
             IPAddress ip = GetMyIP();
             while (!IPAddressValid(ip))
             {
-                Trace.TraceWarning("I don't have a valid IP yet.");
+                logger.LogWarning("I don't have a valid IP yet.");
                 Thread.Sleep(TimeSpan.FromSeconds(5));
                 ip = GetMyIP();
             }
-            Trace.WriteLine($"My IP:{ip}");
+
+            logger.LogInformation($"My IP:{ip}");
             localEndPoint = new IPEndPoint(ip, Port);
         }
 
@@ -136,7 +140,7 @@ namespace WindowsLibrary.MessageReception
             {
                 return;
             }
-            Trace.WriteLine("Address changed");
+            logger.LogInformation("Address changed");
             SetLocalEndPoint();
             if (shouldRun)
             {
@@ -205,7 +209,7 @@ namespace WindowsLibrary.MessageReception
                 {
                     // All the data has been read from the client.
                     message = state.sb.ToString(0, state.sb.Length - 1);
-                    Trace.WriteLine($"Read {message.Length} bytes from " +
+                    logger.LogInformation($"Read {message.Length} bytes from " +
                         $"{((IPEndPoint)handler.RemoteEndPoint).Address}. Data : {message}");
                     Maybe<string> maybeResponse = MessageProcessor(message);
                     maybeResponse.Match(
@@ -226,17 +230,17 @@ namespace WindowsLibrary.MessageReception
             }
         }
 
-        private static void Send(Socket handler, string data)
+        private void Send(Socket handler, string data)
         {
             // Convert the string data to byte data using ASCII encoding.  
             byte[] byteData = Encoding.ASCII.GetBytes(data + MessageTerminator);
-            Trace.WriteLine($"Sent \"{data}\" to client.");
+            logger.LogInformation($"Sent \"{data}\" to client.");
             // Begin sending the data to the remote device.  
             handler.BeginSend(byteData, 0, byteData.Length, 0,
                 new AsyncCallback(SendCallback), handler);
         }
 
-        private static void SendCallback(IAsyncResult ar)
+        private void SendCallback(IAsyncResult ar)
         {
             try
             {
@@ -248,11 +252,11 @@ namespace WindowsLibrary.MessageReception
             }
             catch (Exception e)
             {
-                Trace.WriteLine(e.ToString());
+                logger.LogInformation(e.ToString());
             }
         }
 
-        private static void CloseHandler(Socket handler)
+        private void CloseHandler(Socket handler)
         {
             try
             {
@@ -260,7 +264,7 @@ namespace WindowsLibrary.MessageReception
             }
             catch (SocketException ex)
             {
-                Trace.WriteLine($"Error closing handler: {ex}");
+                logger.LogInformation($"Error closing handler: {ex}");
             }
             finally
             {
@@ -272,7 +276,7 @@ namespace WindowsLibrary.MessageReception
         {
             new Thread(() =>
             {
-                Trace.WriteLine("Listening for name lookup");
+                logger.LogInformation("Listening for name lookup");
                 using (udpClient = new UdpClient(Port))
                 {
                     var clientEndpoint = new IPEndPoint(IPAddress.Any, 0);
@@ -296,19 +300,19 @@ namespace WindowsLibrary.MessageReception
             {
                 if (shouldRun)
                 {
-                    Trace.TraceError($"Error occured while listening " +
+                    logger.LogError($"Error occured while listening " +
                         $"and responding to name lookup: {e.Message}");
                 }
             }
         }
 
-        private static void ListenAndRespondToNameLookup(
+        private void ListenAndRespondToNameLookup(
             UdpClient udpClient,
             IPEndPoint clientEndpoint)
         {
             var clientRequestBytes = udpClient.Receive(ref clientEndpoint);
             var clientRequestMessage = Encoding.ASCII.GetString(clientRequestBytes);
-            Trace.WriteLine($"Received \"{clientRequestMessage}\" from {clientEndpoint.Address}");
+            logger.LogInformation($"Received \"{clientRequestMessage}\" from {clientEndpoint.Address}");
             var response = Encoding.ASCII.GetBytes(Environment.MachineName);
             udpClient.Send(response, response.Length, clientEndpoint);
         }

@@ -1,4 +1,5 @@
 ﻿using Domain.CommandFactories;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,14 +18,18 @@ namespace Domain.NightlyShutdown
         private readonly IShutdownHistoryStorage shutdownHistoryStorage;
         private readonly IShutdownCalculator nightlyShutdownCalculator;
         private readonly IShutdownCommandFactory shutdownCommandFactory;
+        private readonly ILogger<NightlyShutdownScheduler> logger;
 
-        public NightlyShutdownScheduler(IShutdownHistoryStorage shutdownHistoryStorage,
-                                        IShutdownCalculator nightlyShutdownCalculator,
-                                        IShutdownCommandFactory shutdownCommandFactory)
+        public NightlyShutdownScheduler(
+            IShutdownHistoryStorage shutdownHistoryStorage,
+            IShutdownCalculator nightlyShutdownCalculator,
+            IShutdownCommandFactory shutdownCommandFactory,
+            ILogger<NightlyShutdownScheduler> logger)
         {
             this.shutdownHistoryStorage = shutdownHistoryStorage;
             this.nightlyShutdownCalculator = nightlyShutdownCalculator;
             this.shutdownCommandFactory = shutdownCommandFactory;
+            this.logger = logger;
         }
 
         public void ScheduleShutdown()
@@ -32,14 +37,14 @@ namespace Domain.NightlyShutdown
             IEnumerable<DateTime> shutdownHistory = shutdownHistoryStorage.GetAll();
             if (!shutdownHistory.Any())
             {
-                Trace.WriteLine("shutdown history is empty");
+                logger.LogInformation("shutdown history is empty");
                 return;
             }
 
             DateTime NextForecastedShutdownTime = nightlyShutdownCalculator.GetNextShutdown(shutdownHistory);
             DateTime nextShutdownTime = AddBuffer(NextForecastedShutdownTime, minutes: 10);
             ExecuteDailyShutdownAt(nextShutdownTime);
-            Trace.TraceInformation($"Shutdown was scheduled to happen at: {nextShutdownTime}");
+            logger.LogInformation($"Shutdown was scheduled to happen at: {nextShutdownTime}");
         }
 
         private DateTime AddBuffer(DateTime nextShutdownTime, int minutes)
