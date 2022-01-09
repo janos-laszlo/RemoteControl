@@ -11,6 +11,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\LocationPaths.json" Link="Resources\LocationPaths.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.TraceSource" Version="6.0.0" />
   </ItemGroup>
@@ -18,6 +24,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\RemoteControlService\Domain\Domain.csproj" />
     <ProjectReference Include="..\..\RemoteControlService\WindowsLibrary\WindowsLibrary.csproj" />
+    <ProjectReference Include="..\DataContracts\DataContracts.csproj" />
+    <ProjectReference Include="..\UninstallActions\UninstallActions.csproj" />
   </ItemGroup>
 
 </Project>

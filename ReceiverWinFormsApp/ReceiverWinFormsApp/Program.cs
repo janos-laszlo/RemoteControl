@@ -1,3 +1,4 @@
+using DataContracts;
 using Domain;
 using Domain.CommandFactories;
 using Domain.Common.TaskScheduling;
@@ -8,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Text.Json;
 using System.Windows.Forms;
 using WindowsLibrary.CommandFactories;
 using WindowsLibrary.Controllers;
@@ -18,15 +21,20 @@ namespace ReceiverWinFormsApp
 {
     static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
+
+        private static Locations Locations;
+
+
         [STAThread]
         static void Main()
         {
+
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            InitAppData();
+
             var services = new ServiceCollection();
             ConfigureServices(services);
             using var serviceProvider = services.BuildServiceProvider();
@@ -38,7 +46,7 @@ namespace ReceiverWinFormsApp
         {
             services.AddLogging(builder =>
             {
-                TextWriterTraceListener listener = new(@"C:\Users\Public\Logs\shutdown history.txt");
+                TextWriterTraceListener listener = new(Locations.LogFilePath);
                 listener.TraceOutputOptions = TraceOptions.DateTime;
 
                 SourceSwitch sourceSwitch = new("ReceiverWinFormsApp", "ReceiverWinFormsApp");
@@ -64,6 +72,31 @@ namespace ReceiverWinFormsApp
             services.AddSingleton<IShutdownHistoryStorage, ShutdownHistoryStorage>();
             services.AddSingleton<ITaskScheduler, CommonTaskScheduler>();
             services.AddTransient<CommandProcessor>();
+            services.AddSingleton(Locations);
+        }
+
+        private static void InitAppData()
+        {
+            var dto = JsonSerializer.Deserialize<LocationPaths>(File.ReadAllText(@"Resources\LocationPaths.json"));
+
+            Locations = new(
+#if DEBUG
+            applicationDataFolder: ".",
+#else
+            applicationDataFolderName: dto.ApplicationDataFolderName,
+#endif
+            logFileName: dto.LogFileName,
+            shutdownHistoryFileName: dto.ShutdownHistoryFileName);
+
+
+            Directory.CreateDirectory(Locations.ApplicationDataFolder);
+            string logFilePath = Path.Combine(Locations.ApplicationDataFolder, Locations.LogFilePath);
+
+
+            if (!File.Exists(logFilePath))
+            {
+                File.WriteAllText(logFilePath, string.Empty);
+            }
         }
     }
 }

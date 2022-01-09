@@ -1,4 +1,5 @@
-﻿using Domain.NightlyShutdown;
+﻿using Domain;
+using Domain.NightlyShutdown;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,8 +15,9 @@ namespace RemoteControlService.UniTests
 
         public ShutdownHistoryStorageTest()
         {
-            File.Delete(ShutdownHistoryStorage.SHUTDOWN_HISTORY_FILE);
-            shutdownHistoryStorage = new ShutdownHistoryStorage();
+            var locations = new Locations(".", "shutdown history.txt", "shutdownHistory.json");
+            File.Delete(locations.ShutdownHistoryFilePath);
+            shutdownHistoryStorage = new ShutdownHistoryStorage(locations);
             shutdownHistoryStorage.Add(DateTime.Now);
             shutdownHistoryStorage.Add(DateTime.UtcNow);
             shutdownHistoryStorage.Add(DateTime.UtcNow.AddDays(1));

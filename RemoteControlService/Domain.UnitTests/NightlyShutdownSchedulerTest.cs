@@ -1,4 +1,5 @@
-﻿using Domain.CommandFactories;
+﻿using Domain;
+using Domain.CommandFactories;
 using Domain.NightlyShutdown;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -21,9 +22,11 @@ namespace RemoteControlService.UniTests
 
         public NightlyShutdownSchedulerTest()
         {
-            File.Delete(ShutdownHistoryStorage.SHUTDOWN_HISTORY_FILE);
+            var locations = new Locations(".", "shutdown history.txt", "shutdownHistory.json");
+
+            File.Delete(locations.ShutdownHistoryFilePath);
             powerController = new CmdLinePowerControllerMock(Substitute.For<ILogger<CmdLinePowerControllerMock>>());
-            shutdownHistoryStorage = new ShutdownHistoryStorage();
+            shutdownHistoryStorage = new ShutdownHistoryStorage(locations);
             shutdownCalculator = new NightlyShutdownCalculator();
             shutdownCommandFactory = new ParameterizedShutdownCommandFactory(
                 powerController);

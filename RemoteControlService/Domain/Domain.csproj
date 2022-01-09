@@ -82,6 +82,7 @@
     <Compile Include="Common\TaskScheduling\CommonTaskScheduler.cs" />
     <Compile Include="Common\TaskScheduling\ITaskScheduler.cs" />
     <Compile Include="Common\TaskScheduling\ScheduledTask.cs" />
+    <Compile Include="Locations.cs" />
     <Compile Include="MessageReception\IMessageReceptionist.cs" />
     <Compile Include="NightlyShutdown\IShutdownCalculator.cs" />
     <Compile Include="NightlyShutdown\IShutdownHistoryStorage.cs" />

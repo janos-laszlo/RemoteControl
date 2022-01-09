@@ -1,0 +1,5 @@
+{
+	"ApplicationDataFolderName": "Remote Control Receiver",
+	"LogFileName": "shutdown history.txt",
+	"ShutdownHistoryFileName": "shutdownHistory.json"
+}

@@ -45,12 +45,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_1C6B6A4A0D3342909841C3AE8A716CFC"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_1EAE29737CFFD4BEA3EAFDC6506071B7"
         "OwnerKey" = "8:_671519825E6E50CA763A38E7A667096A"
         "MsmSig" = "8:_UNDEFINED"
@@ -123,6 +117,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_B629762ED13B4C288E8A95B0054EBA8C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C5CC531B3290A482F5999112B8E96065"
         "OwnerKey" = "8:_671519825E6E50CA763A38E7A667096A"
         "MsmSig" = "8:_UNDEFINED"
@@ -172,7 +172,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_671519825E6E50CA763A38E7A667096A"
+        "OwnerKey" = "8:_E7DC9DB63F39AB7C6CC2AA9F3C783339"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_E06925A10915554A9E9B8F571BE5F19B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -190,7 +196,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_78BD67CF3E18346945B683438575FD49"
+        "OwnerKey" = "8:_8E7195CD3EED0731350DCFF2BA875780"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -202,49 +208,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_1EAE29737CFFD4BEA3EAFDC6506071B7"
+        "OwnerKey" = "8:_78BD67CF3E18346945B683438575FD49"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_29539D27DC52D5C614A1662BAC59BB1B"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8E7195CD3EED0731350DCFF2BA875780"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E7DC9DB63F39AB7C6CC2AA9F3C783339"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E06925A10915554A9E9B8F571BE5F19B"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2AE96A435458C32C392C396D67688F19"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_04F692C5E07A96A4A822DC51652EC955"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_14AB3FD0646A11121F866A733F50AB69"
+        "OwnerKey" = "8:_671519825E6E50CA763A38E7A667096A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -256,13 +226,43 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_395321A3E57795B6843C4D58285C2D9B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_2AE96A435458C32C392C396D67688F19"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_29539D27DC52D5C614A1662BAC59BB1B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_1EAE29737CFFD4BEA3EAFDC6506071B7"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_14AB3FD0646A11121F866A733F50AB69"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_05A45E0DEE875DDCE262FD2EAAED1D1A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_395321A3E57795B6843C4D58285C2D9B"
+        "OwnerKey" = "8:_04F692C5E07A96A4A822DC51652EC955"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -283,6 +283,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -299,12 +315,42 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
     }
     "Deployable"
     {
         "CustomAction"
         {
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_467720BA15C04C959B7CBE77515087FF"
+            {
+            "Name" = "8:UninstallActions.exe"
+            "Condition" = "8:"
+            "Object" = "8:_B629762ED13B4C288E8A95B0054EBA8C"
+            "FileType" = "3:2"
+            "InstallAction" = "3:4"
+            "Arguments" = "8:/Uninstall"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_1527FAE1_59D4_4377_BB10_78435BAD8B51"
+            "InstallerClass" = "11:FALSE"
+            "CustomActionData" = "8:"
+            }
         }
         "DefaultFeature"
         {
@@ -460,26 +506,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1C6B6A4A0D3342909841C3AE8A716CFC"
-            {
-            "SourcePath" = "8:..\\..\\RemoteControlService\\shutdownHistory.json"
-            "TargetName" = "8:shutdownHistory.json"
-            "Tag" = "8:"
-            "Folder" = "8:_4A21B827BC324529B9B69505E7D1841C"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1EAE29737CFFD4BEA3EAFDC6506071B7"
@@ -781,6 +807,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B629762ED13B4C288E8A95B0054EBA8C"
+            {
+            "SourcePath" = "8:..\\UninstallActions\\bin\\Release\\net5.0\\UninstallActions.exe"
+            "TargetName" = "8:UninstallActions.exe"
+            "Tag" = "8:"
+            "Folder" = "8:_4A21B827BC324529B9B69505E7D1841C"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C5CC531B3290A482F5999112B8E96065"
             {
             "AssemblyRegister" = "3:1"
@@ -1044,7 +1090,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Remote Control Receiver"
         "ProductCode" = "8:{5B784A12-419F-4402-8301-7F0E1312F8C5}"
-        "PackageCode" = "8:{F15FED54-8F62-44AD-BF18-1D29E398CA09}"
+        "PackageCode" = "8:{CC4F595B-9FE0-4CC1-826B-661B0B51E1A8}"
         "UpgradeCode" = "8:{10B24444-F107-43FE-8650-68BB07873627}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

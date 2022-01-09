@@ -102,3 +102,5 @@ RemoteControlService/WindowsLibrary/obj
 ReceiverWinFormsApp/ReceiverWinFormsApp/obj
 ReceiverWinFormsApp/packages
 ReceiverWinFormsApp/.vs
+ReceiverWinFormsApp/DataContracts/obj
+ReceiverWinFormsApp/UninstallActions/obj

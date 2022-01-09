@@ -13,6 +13,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.UnitTests", "..\Remo
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ReceiverWinFormsAppSetup", "ReceiverWinFormsAppSetup\ReceiverWinFormsAppSetup.vdproj", "{3B290835-8B47-4AE2-AF62-B1D2CDF4CE8A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UninstallActions", "UninstallActions\UninstallActions.csproj", "{2314709B-89FF-48D7-A60F-6B8C3921FB85}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedConfiguration", "SharedConfiguration", "{2B34E51C-2D80-4430-9903-AA6DEF1BFF29}"
+	ProjectSection(SolutionItems) = preProject
+		LocationPaths.json = LocationPaths.json
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataContracts", "DataContracts\DataContracts.csproj", "{6F5BCD72-69A8-427F-95C8-DD5C7EBBF5AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +46,14 @@ Global
 		{2C063BF2-CC75-45A4-B2B0-6E9ED49EB354}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3B290835-8B47-4AE2-AF62-B1D2CDF4CE8A}.Debug|Any CPU.ActiveCfg = Debug
 		{3B290835-8B47-4AE2-AF62-B1D2CDF4CE8A}.Release|Any CPU.ActiveCfg = Release
+		{2314709B-89FF-48D7-A60F-6B8C3921FB85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2314709B-89FF-48D7-A60F-6B8C3921FB85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2314709B-89FF-48D7-A60F-6B8C3921FB85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2314709B-89FF-48D7-A60F-6B8C3921FB85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F5BCD72-69A8-427F-95C8-DD5C7EBBF5AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F5BCD72-69A8-427F-95C8-DD5C7EBBF5AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F5BCD72-69A8-427F-95C8-DD5C7EBBF5AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F5BCD72-69A8-427F-95C8-DD5C7EBBF5AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
