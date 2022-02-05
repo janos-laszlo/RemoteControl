@@ -10,13 +10,36 @@ namespace Domain.Common.TaskScheduling
         private readonly ConcurrentPriorityQueue<ScheduledTask> tasks =
             new ConcurrentPriorityQueue<ScheduledTask>(
                 (s1, s2) => s1.ExecuteAt < s2.ExecuteAt);
-        private readonly Timer timer = new Timer();
+        private Timer timer;
+        private bool isRunning;
 
-        public CommonTaskScheduler()
+        public void Start()
         {
-            timer.Elapsed += ExecuteDueTasks;
+            if (isRunning)
+            {
+                return;
+            }
+
+            if (timer is null)
+            {
+                timer = new Timer();
+                timer.Elapsed += ExecuteDueTasks;
+            }
+
             SetTimerIntervalToPriorityQueueTop();
             timer.Start();
+            isRunning = true;
+        }
+
+        public void Stop()
+        {
+            if (!isRunning)
+            {
+                return;
+            }
+
+            timer.Stop();
+            isRunning = false;
         }
 
         public void ScheduleTask(ScheduledTask scheduledTask)
@@ -29,7 +52,7 @@ namespace Domain.Common.TaskScheduling
         {
             if (tasks.TryDequeue(out ScheduledTask task))
             {
-                Task.Run(task.Task);
+                Task.Run(task.Action);
                 SetTimerIntervalToPriorityQueueTop();
             }
         }

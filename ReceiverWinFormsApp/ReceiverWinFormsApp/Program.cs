@@ -63,8 +63,8 @@ namespace ReceiverWinFormsApp
             services.AddTransient<ITextCommandFactory, JsonCommandFactory>();
             services.AddTransient<IMessageReceptionist, MessageReceptionist>();
             services.AddTransient<IShutdownScheduler, NightlyShutdownScheduler>();
-            services.AddTransient<IPowerController, CmdLinePowerController>();
-            services.AddTransient<IVolumeController, CmdLineVolumeController>();
+            services.AddSingleton<IPowerController, WindowsFormsPowerController>();
+            services.AddTransient<IVolumeController, NAudioVolumeController>();
             services.AddTransient<ISystemInformation, WindowsLibrary.NightlyShutdown.SystemInformation>();
             services.AddTransient<IShutdownCalculator, NightlyShutdownCalculator>();
             services.AddTransient<IShutdownCommandFactory, ParameterizedShutdownCommandFactory>();
@@ -83,19 +83,18 @@ namespace ReceiverWinFormsApp
 #if DEBUG
             applicationDataFolder: ".",
 #else
-            applicationDataFolderName: dto.ApplicationDataFolderName,
+            applicationDataFolder: Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), dto.ApplicationDataFolderName),
 #endif
             logFileName: dto.LogFileName,
             shutdownHistoryFileName: dto.ShutdownHistoryFileName);
 
 
             Directory.CreateDirectory(Locations.ApplicationDataFolder);
-            string logFilePath = Path.Combine(Locations.ApplicationDataFolder, Locations.LogFilePath);
 
 
-            if (!File.Exists(logFilePath))
+            if (!File.Exists(Locations.LogFilePath))
             {
-                File.WriteAllText(logFilePath, string.Empty);
+                File.WriteAllText(Locations.LogFilePath, string.Empty);
             }
         }
     }

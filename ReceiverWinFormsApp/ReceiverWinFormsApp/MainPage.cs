@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Win32;
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -12,9 +13,24 @@ namespace ReceiverWinFormsApp
         public MainPage(MainPageViewModel viewModel)
         {
             InitializeComponent();
+            SystemEvents.PowerModeChanged += OnPowerChanged;
             this.viewModel = viewModel;
+
             viewModel.StartReceiver();
             UpdateButtonText();
+        }
+
+        private void OnPowerChanged(object s, PowerModeChangedEventArgs e)
+        {
+            switch (e.Mode)
+            {
+                case PowerModes.Resume:
+                    viewModel.StartReceiver();
+                    break;
+                case PowerModes.Suspend:
+                    viewModel.StopReceiver();
+                    break;
+            }
         }
 
         private void Button1_MouseClick(object sender, MouseEventArgs e)
@@ -31,7 +47,7 @@ namespace ReceiverWinFormsApp
             UpdateButtonText();
         }
 
-        private void NotifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void NotifyIcon1_MouseClick(object sender, MouseEventArgs e)
         {
             Show();
             WindowState = FormWindowState.Normal;
@@ -53,6 +69,7 @@ namespace ReceiverWinFormsApp
 
         private void MainPage_FormClosing(object sender, FormClosingEventArgs e)
         {
+            SystemEvents.PowerModeChanged -= OnPowerChanged;
             viewModel.StopReceiver();
         }
 

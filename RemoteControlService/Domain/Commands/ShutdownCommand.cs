@@ -24,8 +24,11 @@ namespace Domain.Commands
         public Maybe<string> Execute()
         {
             powerController.ScheduleShutdown(shutdownArgs);
-            NextShutdownDateTime = Maybe<DateTime>.Some(
-                DateTime.Now.AddSeconds(shutdownArgs.Seconds));
+            NextShutdownDateTime = NextShutdownDateTime.Match(
+                () => Maybe<DateTime>.Some(DateTime.Now.AddSeconds(shutdownArgs.Seconds)),
+                (dateTime) => shutdownArgs.OverrideExistingShutdown
+                    ? Maybe<DateTime>.Some(DateTime.Now.AddSeconds(shutdownArgs.Seconds))
+                    : NextShutdownDateTime);
             return Maybe<string>.None();
         }
     }

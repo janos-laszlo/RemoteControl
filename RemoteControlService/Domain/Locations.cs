@@ -14,9 +14,9 @@ namespace Domain
 
         public string ShutdownHistoryFilePath => Path.Combine(ApplicationDataFolder, shutdownHistoryFileName);
 
-        public Locations(string applicationDataFolderName, string logFileName, string shutdownHistoryFileName)
+        public Locations(string applicationDataFolder, string logFileName, string shutdownHistoryFileName)
         {
-            ApplicationDataFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), applicationDataFolderName);
+            ApplicationDataFolder = applicationDataFolder;
             this.logFileName = logFileName;
             this.shutdownHistoryFileName = shutdownHistoryFileName;
         }

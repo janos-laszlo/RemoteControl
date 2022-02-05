@@ -41,8 +41,8 @@ namespace Domain.NightlyShutdown
                 return;
             }
 
-            DateTime NextForecastedShutdownTime = nightlyShutdownCalculator.GetNextShutdown(shutdownHistory);
-            DateTime nextShutdownTime = AddBuffer(NextForecastedShutdownTime, minutes: 10);
+            DateTime nextForecastedShutdownTime = nightlyShutdownCalculator.GetNextShutdown(shutdownHistory);
+            DateTime nextShutdownTime = AddBuffer(nextForecastedShutdownTime, minutes: 10);
             ExecuteDailyShutdownAt(nextShutdownTime);
             logger.LogInformation($"Shutdown was scheduled to happen at: {nextShutdownTime}");
         }

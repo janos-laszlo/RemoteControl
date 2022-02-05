@@ -11,7 +11,10 @@ namespace UninstallActions
         static void Main(string[] args)
         {
             var dto = JsonSerializer.Deserialize<LocationPaths>(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources\LocationPaths.json")));
-            var locations = new Locations(dto.ApplicationDataFolderName, dto.LogFileName, dto.ShutdownHistoryFileName);
+            var locations = new Locations(
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), dto.ApplicationDataFolderName),
+                dto.LogFileName,
+                dto.ShutdownHistoryFileName);
 
             if (File.Exists(locations.LogFilePath))
             {

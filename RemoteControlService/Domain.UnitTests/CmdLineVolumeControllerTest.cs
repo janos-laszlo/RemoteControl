@@ -5,11 +5,11 @@ namespace RemoteControlService.UniTests
 {
     public class CmdLineVolumeControllerTest
     {
-        private readonly CmdLineVolumeController volumeController;
+        private readonly NAudioVolumeController volumeController;
 
         public CmdLineVolumeControllerTest()
         {
-            volumeController = new CmdLineVolumeController();
+            volumeController = new NAudioVolumeController();
         }
 
         [Fact]

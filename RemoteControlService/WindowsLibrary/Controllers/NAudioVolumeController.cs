@@ -4,11 +4,11 @@ using System;
 
 namespace WindowsLibrary.Controllers
 {
-    public class CmdLineVolumeController : IVolumeController
+    public class NAudioVolumeController : IVolumeController
     {
         private readonly MMDevice defaultDevice;
 
-        public CmdLineVolumeController()
+        public NAudioVolumeController()
         {
             MMDeviceEnumerator devEnum = new MMDeviceEnumerator();
             defaultDevice = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);

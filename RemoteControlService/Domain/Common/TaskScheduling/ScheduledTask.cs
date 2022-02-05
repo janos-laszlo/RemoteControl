@@ -4,16 +4,18 @@ namespace Domain.Common.TaskScheduling
 {
     public class ScheduledTask
     {
+        public static readonly Action EmptyAction = () => { };
+
         public ScheduledTask(Action task, DateTime executeAt)
         {
-            Task = task;
+            Action = task;
             ExecuteAt = executeAt;
         }
-        public Action Task { get; private set; }
+        public Action Action { get; private set; }
         public DateTime ExecuteAt { get; private set; }
         public void Cancel()
         {
-            Task = () => { };
+            Action = EmptyAction;
         }
     }
 }
