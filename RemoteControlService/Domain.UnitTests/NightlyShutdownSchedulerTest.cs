@@ -6,8 +6,6 @@ using NSubstitute;
 using RemoteControlService.UniTests.Mocks;
 using System;
 using System.IO;
-using WindowsLibrary.CommandFactories;
-using WindowsLibrary.NightlyShutdown;
 using Xunit;
 
 namespace RemoteControlService.UniTests

@@ -22,6 +22,7 @@ namespace WindowsLibrary.CommandFactories
                     nameof(ShutdownCommand),
                     json =>  new ShutdownCommand(
                         serviceProvider.GetRequiredService<IPowerController>(),
+                        new WindowsNotifier(),
                         new ShutdownArgs(
                             Create<ShutdownCommandDTO>(json).Seconds,
                             overrideExistingShutdown: true,

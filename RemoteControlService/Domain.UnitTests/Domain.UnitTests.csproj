@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RemoteControlService.UniTests</RootNamespace>
     <AssemblyName>RemoteControlService.UniTests</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
@@ -22,6 +22,7 @@
     <TestProjectType>UnitTest</TestProjectType>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -56,13 +57,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.csproj">
-      <Project>{9f5c8e97-7edc-4ea7-aca0-70e9ca92cf79}</Project>
+    <ProjectReference Include="..\..\ReceiverWinFormsApp\Domain\Domain.csproj">
+      <Project>{d7fe3b03-2052-40fd-8731-6f016e08f3c6}</Project>
       <Name>Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WindowsLibrary\WindowsLibrary.csproj">
-      <Project>{1571bc87-8077-4b4f-8fb0-7e4fa3f38fe6}</Project>
-      <Name>WindowsLibrary</Name>
+    <ProjectReference Include="..\..\ReceiverWinFormsApp\ReceiverWinFormsApp\ReceiverWinFormsApp.csproj">
+      <Project>{a2a62937-04c4-4c33-af69-03397d920b49}</Project>
+      <Name>ReceiverWinFormsApp</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

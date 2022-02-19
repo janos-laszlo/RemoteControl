@@ -7,15 +7,16 @@ using Domain.MessageReception;
 using Domain.NightlyShutdown;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using ReceiverWinFormsApp.CommandFactories;
+using ReceiverWinFormsApp.Controllers;
+using ReceiverWinFormsApp.MessageReception;
+using ReceiverWinFormsApp.NightlyShutdown;
+using ReceiverWinFormsApp.Notification;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Windows.Forms;
-using WindowsLibrary.CommandFactories;
-using WindowsLibrary.Controllers;
-using WindowsLibrary.MessageReception;
-using WindowsLibrary.NightlyShutdown;
 
 namespace ReceiverWinFormsApp
 {
@@ -63,14 +64,15 @@ namespace ReceiverWinFormsApp
             services.AddTransient<ITextCommandFactory, JsonCommandFactory>();
             services.AddTransient<IMessageReceptionist, MessageReceptionist>();
             services.AddTransient<IShutdownScheduler, NightlyShutdownScheduler>();
-            services.AddSingleton<IPowerController, WindowsFormsPowerController>();
+            services.AddSingleton<IPowerController, WindowsPowerController>();
             services.AddTransient<IVolumeController, NAudioVolumeController>();
-            services.AddTransient<ISystemInformation, WindowsLibrary.NightlyShutdown.SystemInformation>();
+            services.AddTransient<ISystemInformation, NightlyShutdown.SystemInformation>();
             services.AddTransient<IShutdownCalculator, NightlyShutdownCalculator>();
             services.AddTransient<IShutdownCommandFactory, ParameterizedShutdownCommandFactory>();
             services.AddTransient<IShutdownHistoryUpdater, NightlyShutdownHistoryUpdater>();
             services.AddSingleton<IShutdownHistoryStorage, ShutdownHistoryStorage>();
             services.AddSingleton<ITaskScheduler, CommonTaskScheduler>();
+            services.AddTransient<INotifier, WindowsNotifier>();
             services.AddTransient<CommandProcessor>();
             services.AddSingleton(Locations);
         }

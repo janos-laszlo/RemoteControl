@@ -8,7 +8,7 @@ namespace UninstallActions
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var dto = JsonSerializer.Deserialize<LocationPaths>(File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Resources\LocationPaths.json")));
             var locations = new Locations(

@@ -3,6 +3,7 @@ using Domain.Commands;
 using Domain.Commands.Arguments;
 using Domain.Controllers;
 using System;
+using WindowsLibrary.Notification;
 
 namespace WindowsLibrary.CommandFactories
 {
@@ -26,6 +27,7 @@ namespace WindowsLibrary.CommandFactories
             int seconds = (int)(nextShutdownTime - DateTime.Now).TotalSeconds;
             return new ShutdownCommand(
                 powerController,
+                new MuteNotifier(),
                 new ShutdownArgs(
                     seconds,
                     overrideExistingShutdown: false,

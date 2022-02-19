@@ -1,5 +1,4 @@
-﻿using WindowsLibrary.Controllers;
-using Xunit;
+﻿using Xunit;
 
 namespace RemoteControlService.UniTests
 {
