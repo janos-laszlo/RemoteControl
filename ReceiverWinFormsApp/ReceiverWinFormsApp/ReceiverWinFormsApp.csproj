@@ -5,6 +5,11 @@
 		<TargetFramework>net6.0-windows10.0.17763</TargetFramework>
 		<UseWindowsForms>true</UseWindowsForms>
 		<ApplicationIcon>remote_control.ico</ApplicationIcon>
+		<ApplicationName>Remote Control Receiver</ApplicationName>
+		<Product>$(ApplicationName)</Product>
+		<PackageId>$(ApplicationName)</PackageId>
+		<Company>$(ApplicationName)</Company>
+		<AssemblyName>$(ApplicationName)</AssemblyName>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
