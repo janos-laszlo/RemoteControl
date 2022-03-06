@@ -2,7 +2,6 @@
 using Domain.Commands;
 using Domain.Commands.Arguments;
 using Domain.Controllers;
-using ReceiverWinFormsApp.Notification;
 using System;
 
 namespace ReceiverWinFormsApp.CommandFactories
@@ -29,7 +28,7 @@ namespace ReceiverWinFormsApp.CommandFactories
                 new ShutdownArgs(
                     nextShutdownTime,
                     overrideExistingShutdown: false,
-                    showNotification: false));
+                    showNotification: true));
         }
     }
 }
