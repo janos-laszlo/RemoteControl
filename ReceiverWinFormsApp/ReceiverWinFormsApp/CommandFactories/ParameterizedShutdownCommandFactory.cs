@@ -18,7 +18,7 @@ namespace ReceiverWinFormsApp.CommandFactories
 
         public CancelShutdownCommand CreateCancelShutdownCommand()
         {
-            return new CancelShutdownCommand(powerController);
+            return new CancelShutdownCommand(powerController, false);
         }
 
         public ShutdownCommand CreateDailyShutdownCommand(DateTime nextShutdownTime)

@@ -104,9 +104,12 @@ ReceiverWinFormsApp/packages
 ReceiverWinFormsApp/.vs
 ReceiverWinFormsApp/DataContracts/obj
 ReceiverWinFormsApp/UninstallActions/obj
-ReceiverWinFormsApp/Domain/bin
-ReceiverWinFormsApp/Domain/obj
+ReceiverWinFormsApp/Domain/bin/
+ReceiverWinFormsApp/Domain/obj/
 ReceiverWinFormsApp/Domain.Tests/bin
 ReceiverWinFormsApp/Domain.Tests/obj
 ReceiverWinFormsApp/ReceiverWinFormsApp.UnitTests/bin
 ReceiverWinFormsApp/ReceiverWinFormsApp.UnitTests/obj
+ReceiverWinFormsApp/Domain/bin/Release
+ReceiverWinFormsApp/Domain/obj/Release
+ReceiverWinFormsApp/Domain/obj/Release/netstandard2.0/Domain.pdb

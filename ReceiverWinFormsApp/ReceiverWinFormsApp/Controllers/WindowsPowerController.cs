@@ -24,11 +24,15 @@ namespace ReceiverWinFormsApp.Controllers
 
         public DateTime? NextShutdownDateTime { get; private set; }
 
-        public void CancelShutdown()
+        public void CancelShutdown(bool showNotification)
         {
             shutdownTask?.Cancel();
             notificationTask?.Cancel();
             NextShutdownDateTime = null;
+            if (showNotification)
+            {
+                notifier.Notify("Shutdown canceled");
+            }
         }
 
         public void Hibernate()
@@ -43,7 +47,7 @@ namespace ReceiverWinFormsApp.Controllers
                 return;
             }
 
-            CancelShutdown();
+            CancelShutdown(false);
             if (arguments.ShowNotification)
             {
                 notificationTask = new ScheduledTask(

@@ -20,7 +20,7 @@ namespace RemoteControlService.UniTests.Mocks
 
         public DateTime? NextShutdownDateTime { get; private set; }
 
-        public void CancelShutdown()
+        public void CancelShutdown(bool showNotification)
         {
             NextShutdownDateTime = null;
         }

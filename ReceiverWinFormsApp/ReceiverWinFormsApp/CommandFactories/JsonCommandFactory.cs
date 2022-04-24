@@ -30,7 +30,8 @@ namespace ReceiverWinFormsApp.CommandFactories
                 {
                     nameof(CancelShutdownCommand),
                     json => new CancelShutdownCommand(
-                        serviceProvider.GetRequiredService<IPowerController>())
+                        serviceProvider.GetRequiredService<IPowerController>(),
+                        showNotification: true)
                 },
                 {
                     nameof(SetVolumeCommand),

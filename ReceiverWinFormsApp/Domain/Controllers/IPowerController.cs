@@ -7,7 +7,7 @@ namespace Domain.Controllers
     {
         DateTime? NextShutdownDateTime { get; }
         void ScheduleShutdown(ShutdownArgs arguments);
-        void CancelShutdown();
+        void CancelShutdown(bool showNotification);
         void Hibernate();
     }
 }
