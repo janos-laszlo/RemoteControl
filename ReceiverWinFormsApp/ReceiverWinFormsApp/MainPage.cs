@@ -93,5 +93,10 @@ namespace ReceiverWinFormsApp
             WindowState = FormWindowState.Minimized;
             Hide();
         }
+
+        private void cancelShutdownButton_Click(object sender, EventArgs e)
+        {
+            viewModel.CancelShutdown();
+        }
     }
 }
