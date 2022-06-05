@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Domain.Controllers;
+using Microsoft.Win32;
 using System;
 using System.Windows.Forms;
 
@@ -8,14 +9,22 @@ namespace ReceiverWinFormsApp
     {
         private readonly MainPageViewModel viewModel;
 
-        public MainPage(MainPageViewModel viewModel)
+        public MainPage(MainPageViewModel viewModel, IPowerController powerController)
         {
             InitializeComponent();
             SystemEvents.PowerModeChanged += OnPowerChanged;
             this.viewModel = viewModel;
 
             viewModel.StartReceiver();
+            powerController.NextShutdownChanged += OnNextShutdownChanged;
             UpdateButtonText();
+        }
+
+        private void OnNextShutdownChanged(DateTime? nextShutdownDateTime)
+        {
+            nextShutdownLabel.Text = nextShutdownDateTime is null
+                ? "Shutdown not scheduled"
+                : $"Shutting down at {nextShutdownDateTime?.ToString("HH:mm")}";
         }
 
         private void OnPowerChanged(object s, PowerModeChangedEventArgs e)

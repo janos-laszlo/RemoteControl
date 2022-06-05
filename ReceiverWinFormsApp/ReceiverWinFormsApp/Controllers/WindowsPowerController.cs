@@ -22,7 +22,21 @@ namespace ReceiverWinFormsApp.Controllers
             this.notifier = notifier;
         }
 
-        public DateTime? NextShutdownDateTime { get; private set; }
+        private DateTime? nextShutdownDateTime;
+        public DateTime? NextShutdownDateTime
+        {
+            get => nextShutdownDateTime;
+            private set
+            {
+                if (nextShutdownDateTime != value)
+                {
+                    nextShutdownDateTime = value;
+                    NextShutdownChanged?.Invoke(nextShutdownDateTime);
+                }
+            }
+        }
+
+        public event Action<DateTime?> NextShutdownChanged;
 
         public void CancelShutdown(bool showNotification)
         {

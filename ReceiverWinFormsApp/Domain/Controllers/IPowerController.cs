@@ -9,5 +9,6 @@ namespace Domain.Controllers
         void ScheduleShutdown(ShutdownArgs arguments);
         void CancelShutdown(bool showNotification);
         void Hibernate();
+        event Action<DateTime?> NextShutdownChanged;
     }
 }
