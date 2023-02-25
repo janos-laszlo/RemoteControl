@@ -113,3 +113,4 @@ ReceiverWinFormsApp/ReceiverWinFormsApp.UnitTests/obj
 ReceiverWinFormsApp/Domain/bin/Release
 ReceiverWinFormsApp/Domain/obj/Release
 ReceiverWinFormsApp/Domain/obj/Release/netstandard2.0/Domain.pdb
+/.vs/slnx.sqlite

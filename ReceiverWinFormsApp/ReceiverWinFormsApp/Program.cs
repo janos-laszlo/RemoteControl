@@ -72,7 +72,7 @@ namespace ReceiverWinFormsApp
             services.AddTransient<IShutdownHistoryUpdater, NightlyShutdownHistoryUpdater>();
             services.AddSingleton<IShutdownHistoryStorage, ShutdownHistoryStorage>();
             services.AddSingleton<ITaskScheduler, CommonTaskScheduler>();
-            services.AddTransient<INotifier, WindowsNotifier>();
+            services.AddSingleton<INotifier, WindowsNotifier>();
             services.AddTransient<CommandProcessor>();
             services.AddSingleton(Locations);
         }
@@ -89,7 +89,6 @@ namespace ReceiverWinFormsApp
 #endif
             logFileName: dto.LogFileName,
             shutdownHistoryFileName: dto.ShutdownHistoryFileName);
-
 
             Directory.CreateDirectory(Locations.ApplicationDataFolder);
 

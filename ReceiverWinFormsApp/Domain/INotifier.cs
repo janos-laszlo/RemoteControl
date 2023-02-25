@@ -6,6 +6,8 @@ namespace Domain
 {
     public interface INotifier
     {
+        event Action OnActivated;
+
         void Notify(string message);
     }
 }

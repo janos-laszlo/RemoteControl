@@ -1,4 +1,6 @@
-﻿using Domain.Controllers;
+﻿using Domain;
+using Domain.Controllers;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32;
 using System;
 using System.Windows.Forms;
@@ -9,22 +11,30 @@ namespace ReceiverWinFormsApp
     {
         private readonly MainPageViewModel viewModel;
 
-        public MainPage(MainPageViewModel viewModel, IPowerController powerController)
+        public MainPage(MainPageViewModel viewModel, IPowerController powerController, INotifier notifier)
         {
             InitializeComponent();
             SystemEvents.PowerModeChanged += OnPowerChanged;
             this.viewModel = viewModel;
-
             viewModel.StartReceiver();
-            powerController.NextShutdownChanged += OnNextShutdownChanged;
+            powerController.NextShutdownChanged += args => HandleEventOnThisForm(() => OnNextShutdownChanged(args));
+            notifier.OnActivated += () => HandleEventOnThisForm(ShowMyself);
             UpdateButtonText();
+        }
+
+        private void HandleEventOnThisForm(Action action)
+        {
+            if (this.InvokeRequired)
+                this.Invoke(HandleEventOnThisForm, action);
+            else
+                action();
         }
 
         private void OnNextShutdownChanged(DateTime? nextShutdownDateTime)
         {
             nextShutdownLabel.Text = nextShutdownDateTime is null
                 ? "Shutdown not scheduled"
-                : $"Shutting down at {nextShutdownDateTime?.ToString("HH:mm")}";
+                : $"Shutting down at {nextShutdownDateTime.Value:HH:mm}";
         }
 
         private void OnPowerChanged(object s, PowerModeChangedEventArgs e)
@@ -56,9 +66,7 @@ namespace ReceiverWinFormsApp
 
         private void NotifyIcon1_MouseClick(object sender, MouseEventArgs e)
         {
-            Show();
-            WindowState = FormWindowState.Normal;
-            notifyIcon1.Visible = false;
+            ShowMyself();
         }
 
         private void MainPage_Resize(object sender, System.EventArgs e)
@@ -68,15 +76,28 @@ namespace ReceiverWinFormsApp
             //and show the system tray icon (represented by the NotifyIcon control)  
             if (WindowState == FormWindowState.Minimized)
             {
-                Hide();
-                notifyIcon1.Visible = true;
-                UpdateNotifyIconText();
+                HideMyself();
             }
+        }
+
+        private void ShowMyself()
+        {
+            Show();
+            WindowState = FormWindowState.Normal;
+            notifyIcon1.Visible = false;
+        }
+
+        private void HideMyself()
+        {
+            Hide();
+            notifyIcon1.Visible = true;
+            UpdateNotifyIconText();
         }
 
         private void MainPage_FormClosing(object sender, FormClosingEventArgs e)
         {
             SystemEvents.PowerModeChanged -= OnPowerChanged;
+            ToastNotificationManagerCompat.Uninstall();
             viewModel.StopReceiver();
         }
 
