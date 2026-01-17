@@ -50,7 +50,7 @@ namespace ReceiverWinFormsApp
             }
         }
 
-        private void Button1_MouseClick(object sender, MouseEventArgs e)
+        private void StartStopButton_MouseClick(object sender, MouseEventArgs e)
         {
             if (viewModel.IsRunning)
             {

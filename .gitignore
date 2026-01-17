@@ -82,13 +82,13 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 
+.vs
 
 # RemoteControlService ignores
 RemoteControlService/RemoteControlService/bin
 RemoteControlService/RemoteControlService/obj
 RemoteControlService/Domain.UnitTests/bin
 RemoteControlService/Domain.UnitTests/obj
-RemoteControlService/.vs
 RemoteControlService/packages
 RemoteControlService/ServiceSetup/Debug
 RemoteControlService/ServiceSetup/Release
@@ -101,7 +101,6 @@ RemoteControlService/WindowsLibrary/obj
 
 ReceiverWinFormsApp/ReceiverWinFormsApp/obj
 ReceiverWinFormsApp/packages
-ReceiverWinFormsApp/.vs
 ReceiverWinFormsApp/DataContracts/obj
 ReceiverWinFormsApp/UninstallActions/obj
 ReceiverWinFormsApp/Domain/bin/
@@ -113,4 +112,3 @@ ReceiverWinFormsApp/ReceiverWinFormsApp.UnitTests/obj
 ReceiverWinFormsApp/Domain/bin/Release
 ReceiverWinFormsApp/Domain/obj/Release
 ReceiverWinFormsApp/Domain/obj/Release/netstandard2.0/Domain.pdb
-/.vs/slnx.sqlite

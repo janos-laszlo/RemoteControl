@@ -21,13 +21,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_663017A475D04CE885A4FED468416D1E"
+        "MsmKey" = "8:_B70473639D20423FBCC50116176CEE2B"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_76FA13DF8B1847B7A3AB623A048FCB74"
+        "MsmKey" = "8:_C1EED4BEEDDB4BB8A64DEAD5E6C8BD5E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -109,17 +109,17 @@
     {
         "CustomAction"
         {
-            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_C2AF6E0E0D00415ABDE62D694F87C84A"
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_7B2A1284E5EB48BB9BAC13069D64BA43"
             {
             "Name" = "8:UninstallActions.exe"
             "Condition" = "8:"
-            "Object" = "8:_76FA13DF8B1847B7A3AB623A048FCB74"
+            "Object" = "8:_C1EED4BEEDDB4BB8A64DEAD5E6C8BD5E"
             "FileType" = "3:2"
             "InstallAction" = "3:4"
             "Arguments" = "8:/Uninstall"
             "EntryPoint" = "8:"
             "Sequence" = "3:1"
-            "Identifier" = "8:_866B8FCF_DBD0_42FA_99CF_306BC790171C"
+            "Identifier" = "8:_76059B0C_5AC3_4F65_B0E8_7E16E1E08CA1"
             "InstallerClass" = "11:FALSE"
             "CustomActionData" = "8:"
             }
@@ -142,7 +142,7 @@
                 "InstallUrl" = "8:https://dotnet.microsoft.com/download/dotnet-core/[NetCoreVerMajorDotMinor]"
                 "IsNETCore" = "11:TRUE"
                 "Architecture" = "2:0"
-                "Runtime" = "2:0"
+                "Runtime" = "2:2"
                 }
                 "{A06ECF26-33A3-4562-8140-9B0E340D4F24}:_FBE653B38D7F4D6F9263B407349E6775"
                 {
@@ -176,9 +176,9 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_76FA13DF8B1847B7A3AB623A048FCB74"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C1EED4BEEDDB4BB8A64DEAD5E6C8BD5E"
             {
-            "SourcePath" = "8:..\\UninstallActions\\bin\\Release\\net6.0\\UninstallActions.exe"
+            "SourcePath" = "8:..\\UninstallActions\\bin\\Release\\net10.0\\UninstallActions.exe"
             "TargetName" = "8:UninstallActions.exe"
             "Tag" = "8:"
             "Folder" = "8:_4A21B827BC324529B9B69505E7D1841C"
@@ -224,7 +224,7 @@
         {
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_4A21B827BC324529B9B69505E7D1841C"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFiles64Folder][Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -273,7 +273,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Remote Control Receiver"
         "ProductCode" = "8:{5B784A12-419F-4402-8301-7F0E1312F8C5}"
-        "PackageCode" = "8:{1BF0869D-A7A2-453B-B88F-A88405168BB0}"
+        "PackageCode" = "8:{44E53781-54E3-4BF8-8607-6182B66A20A1}"
         "UpgradeCode" = "8:{10B24444-F107-43FE-8650-68BB07873627}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -294,7 +294,7 @@
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
-        "TargetPlatform" = "3:0"
+        "TargetPlatform" = "3:1"
         "PreBuildEvent" = "8:"
         "PostBuildEvent" = "8:"
         "RunPostBuildEvent" = "3:0"
@@ -792,9 +792,9 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_663017A475D04CE885A4FED468416D1E"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B70473639D20423FBCC50116176CEE2B"
             {
-            "SourcePath" = "8:..\\ReceiverWinFormsApp\\obj\\Release\\net6.0-windows10.0.17763\\apphost.exe"
+            "SourcePath" = "8:..\\ReceiverWinFormsApp\\obj\\Release\\net10.0-windows10.0.26100.0\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_4A21B827BC324529B9B69505E7D1841C"
@@ -812,9 +812,9 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:Release|Any CPU"
+            "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:PublishItems"
-            "OutputProjectGuid" = "8:{A2A62937-04C4-4C33-AF69-03397D920B49}"
+            "OutputProjectGuid" = "8:{CDAECFD9-29D7-5BF3-D76C-12167C8AD626}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

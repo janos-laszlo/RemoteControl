@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/SharedConfiguration/">
+    <File Path="LocationPaths.json" />
+  </Folder>
+  <Project Path="DataContracts/DataContracts.csproj" />
+  <Project Path="Domain/Domain.csproj" />
+  <Project Path="ReceiverWinFormsApp.UnitTests/Domain.UnitTests.csproj" />
+  <Project Path="ReceiverWinFormsApp/ReceiverWinFormsApp.csproj" />
+  <Project Path="ReceiverWinFormsAppSetup/ReceiverWinFormsAppSetup.vdproj" Type="Installer">
+    <Build />
+  </Project>
+  <Project Path="UninstallActions/UninstallActions.csproj" />
+</Solution>
