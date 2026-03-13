@@ -64,7 +64,7 @@ namespace ReceiverWinFormsApp
             cancelShutdownButton.TabIndex = 1;
             cancelShutdownButton.Text = "Cancel Shutdown";
             cancelShutdownButton.UseVisualStyleBackColor = true;
-            cancelShutdownButton.Click += cancelShutdownButton_Click;
+            cancelShutdownButton.Click += CancelShutdownButton_Click;
             // 
             // startStopButton
             // 

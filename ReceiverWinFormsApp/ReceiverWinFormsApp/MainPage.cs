@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Domain.Controllers;
+using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32;
 using System;
@@ -103,14 +104,7 @@ namespace ReceiverWinFormsApp
 
         private void UpdateButtonText()
         {
-            if (viewModel.IsRunning)
-            {
-                startStopButton.Text = "Stop";
-            }
-            else
-            {
-                startStopButton.Text = "Start";
-            }
+            startStopButton.Text = viewModel.IsRunning ? "Stop" : "Start";
         }
 
         private void UpdateNotifyIconText()
@@ -124,7 +118,7 @@ namespace ReceiverWinFormsApp
             Hide();
         }
 
-        private void cancelShutdownButton_Click(object sender, EventArgs e)
+        private void CancelShutdownButton_Click(object sender, EventArgs e)
         {
             viewModel.CancelShutdown();
         }
